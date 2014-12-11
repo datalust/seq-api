@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>Seq.Api</id>
-    <version>0.1.0</version>
+    <version>$version$</version>
     <authors>Continuous IT Pty Ltd</authors>
     <description>Client library for the Seq web UI.</description>
     <language>en-US</language>
