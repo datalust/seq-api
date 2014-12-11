@@ -1,0 +1,41 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{B36BE973-6D5B-4DAA-BF42-F1CF11D6F18E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Seq.Api", "src\Seq.Api\Seq.Api.csproj", "{077B5E8A-611B-4CA9-BE59-5454092D21FE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "example", "example", "{1C66E116-DC21-4C8F-833E-A4C2DDF58487}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeqTail", "example\SeqTail\SeqTail.csproj", "{905AF63F-05F6-4293-AE30-DC9FE8B243E7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "asset", "asset", "{233C7E7D-26DE-452A-A415-44F99CBA18E7}"
+	ProjectSection(SolutionItems) = preProject
+		asset\getseq_net.ico = asset\getseq_net.ico
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{077B5E8A-611B-4CA9-BE59-5454092D21FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{077B5E8A-611B-4CA9-BE59-5454092D21FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{077B5E8A-611B-4CA9-BE59-5454092D21FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{077B5E8A-611B-4CA9-BE59-5454092D21FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{905AF63F-05F6-4293-AE30-DC9FE8B243E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{905AF63F-05F6-4293-AE30-DC9FE8B243E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{905AF63F-05F6-4293-AE30-DC9FE8B243E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{905AF63F-05F6-4293-AE30-DC9FE8B243E7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{077B5E8A-611B-4CA9-BE59-5454092D21FE} = {B36BE973-6D5B-4DAA-BF42-F1CF11D6F18E}
+		{905AF63F-05F6-4293-AE30-DC9FE8B243E7} = {1C66E116-DC21-4C8F-833E-A4C2DDF58487}
+	EndGlobalSection
+EndGlobal

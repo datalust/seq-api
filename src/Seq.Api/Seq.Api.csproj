@@ -1,0 +1,125 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <MinimumVisualStudioVersion>10.0</MinimumVisualStudioVersion>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{077B5E8A-611B-4CA9-BE59-5454092D21FE}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Seq</RootNamespace>
+    <AssemblyName>Seq.Api</AssemblyName>
+    <DefaultLanguage>en-US</DefaultLanguage>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <TargetFrameworkProfile>Profile259</TargetFrameworkProfile>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <DocumentationFile>
+    </DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <DocumentationFile>
+    </DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- A reference to the entire .NET Framework is automatically included -->
+    <None Include="packages.config" />
+    <None Include="Seq.Api.nuspec" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Api\Client\SeqApiClient.cs" />
+    <Compile Include="Api\Model\AppInstances\AppInstanceEntity.cs" />
+    <Compile Include="Api\Model\Apps\AppEntity.cs" />
+    <Compile Include="Api\Model\Apps\AppPackagePart.cs" />
+    <Compile Include="Api\Model\Apps\AppSettingPart.cs" />
+    <Compile Include="Api\Model\Entity.cs" />
+    <Compile Include="Api\Model\Events\EventEntity.cs" />
+    <Compile Include="Api\Model\Events\EventInputResultPart.cs" />
+    <Compile Include="Api\Model\Events\EventPropertyPart.cs" />
+    <Compile Include="Api\Model\Events\MessageTemplateTokenPart.cs" />
+    <Compile Include="Api\Model\Events\ResultSetPart.cs" />
+    <Compile Include="Api\Model\Expressions\ExpressionPart.cs" />
+    <Compile Include="Api\Model\Feeds\NuGetFeedEntity.cs" />
+    <Compile Include="Api\Model\ILinked.cs" />
+    <Compile Include="Api\Model\Inputs\ApiKeyEntity.cs" />
+    <Compile Include="Api\Model\Inputs\ApiKeyMetricsPart.cs" />
+    <Compile Include="Api\Model\Inputs\InputAppliedPropertyPart.cs" />
+    <Compile Include="Api\Model\License\LicenseEntity.cs" />
+    <Compile Include="Api\Model\Link.cs" />
+    <Compile Include="Api\Model\LinkCollection.cs" />
+    <Compile Include="Api\Model\LogEvents\LogEventLevel.cs" />
+    <Compile Include="Api\Model\Metrics\MetricsEntity.cs" />
+    <Compile Include="Api\Model\Metrics\RunningTaskPart.cs" />
+    <Compile Include="Api\Model\Pins\PinEntity.cs" />
+    <Compile Include="Api\Model\Queries\PropertyOfInterestPart.cs" />
+    <Compile Include="Api\Model\Queries\QueryEntity.cs" />
+    <Compile Include="Api\Model\Queries\TaggedPropertyPart.cs" />
+    <Compile Include="Api\Model\Reports\PreparedReportEntity.cs" />
+    <Compile Include="Api\Model\Reports\ReportResultPart.cs" />
+    <Compile Include="Api\Model\Reports\ReportRowPart.cs" />
+    <Compile Include="Api\Model\ResourceGroup.cs" />
+    <Compile Include="Api\Model\Retention\RetentionPolicyEntity.cs" />
+    <Compile Include="Api\Model\Root\RootEntity.cs" />
+    <Compile Include="Api\Model\Settings\SettingEntity.cs" />
+    <Compile Include="Api\Model\Shared\EventFilterPart.cs" />
+    <Compile Include="Api\Model\Shared\ResultSetStatus.cs" />
+    <Compile Include="Api\Model\Shared\StatisticsPart.cs" />
+    <Compile Include="Api\Model\Users\CredentialsPart.cs" />
+    <Compile Include="Api\Model\Users\UserEntity.cs" />
+    <Compile Include="Api\Model\Views\ViewEntity.cs" />
+    <Compile Include="Api\Model\Watches\DataPointPart.cs" />
+    <Compile Include="Api\Model\Watches\DataRangePart.cs" />
+    <Compile Include="Api\Model\Watches\TimeSliceDuration.cs" />
+    <Compile Include="Api\Model\Watches\WatchEntity.cs" />
+    <Compile Include="Api\Serialization\LinkCollectionConverter.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\packages\Newtonsoft.Json.6.0.6\lib\portable-net45+wp80+win8+wpa81+aspnetcore50\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http">
+      <HintPath>..\..\packages\Microsoft.Net.Http.2.2.28\lib\portable-net40+sl4+win8+wp71+wpa81\System.Net.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Extensions">
+      <HintPath>..\..\packages\Microsoft.Net.Http.2.2.28\lib\portable-net40+sl4+win8+wp71+wpa81\System.Net.Http.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Primitives">
+      <HintPath>..\..\packages\Microsoft.Net.Http.2.2.28\lib\portable-net40+sl4+win8+wp71+wpa81\System.Net.Http.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="Tavis.UriTemplates">
+      <HintPath>..\..\packages\Tavis.UriTemplates.0.6.0\lib\portable-net45+sl5+wp8+win8+wpa81+MonoTouch1+MonoAndroid1\Tavis.UriTemplates.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
+  <Import Project="..\..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets" Condition="Exists('..\..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" />
+  <Target Name="EnsureBclBuildImported" BeforeTargets="BeforeBuild" Condition="'$(BclBuildImported)' == ''">
+    <Error Condition="!Exists('..\..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" Text="This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=317567." HelpKeyword="BCLBUILD2001" />
+    <Error Condition="Exists('..\..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" Text="The build restored NuGet packages. Build the project again to include these packages in the build. For more information, see http://go.microsoft.com/fwlink/?LinkID=317568." HelpKeyword="BCLBUILD2002" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
