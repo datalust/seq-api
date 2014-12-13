@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using DocoptNet;
 using Seq.Api.Client;
+using Seq.Api.Model;
 using Seq.Api.Model.Events;
 using Seq.Api.Model.Expressions;
 
@@ -72,19 +73,20 @@ Options:
             var startedAt = DateTime.UtcNow;
 
             var client = new SeqApiClient(server) { ApiKey = apiKey };
+            var root = await client.GetRootAsync();
 
             string strict = null;
             if (filter != null)
             {
-                var expressions = await client.GetResourceGroup("expressions");
-                var converted = await client.Get<ExpressionPart>(expressions, "ToStrict", new Dictionary<string, object>
+                var expressions = await client.GetAsync<ResourceGroup>(root, "ExpressionsResources");
+                var converted = await client.GetAsync<ExpressionPart>(expressions, "ToStrict", new Dictionary<string, object>
                 {
                     {"fuzzy", filter}
                 });
                 strict = converted.StrictExpression;
             }
 
-            var eventResources = await client.GetResourceGroup("events");
+            var eventResources = await client.GetAsync<ResourceGroup>(root, "EventsResources");
 
             var parameters = new Dictionary<string, object>
             {
@@ -96,7 +98,7 @@ Options:
             if (strict != null)
                 parameters.Add("filter", strict);
 
-            var result = await client.List<EventEntity>(eventResources, "Items", parameters);
+            var result = await client.ListAsync<EventEntity>(eventResources, "Items", parameters);
 
             // Since results may come late, we request an overlapping window and exclude
             // events that have already been printed. If the last seen ID wasn't returned
@@ -157,7 +159,7 @@ Options:
                 }
 
                 parameters["fromDateUtc"] = lastReturnedId == null ? startedAt : DateTime.UtcNow.AddMinutes(-3);
-                result = await client.List<EventEntity>(eventResources, "Items", parameters);
+                result = await client.ListAsync<EventEntity>(eventResources, "Items", parameters);
             }
         }
     }

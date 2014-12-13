@@ -29,13 +29,14 @@ Create a `SeqApiClient` with your server URL:
 var client = new SeqApiClient("http://localhost:5341");
 ```
 
-Get one of the resource groups:
+Get the root resource and use it to retrieve one or more of the resource groups:
 
 ```csharp
-var events = await client.GetResourceGroup("events");
+var root = client.GetRootAsync();
+var events = await client.GetAsync<ResourceGroup>(root, "EventsResources");
 ```
 
-(Available resource groups, like `events`, `users` and so-on, can be seen in the root document served at `/api` from you Seq server; in future the root document will be used here.)
+(Available resource groups, like `events`, `users` and so-on, can be seen in the root document's `Links` collection.)
 
 Use the client to navigate links from entity to entity:
 

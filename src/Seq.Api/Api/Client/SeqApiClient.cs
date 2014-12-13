@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Seq.Api.Model;
+using Seq.Api.Model.Root;
 using Seq.Api.Serialization;
 using Tavis.UriTemplates;
 
@@ -18,7 +19,6 @@ namespace Seq.Api.Client
         readonly string _serverUrl;
 
         readonly HttpClient _httpClient;
-        readonly IDictionary<string, ResourceGroup> _resourceGroups = new Dictionary<string, ResourceGroup>();
         readonly JsonSerializer _serializer = JsonSerializer.Create(
             new JsonSerializerSettings
             {
@@ -47,71 +47,63 @@ namespace Seq.Api.Client
 
         public string ApiKey { get; set; }
 
-        public async Task<ResourceGroup> GetResourceGroup(string collection)
+        public Task<RootEntity> GetRootAsync()
         {
-            ResourceGroup group;
-            if (!_resourceGroups.TryGetValue(collection, out group))
-            {
-                var resourcesUrl = string.Format("api/{0}/resources", collection);
-
-                group = await HttpGet<ResourceGroup>(resourcesUrl);
-                _resourceGroups.Add(collection, group);
-            }
-            return group;
+            return HttpGetAsync<RootEntity>("api");
         }
 
-        public Task<TEntity> Get<TEntity>(ILinked entity, string link, IDictionary<string, object> parameters = null)
+        public Task<TEntity> GetAsync<TEntity>(ILinked entity, string link, IDictionary<string, object> parameters = null)
         {
             var linkUri = ResolveLink(entity, link, parameters);
-            return HttpGet<TEntity>(linkUri);
+            return HttpGetAsync<TEntity>(linkUri);
         }
 
-        public Task<List<TEntity>> List<TEntity>(ILinked entity, string link, IDictionary<string, object> parameters = null)
+        public Task<List<TEntity>> ListAsync<TEntity>(ILinked entity, string link, IDictionary<string, object> parameters = null)
         {
             var linkUri = ResolveLink(entity, link, parameters);
-            return HttpGet<List<TEntity>>(linkUri);
+            return HttpGetAsync<List<TEntity>>(linkUri);
         }
 
-        public async Task Post<TEntity>(ILinked entity, string link, TEntity content, IDictionary<string, object> parameters = null)
+        public async Task PostAsync<TEntity>(ILinked entity, string link, TEntity content, IDictionary<string, object> parameters = null)
         {
             var linkUri = ResolveLink(entity, link, parameters);
             var request = new HttpRequestMessage(HttpMethod.Post, linkUri);
-            var stream = await HttpSend(request);
+            var stream = await HttpSendAsync(request);
             new StreamReader(stream).ReadToEnd();
         }
 
-        public async Task<TResponse> Post<TEntity, TResponse>(ILinked entity, string link, TEntity content, IDictionary<string, object> parameters = null)
+        public async Task<TResponse> PostAsync<TEntity, TResponse>(ILinked entity, string link, TEntity content, IDictionary<string, object> parameters = null)
         {
             var linkUri = ResolveLink(entity, link, parameters);
             var request = new HttpRequestMessage(HttpMethod.Post, linkUri);
-            var stream = await HttpSend(request);
+            var stream = await HttpSendAsync(request);
             return _serializer.Deserialize<TResponse>(new JsonTextReader(new StreamReader(stream)));
         }
 
-        public async Task Put<TEntity>(ILinked entity, string link, TEntity content, IDictionary<string, object> parameters = null)
+        public async Task PutAsync<TEntity>(ILinked entity, string link, TEntity content, IDictionary<string, object> parameters = null)
         {
             var linkUri = ResolveLink(entity, link, parameters);
             var request = new HttpRequestMessage(HttpMethod.Put, linkUri);
-            var stream = await HttpSend(request);
+            var stream = await HttpSendAsync(request);
             new StreamReader(stream).ReadToEnd();
         }
 
-        public async Task Delete<TEntity>(ILinked entity, string link, TEntity content, IDictionary<string, object> parameters = null)
+        public async Task DeleteAsync<TEntity>(ILinked entity, string link, TEntity content, IDictionary<string, object> parameters = null)
         {
             var linkUri = ResolveLink(entity, link, parameters);
             var request = new HttpRequestMessage(HttpMethod.Delete, linkUri);
-            var stream = await HttpSend(request);
+            var stream = await HttpSendAsync(request);
             new StreamReader(stream).ReadToEnd();
         }
 
-        async Task<T> HttpGet<T>(string url)
+        async Task<T> HttpGetAsync<T>(string url)
         {
             var request = new HttpRequestMessage(HttpMethod.Get, url);
-            var stream = await HttpSend(request);
+            var stream = await HttpSendAsync(request);
             return _serializer.Deserialize<T>(new JsonTextReader(new StreamReader(stream)));
         }
 
-        async Task<Stream> HttpSend(HttpRequestMessage request)
+        async Task<Stream> HttpSendAsync(HttpRequestMessage request)
         {
             if (!string.IsNullOrEmpty(ApiKey))
                 request.Headers.Add("X-Seq-ApiKey", ApiKey);
