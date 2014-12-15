@@ -109,9 +109,24 @@ namespace Seq.Api.Client
         {
             if (_apiKey != null)
                 request.Headers.Add("X-Seq-ApiKey", _apiKey);
-            var response = await _httpClient.SendAsync(request);
+            
+            var response = await _httpClient.SendAsync(request);                
             var stream = await response.Content.ReadAsStreamAsync();
-            return stream;
+            
+            if (response.IsSuccessStatusCode)
+                return stream;
+
+            try
+            {
+                var payload = _serializer.Deserialize<Dictionary<string, object>>(new JsonTextReader(new StreamReader(stream)));
+                object error;
+                if (payload.TryGetValue("Error", out error) && error != null)
+                    throw new SeqApiException(error.ToString());
+            }
+            // ReSharper disable once EmptyGeneralCatchClause
+            catch { }
+
+            throw new SeqApiException("The Seq request failed (" + response.StatusCode + ").");
         }
 
         static string ResolveLink(ILinked entity, string link, IDictionary<string, object> parameters = null)

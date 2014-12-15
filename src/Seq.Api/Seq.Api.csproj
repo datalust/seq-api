@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Api\Client\SeqApiClient.cs" />
+    <Compile Include="Api\Client\SeqApiException.cs" />
     <Compile Include="Api\ResourceGroups\ApiKeysResourceGroup.cs" />
     <Compile Include="Api\ResourceGroups\ApiResourceGroup.cs" />
     <Compile Include="Api\ResourceGroups\AppInstancesResourceGroup.cs" />
