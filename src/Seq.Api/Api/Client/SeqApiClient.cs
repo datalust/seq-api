@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -69,7 +70,7 @@ namespace Seq.Api.Client
         public async Task PostAsync<TEntity>(ILinked entity, string link, TEntity content, IDictionary<string, object> parameters = null)
         {
             var linkUri = ResolveLink(entity, link, parameters);
-            var request = new HttpRequestMessage(HttpMethod.Post, linkUri);
+            var request = new HttpRequestMessage(HttpMethod.Post, linkUri) { Content = MakeJsonContent(content) };
             var stream = await HttpSendAsync(request);
             new StreamReader(stream).ReadToEnd();
         }
@@ -77,7 +78,7 @@ namespace Seq.Api.Client
         public async Task<TResponse> PostAsync<TEntity, TResponse>(ILinked entity, string link, TEntity content, IDictionary<string, object> parameters = null)
         {
             var linkUri = ResolveLink(entity, link, parameters);
-            var request = new HttpRequestMessage(HttpMethod.Post, linkUri);
+            var request = new HttpRequestMessage(HttpMethod.Post, linkUri) { Content = MakeJsonContent(content) };
             var stream = await HttpSendAsync(request);
             return _serializer.Deserialize<TResponse>(new JsonTextReader(new StreamReader(stream)));
         }
@@ -85,7 +86,7 @@ namespace Seq.Api.Client
         public async Task PutAsync<TEntity>(ILinked entity, string link, TEntity content, IDictionary<string, object> parameters = null)
         {
             var linkUri = ResolveLink(entity, link, parameters);
-            var request = new HttpRequestMessage(HttpMethod.Put, linkUri);
+            var request = new HttpRequestMessage(HttpMethod.Put, linkUri) { Content = MakeJsonContent(content) };
             var stream = await HttpSendAsync(request);
             new StreamReader(stream).ReadToEnd();
         }
@@ -93,7 +94,7 @@ namespace Seq.Api.Client
         public async Task DeleteAsync<TEntity>(ILinked entity, string link, TEntity content, IDictionary<string, object> parameters = null)
         {
             var linkUri = ResolveLink(entity, link, parameters);
-            var request = new HttpRequestMessage(HttpMethod.Delete, linkUri);
+            var request = new HttpRequestMessage(HttpMethod.Delete, linkUri) { Content = MakeJsonContent(content) };
             var stream = await HttpSendAsync(request);
             new StreamReader(stream).ReadToEnd();
         }
@@ -127,6 +128,13 @@ namespace Seq.Api.Client
             catch { }
 
             throw new SeqApiException("The Seq request failed (" + response.StatusCode + ").");
+        }
+
+        HttpContent MakeJsonContent(object content)
+        {
+            var json = new StringWriter();
+            _serializer.Serialize(json, content);
+            return new StringContent(json.ToString(), Encoding.UTF8, "application/json");
         }
 
         static string ResolveLink(ILinked entity, string link, IDictionary<string, object> parameters = null)
