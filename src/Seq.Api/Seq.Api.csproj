@@ -46,6 +46,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Api\Client\SeqApiClient.cs" />
+    <Compile Include="Api\ResourceGroups\ApiKeysResourceGroup.cs" />
+    <Compile Include="Api\ResourceGroups\ApiResourceGroup.cs" />
+    <Compile Include="Api\ResourceGroups\AppInstancesResourceGroup.cs" />
+    <Compile Include="Api\ResourceGroups\AppsResourceGroup.cs" />
+    <Compile Include="Api\ResourceGroups\EventsResourceGroup.cs" />
+    <Compile Include="Api\ResourceGroups\ExpressionsResourceGroup.cs" />
+    <Compile Include="Api\ResourceGroups\FeedsResourceGroup.cs" />
+    <Compile Include="Api\ResourceGroups\ISeqConnection.cs" />
     <Compile Include="Api\Model\AppInstances\AppInstanceEntity.cs" />
     <Compile Include="Api\Model\Apps\AppEntity.cs" />
     <Compile Include="Api\Model\Apps\AppPackagePart.cs" />
@@ -89,6 +97,17 @@
     <Compile Include="Api\Model\Watches\DataRangePart.cs" />
     <Compile Include="Api\Model\Watches\TimeSliceDuration.cs" />
     <Compile Include="Api\Model\Watches\WatchEntity.cs" />
+    <Compile Include="Api\ResourceGroups\LicensesResourceGroup.cs" />
+    <Compile Include="Api\ResourceGroups\MetricsResourceGroup.cs" />
+    <Compile Include="Api\ResourceGroups\PinsResourceGroup.cs" />
+    <Compile Include="Api\ResourceGroups\QueriesResourceGroup.cs" />
+    <Compile Include="Api\ResourceGroups\ReportsResourceGroup.cs" />
+    <Compile Include="Api\ResourceGroups\RetentionPoliciesResourceGroup.cs" />
+    <Compile Include="Api\ResourceGroups\SettingsResourceGroup.cs" />
+    <Compile Include="Api\ResourceGroups\UsersResourceGroup.cs" />
+    <Compile Include="Api\ResourceGroups\ViewsResourceGroup.cs" />
+    <Compile Include="Api\ResourceGroups\WatchesResourceGroup.cs" />
+    <Compile Include="Api\SeqConnection.cs" />
     <Compile Include="Api\Serialization\LinkCollectionConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

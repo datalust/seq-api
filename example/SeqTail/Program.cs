@@ -4,10 +4,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using DocoptNet;
-using Seq.Api.Client;
-using Seq.Api.Model;
+using Seq.Api;
 using Seq.Api.Model.Events;
-using Seq.Api.Model.Expressions;
 
 namespace SeqTail
 {
@@ -72,33 +70,16 @@ Options:
         {
             var startedAt = DateTime.UtcNow;
 
-            var client = new SeqApiClient(server) { ApiKey = apiKey };
-            var root = await client.GetRootAsync();
+            var connection = new SeqConnection(server, apiKey);
 
             string strict = null;
             if (filter != null)
             {
-                var expressions = await client.GetAsync<ResourceGroup>(root, "ExpressionsResources");
-                var converted = await client.GetAsync<ExpressionPart>(expressions, "ToStrict", new Dictionary<string, object>
-                {
-                    {"fuzzy", filter}
-                });
+                var converted = await connection.Expressions.ToStrictAsync(filter);
                 strict = converted.StrictExpression;
             }
 
-            var eventResources = await client.GetAsync<ResourceGroup>(root, "EventsResources");
-
-            var parameters = new Dictionary<string, object>
-            {
-                {"count", window},
-                {"render", true},
-                {"fromDateUtc", startedAt}
-            };
-
-            if (strict != null)
-                parameters.Add("filter", strict);
-
-            var result = await client.ListAsync<EventEntity>(eventResources, "Items", parameters);
+            var result = await connection.Events.ListAsync(count: window, render: true, fromDateUtc: startedAt, filter: strict);
 
             // Since results may come late, we request an overlapping window and exclude
             // events that have already been printed. If the last seen ID wasn't returned
@@ -110,7 +91,7 @@ Options:
             {
                 if (result.Count == 0)
                 {
-                    await Task.Delay(TimeSpan.FromMilliseconds(500));
+                    await Task.Delay(TimeSpan.FromSeconds(1));
                 }
                 else
                 {
@@ -158,8 +139,8 @@ Options:
                     lastPrintedBatch = new HashSet<string>(result.Select(e => e.Id));
                 }
 
-                parameters["fromDateUtc"] = lastReturnedId == null ? startedAt : DateTime.UtcNow.AddMinutes(-3);
-                result = await client.ListAsync<EventEntity>(eventResources, "Items", parameters);
+                var fromDateUtc = lastReturnedId == null ? startedAt : DateTime.UtcNow.AddMinutes(-3);
+                result = await connection.Events.ListAsync(count: window, render: true, fromDateUtc: fromDateUtc, filter: strict);
             }
         }
     }

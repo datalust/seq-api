@@ -17,6 +17,7 @@ namespace Seq.Api.Client
     public class SeqApiClient : IDisposable
     {
         readonly string _serverUrl;
+        readonly string _apiKey;
 
         readonly HttpClient _httpClient;
         readonly JsonSerializer _serializer = JsonSerializer.Create(
@@ -25,11 +26,14 @@ namespace Seq.Api.Client
                 Converters = { new StringEnumConverter(), new LinkCollectionConverter() }
             });
 
-        public SeqApiClient(string serverUrl)
+        public SeqApiClient(string serverUrl, string apiKey = null)
         {
             if (serverUrl == null) throw new ArgumentNullException("serverUrl");
 
             _serverUrl = serverUrl;
+
+            if (!string.IsNullOrEmpty(apiKey))
+                _apiKey = apiKey;
 
             var handler = new HttpClientHandler { CookieContainer = new CookieContainer() };
 
@@ -44,8 +48,6 @@ namespace Seq.Api.Client
         {
             get { return _serverUrl; }
         }
-
-        public string ApiKey { get; set; }
 
         public Task<RootEntity> GetRootAsync()
         {
@@ -105,8 +107,8 @@ namespace Seq.Api.Client
 
         async Task<Stream> HttpSendAsync(HttpRequestMessage request)
         {
-            if (!string.IsNullOrEmpty(ApiKey))
-                request.Headers.Add("X-Seq-ApiKey", ApiKey);
+            if (_apiKey != null)
+                request.Headers.Add("X-Seq-ApiKey", _apiKey);
             var response = await _httpClient.SendAsync(request);
             var stream = await response.Content.ReadAsStreamAsync();
             return stream;
