@@ -1,5 +1,5 @@
-Seq.Api
-=======
+Seq HTTP API Client
+===================
 
 [![Build status](https://ci.appveyor.com/api/projects/status/58i2tne3ga4jcx5s?svg=true)](https://ci.appveyor.com/project/NicholasBlumhardt/seq-api)
 
@@ -8,7 +8,7 @@ Seq.Api
 This library includes:
 
  * C# representations of the entities exposed by the Seq HTTP API
- * (Work-in-progress) helper classes for interacting with the API
+ * Helper classes for interacting with the API
 
 Its useful for querying events and working with configuration data - *everything you can do using the Seq web UI*, you can do programmatically via the API.
 
@@ -22,6 +22,27 @@ Install from NuGet:
 ```powershell
 Install-Package Seq.Api
 ```
+
+Create a `SeqConnection` with your server URL:
+
+```csharp
+var connection = new SeqConnection("http://localhost:5341");
+```
+
+Navigate the "resource groups" exposed as properties of the `connnection`:
+
+```csharp
+var installedApps = await connection.Apps.ListAsync();
+```
+
+**To authenticate**, the `SeqConnection` constructor accepts an `apiKey` parameter (make sure the API key permits _user-level access_) or, if you want to log in with personal credentials you can `await connection.Users.Login(username, password)`.
+
+For a more complete example, see the [seq-tail app included in the source](https://github.com/continuousit/seq-api/blob/master/example/SeqTail/Program.cs);
+
+Working with the Basic Client
+-----------------------------
+
+The `SeqApiClient` class implements the low level interactions with the API's entities and links. It's one step up from `System.Net.HttpClient` - you may be able to use it in cases not supported by the high-level wrapper. 
 
 Create a `SeqApiClient` with your server URL:
 
@@ -50,13 +71,10 @@ foreach (var match in matched)
   Console.WriteLine(matched.RenderedMessage);
 ```
 
-For a more complete example, see the [seq-tail app included in the source](https://github.com/continuousit/seq-api/blob/master/example/SeqTail/Program.cs);
-
 Status
 ------
 
 This library is under active development.
 
-The entity types etc. are complete: they're the same ones Seq uses internally.
-
-The helper classes such as `SeqApiClient` are under development and may change substantially. `SeqApiClient` is intended to be a bare-bones, nuts-and-bolts interface to the API. Some friendly higher-level operations will be wrapped around this.
+* The entity types etc. are complete: they're the same ones Seq uses internally.
+* The helper classes such as `SeqConnection` and `SeqApiClient` are evolving and may change in response to feedback (and PRs!).
