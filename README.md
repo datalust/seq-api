@@ -10,9 +10,9 @@ This library includes:
  * C# representations of the entities exposed by the Seq HTTP API
  * Helper classes for interacting with the API
 
-Its useful for querying events and working with configuration data - *everything you can do using the Seq web UI*, you can do programmatically via the API.
+It's useful for querying events and working with configuration data - *everything you can do using the Seq web UI*, you can do programmatically via the API.
 
-If you want to *write events* to Seq, use one of the logging framework clients```cs such as _Serilog.Sinks.Seq_ or _Seq.Client.Slab_ instead.
+If you want to *write events* to Seq, use one of the logging framework clients, such as _Serilog.Sinks.Seq_ or _Seq.Client.Slab_ instead.
 
 Getting Started
 ---------------
