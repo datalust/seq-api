@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Seq.Api", "src\Seq.Api\Seq.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "example", "example", "{1C66E116-DC21-4C8F-833E-A4C2DDF58487}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeqTail", "example\SeqTail\SeqTail.csproj", "{905AF63F-05F6-4293-AE30-DC9FE8B243E7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "seq-tail", "example\SeqTail\seq-tail.csproj", "{905AF63F-05F6-4293-AE30-DC9FE8B243E7}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "asset", "asset", "{233C7E7D-26DE-452A-A415-44F99CBA18E7}"
 	ProjectSection(SolutionItems) = preProject
