@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="Api\Client\SeqApiClient.cs" />
     <Compile Include="Api\Client\SeqApiException.cs" />
+    <Compile Include="Api\Model\Updates\AvailableUpdateEntity.cs" />
     <Compile Include="Api\ResourceGroups\ApiKeysResourceGroup.cs" />
     <Compile Include="Api\ResourceGroups\ApiResourceGroup.cs" />
     <Compile Include="Api\ResourceGroups\AppInstancesResourceGroup.cs" />
@@ -107,6 +108,7 @@
     <Compile Include="Api\ResourceGroups\RetentionPoliciesResourceGroup.cs" />
     <Compile Include="Api\ResourceGroups\SettingName.cs" />
     <Compile Include="Api\ResourceGroups\SettingsResourceGroup.cs" />
+    <Compile Include="Api\ResourceGroups\UpdatesResourceGroup.cs" />
     <Compile Include="Api\ResourceGroups\UsersResourceGroup.cs" />
     <Compile Include="Api\ResourceGroups\ViewsResourceGroup.cs" />
     <Compile Include="Api\ResourceGroups\WatchesResourceGroup.cs" />

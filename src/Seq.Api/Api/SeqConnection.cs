@@ -85,6 +85,11 @@ namespace Seq.Api
             get { return new SettingsResourceGroup(this); }
         }
 
+        public UpdatesResourceGroup Updates
+        {
+            get {  return new UpdatesResourceGroup(this); }
+        }
+
         public UsersResourceGroup Users
         {
             get { return new UsersResourceGroup(this); }
