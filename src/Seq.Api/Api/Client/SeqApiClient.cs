@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -19,6 +20,11 @@ namespace Seq.Api.Client
     {
         readonly string _serverUrl;
         readonly string _apiKey;
+
+        // Future versions of Seq may not completely support v1 features, however
+        // providing this as an Accept header will ensure what compatibility is available
+        // can be utilised.
+        const string SeqApiV1MediaType = "application/vnd.continuousit.seq.v1+json";
 
         readonly HttpClient _httpClient;
         readonly JsonSerializer _serializer = JsonSerializer.Create(
@@ -110,6 +116,8 @@ namespace Seq.Api.Client
         {
             if (_apiKey != null)
                 request.Headers.Add("X-Seq-ApiKey", _apiKey);
+
+            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(SeqApiV1MediaType));
             
             var response = await _httpClient.SendAsync(request);                
             var stream = await response.Content.ReadAsStreamAsync();
