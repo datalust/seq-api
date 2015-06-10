@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace Seq.Api.Model.Events
 {
-    public class EventEntity : Seq.Api.Model.Entity
+    public class EventEntity : Entity
     {
         public string Timestamp { get; set; }
         public List<EventPropertyPart> Properties { get; set; }

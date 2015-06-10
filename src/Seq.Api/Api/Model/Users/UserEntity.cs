@@ -2,7 +2,7 @@
 
 namespace Seq.Api.Model.Users
 {
-    public class UserEntity : Seq.Api.Model.Entity
+    public class UserEntity : Entity
     {
         public string Username { get; set; }
         public string DisplayName { get; set; }

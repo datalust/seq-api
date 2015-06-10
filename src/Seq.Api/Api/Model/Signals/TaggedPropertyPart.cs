@@ -1,4 +1,4 @@
-﻿namespace Seq.Api.Model.Queries
+﻿namespace Seq.Api.Model.Signals
 {
     public class TaggedPropertyPart
     {
