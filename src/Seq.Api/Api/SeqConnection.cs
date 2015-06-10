@@ -65,16 +65,6 @@ namespace Seq.Api
             get { return new PinsResourceGroup(this); }
         }
 
-        public QueriesResourceGroup Queries
-        {
-            get { return new QueriesResourceGroup(this); }
-        }
-
-        public ReportsResourceGroup Reports
-        {
-            get { return new ReportsResourceGroup(this); }
-        }
-
         public RetentionPoliciesResourceGroup RetentionPolicies
         {
             get { return new RetentionPoliciesResourceGroup(this); }
@@ -85,6 +75,11 @@ namespace Seq.Api
             get { return new SettingsResourceGroup(this); }
         }
 
+        public SignalsResourceGroup Signals
+        {
+            get { return new SignalsResourceGroup(this); }
+        }
+
         public UpdatesResourceGroup Updates
         {
             get {  return new UpdatesResourceGroup(this); }
@@ -93,11 +88,6 @@ namespace Seq.Api
         public UsersResourceGroup Users
         {
             get { return new UsersResourceGroup(this); }
-        }
-
-        public ViewsResourceGroup Views
-        {
-            get { return new ViewsResourceGroup(this); }
         }
 
         public WatchesResourceGroup Watches

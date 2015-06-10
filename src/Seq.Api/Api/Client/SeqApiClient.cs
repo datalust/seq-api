@@ -24,7 +24,7 @@ namespace Seq.Api.Client
         // Future versions of Seq may not completely support v1 features, however
         // providing this as an Accept header will ensure what compatibility is available
         // can be utilised.
-        const string SeqApiV1MediaType = "application/vnd.continuousit.seq.v1+json";
+        const string SeqApiV2MediaType = "application/vnd.continuousit.seq.v2+json";
 
         readonly HttpClient _httpClient;
         readonly JsonSerializer _serializer = JsonSerializer.Create(
@@ -117,7 +117,7 @@ namespace Seq.Api.Client
             if (_apiKey != null)
                 request.Headers.Add("X-Seq-ApiKey", _apiKey);
 
-            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(SeqApiV1MediaType));
+            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(SeqApiV2MediaType));
             
             var response = await _httpClient.SendAsync(request);                
             var stream = await response.Content.ReadAsStreamAsync();

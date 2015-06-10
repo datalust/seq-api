@@ -34,7 +34,7 @@ Options:
             {
                 try
                 {
-                    var arguments = new Docopt().Apply(Usage, args, version: "Seq Tail 0.1", exit: true);
+                    var arguments = new Docopt().Apply(Usage, args, version: "Seq Tail 0.2", exit: true);
 
                     var server = arguments["<server>"].ToString();
                     var apiKey = Normalize(arguments["--apikey"]);
