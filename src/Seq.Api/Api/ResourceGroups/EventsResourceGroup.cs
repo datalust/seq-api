@@ -70,7 +70,7 @@ namespace Seq.Api.ResourceGroups
         }
 
         public async Task<ResultSetPart> InSignalAsync(
-            string intersectIds,
+            string[] intersectIds,
             string filter = null, 
             int? count = null,
             string start = null,
