@@ -21,7 +21,25 @@ namespace Seq.Api.ResourceGroups
             return await GroupGetAsync<EventEntity>("Item", new Dictionary<string, object> {{"id", id}});
         }
 
+        /// <summary>
+        /// Retrieve a list of events that match a set of conditions. The complete result is buffered into memory,
+        /// so if a large result set is expected, use InSignalAsync() and lastReadEventId to page the results.
+        /// </summary>
+        /// <param name="intersectIds">If provided, a list of signal ids whose intersection will be filtered for the result.</param>
+        /// <param name="filter">A strict Seq filter expression to match (text expressions must be in double quotes). To
+        /// convert a "fuzzy" filter into a strict one the way the Seq UI does, use connection.Expressions.ToStrictAsync().</param>
+        /// <param name="count">The number of events to retrieve. If not specified will default to 30.</param>
+        /// <param name="startAtId">An event id from which to start searching (inclusively).</param>
+        /// <param name="afterId">An event id to search after (exclusively).</param>
+        /// <param name="render">If specified, the event's message template and properties will be rendered into its RenderedMessage property.</param>
+        /// <param name="fromDateUtc">Earliest (inclusive) date/time from which to search.</param>
+        /// <param name="toDateUtc">Latest (exclusive) date/time from which to search.</param>
+        /// <param name="shortCircuitAfter">If specified, the number of events after the first match to keep searching before a partial
+        /// result set is returned. Used to improve responsiveness when the result is displayed in a user interface, not typically used in
+        /// batch processing scenarios.</param>
+        /// <returns>The complete list of events, ordered from least to most recent.</returns>
         public async Task<List<EventEntity>> ListAsync(
+            string[] intersectIds = null,
             string filter = null, 
             int count = 30,
             string startAtId = null,
@@ -32,6 +50,7 @@ namespace Seq.Api.ResourceGroups
             int? shortCircuitAfter = null)
         {
             var parameters = new Dictionary<string, object> { { "count", count } };
+            if (intersectIds != null && intersectIds.Length > 0) { parameters.Add("intersectIds", string.Join(",", intersectIds)); }
             if (filter != null) { parameters.Add("filter", filter); }
             if (startAtId != null) { parameters.Add("startAtId", startAtId); }
             if (afterId != null) { parameters.Add("afterId", afterId); }
