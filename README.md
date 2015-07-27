@@ -71,11 +71,14 @@ If the result set is expected to be small, `ListAsync()` will buffer results and
 ```csharp
 var resultSet = await connection.Events.ListAsync(
     filter: "Environment == \"Test\"",
-    render: true);
+    render: true,
+    count: 1000);
   
 foreach (var evt in resultSet)
   Console.WriteLine(evt.RenderedMessage);
 ```
+
+All methods that retrieve events require a `count`. The API client defaults this value to `30` if not specified.
 
 Working with the Basic Client
 -----------------------------
