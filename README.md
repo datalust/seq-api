@@ -39,6 +39,44 @@ var installedApps = await connection.Apps.ListAsync();
 
 For a more complete example, see the [seq-tail app included in the source](https://github.com/continuousit/seq-api/blob/master/example/SeqTail/Program.cs);
 
+Reading Events
+--------------
+
+Seq internally limits the resources a query is allowed to consume. The query methods on `SeqConnection.Events` include a _status_ with each result set - a `Partial` status indicates that further results must be retrieved.
+
+The snippet below demonstrates paging through results to retrieve the complete set.
+
+```csharp
+string lastReadEventId = null;
+
+while(true)
+{
+  var resultSet = await connection.Events.InSignalAsync(
+      filter: "Environment == \"Test\"",
+      render: true,
+      afterId: lastReadEventId);
+      
+  foreach (var evt in resultSet.Events)
+    Console.WriteLine(evt.RenderedMessage);
+
+  if (resultSet.Statistics.Status != ResultSetStatus.Partial)
+    break;
+    
+  lastReadEventId = resultSet.Statistics.LastReadEventId;
+}
+```
+
+If the result set is expected to be small, `ListAsync()` will buffer results and return a complete list:
+
+```csharp
+var resultSet = await connection.Events.ListAsync(
+    filter: "Environment == \"Test\"",
+    render: true);
+  
+foreach (var evt in resultSet)
+  Console.WriteLine(evt.RenderedMessage);
+```
+
 Working with the Basic Client
 -----------------------------
 
