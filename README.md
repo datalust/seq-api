@@ -3,8 +3,6 @@ Seq HTTP API Client
 
 [![Build status](https://ci.appveyor.com/api/projects/status/58i2tne3ga4jcx5s?svg=true)](https://ci.appveyor.com/project/NicholasBlumhardt/seq-api)
 
-**To raise issues** with this library please use the [issue tracker here](https://github.com/continuousit/seq-releases/issues).
-
 This library includes:
 
  * C# representations of the entities exposed by the Seq HTTP API
