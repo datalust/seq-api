@@ -160,7 +160,13 @@ namespace Seq.Api.Client
                     throw new ArgumentException("The URI template '" + expression + "' does not contain parameter: " + string.Join(",", missing));
 
                 foreach (var parameter in parameters)
-                    template.SetParameter(parameter.Key, parameter.Value);
+                {
+                    var value = parameter.Value is DateTime
+                        ? ((DateTime) parameter.Value).ToString("O")
+                        : parameter.Value;
+
+                    template.SetParameter(parameter.Key, value);
+                }
             }
 
             return template.Resolve();
