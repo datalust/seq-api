@@ -33,7 +33,7 @@ namespace Seq.Api.ResourceGroups
 
         public async Task<WatchEntity> AddAsync(WatchEntity entity)
         {
-            return await Client.PostAsync<WatchEntity, WatchEntity>(entity, "Self", entity);
+            return await Client.PostAsync<WatchEntity, WatchEntity>(entity, "Create", entity);
         }
 
         public async Task RemoveAsync(WatchEntity entity)

@@ -35,7 +35,7 @@ namespace Seq.Api.ResourceGroups
 
         public async Task<SettingEntity> AddAsync(SettingEntity entity)
         {
-            return await Client.PostAsync<SettingEntity, SettingEntity>(entity, "Self", entity);
+            return await Client.PostAsync<SettingEntity, SettingEntity>(entity, "Create", entity);
         }
 
         public async Task RemoveAsync(SettingEntity entity)

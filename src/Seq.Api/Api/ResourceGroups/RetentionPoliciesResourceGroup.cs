@@ -30,7 +30,7 @@ namespace Seq.Api.ResourceGroups
 
         public async Task<RetentionPolicyEntity> AddAsync(RetentionPolicyEntity entity)
         {
-            return await Client.PostAsync<RetentionPolicyEntity, RetentionPolicyEntity>(entity, "Self", entity);
+            return await Client.PostAsync<RetentionPolicyEntity, RetentionPolicyEntity>(entity, "Create", entity);
         }
 
         public async Task RemoveAsync(RetentionPolicyEntity entity)

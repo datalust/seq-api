@@ -51,7 +51,7 @@ namespace Seq.Api.ResourceGroups
 
         public async Task<PinEntity> AddAsync(PinEntity entity)
         {
-            return await Client.PostAsync<PinEntity, PinEntity>(entity, "Self", entity);
+            return await Client.PostAsync<PinEntity, PinEntity>(entity, "Create", entity);
         }
 
         public async Task RemoveAsync(PinEntity entity)

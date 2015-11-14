@@ -30,7 +30,7 @@ namespace Seq.Api.ResourceGroups
 
         public async Task<SignalEntity> AddAsync(SignalEntity entity)
         {
-            return await Client.PostAsync<SignalEntity, SignalEntity>(entity, "Self", entity);
+            return await Client.PostAsync<SignalEntity, SignalEntity>(entity, "Create", entity);
         }
 
         public async Task RemoveAsync(SignalEntity entity)

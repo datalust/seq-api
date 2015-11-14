@@ -35,7 +35,7 @@ namespace Seq.Api.ResourceGroups
 
         public async Task<UserEntity> AddAsync(UserEntity entity)
         {
-            return await Client.PostAsync<UserEntity, UserEntity>(entity, "Self", entity);
+            return await Client.PostAsync<UserEntity, UserEntity>(entity, "Create", entity);
         }
 
         public async Task RemoveAsync(UserEntity entity)

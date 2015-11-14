@@ -31,7 +31,7 @@ namespace Seq.Api.ResourceGroups
 
         public async Task<AppInstanceEntity> AddAsync(AppInstanceEntity entity, bool runOnExisting = false)
         {
-            return await Client.PostAsync<AppInstanceEntity, AppInstanceEntity>(entity, "Self", entity, new Dictionary<string, object> { { "runOnExisting", runOnExisting } });
+            return await Client.PostAsync<AppInstanceEntity, AppInstanceEntity>(entity, "Create", entity, new Dictionary<string, object> { { "runOnExisting", runOnExisting } });
         }
 
         public async Task RemoveAsync(AppInstanceEntity entity)

@@ -30,7 +30,7 @@ namespace Seq.Api.ResourceGroups
 
         public async Task<NuGetFeedEntity> AddAsync(NuGetFeedEntity entity)
         {
-            return await Client.PostAsync<NuGetFeedEntity, NuGetFeedEntity>(entity, "Self", entity);
+            return await Client.PostAsync<NuGetFeedEntity, NuGetFeedEntity>(entity, "Create", entity);
         }
 
         public async Task RemoveAsync(NuGetFeedEntity entity)
