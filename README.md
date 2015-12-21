@@ -92,7 +92,7 @@ var client = new SeqApiClient("http://localhost:5341");
 Get the root resource and use it to retrieve one or more of the resource groups:
 
 ```csharp
-var root = client.GetRootAsync();
+var root = await client.GetRootAsync();
 var events = await client.GetAsync<ResourceGroup>(root, "EventsResources");
 ```
 
