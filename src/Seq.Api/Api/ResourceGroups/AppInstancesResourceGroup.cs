@@ -20,7 +20,7 @@ namespace Seq.Api.ResourceGroups
 
         public async Task<List<AppInstanceEntity>> ListAsync()
         {
-            return await GroupListAsync<AppInstanceEntity>("Items");
+            return await GroupListAsync<AppInstanceEntity>("Items", new Dictionary<string, object> { { "runOnExisting", false } });
         }
 
         public async Task<AppInstanceEntity> TemplateAsync(string appId)
@@ -29,9 +29,9 @@ namespace Seq.Api.ResourceGroups
             return await GroupGetAsync<AppInstanceEntity>("Template", new Dictionary<string, object> { { "appId", appId } });
         }
 
-        public async Task<AppInstanceEntity> AddAsync(AppInstanceEntity entity, bool runOnExisting = false)
+        public async Task<AppInstanceEntity> AddAsync(AppInstanceEntity entity)
         {
-            return await Client.PostAsync<AppInstanceEntity, AppInstanceEntity>(entity, "Create", entity, new Dictionary<string, object> { { "runOnExisting", runOnExisting } });
+            return await Client.PostAsync<AppInstanceEntity, AppInstanceEntity>(entity, "Create", entity);
         }
 
         public async Task RemoveAsync(AppInstanceEntity entity)
