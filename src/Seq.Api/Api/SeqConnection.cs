@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Threading.Tasks;
 using Seq.Api.Client;
 using Seq.Api.Model;
@@ -11,7 +11,7 @@ namespace Seq.Api
     public class SeqConnection : ISeqConnection
     {
         readonly SeqApiClient _client;
-        readonly Dictionary<string, ResourceGroup> _resourceGroups = new Dictionary<string, ResourceGroup>();
+        readonly ConcurrentDictionary<string, ResourceGroup> _resourceGroups = new ConcurrentDictionary<string, ResourceGroup>();
         RootEntity _root;
 
         public SeqConnection(string serverUrl, string apiKey = null)
@@ -105,7 +105,7 @@ namespace Seq.Api
                 _root = await _client.GetRootAsync();
 
             loaded = await _client.GetAsync<ResourceGroup>(_root, name + "Resources");
-            _resourceGroups.Add(name, loaded);
+            _resourceGroups.TryAdd(name, loaded);
             return loaded;
         }
 
