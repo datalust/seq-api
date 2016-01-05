@@ -11,13 +11,16 @@ namespace Seq.Api
     public class SeqConnection : ISeqConnection
     {
         readonly SeqApiClient _client;
-        readonly ConcurrentDictionary<string, ResourceGroup> _resourceGroups = new ConcurrentDictionary<string, ResourceGroup>();
-        RootEntity _root;
+        readonly ConcurrentDictionary<string, Task<ResourceGroup>> _resourceGroups = new ConcurrentDictionary<string, Task<ResourceGroup>>();
+        readonly Lazy<Task<RootEntity>> _root;
 
         public SeqConnection(string serverUrl, string apiKey = null)
         {
             if (serverUrl == null) throw new ArgumentNullException("serverUrl");
             _client = new SeqApiClient(serverUrl, apiKey);
+            
+            _root = new Lazy<Task<RootEntity>>(() => _client.GetRootAsync());
+
         }
 
         public ApiKeysResourceGroup ApiKeys
@@ -97,16 +100,12 @@ namespace Seq.Api
 
         public async Task<ResourceGroup> LoadResourceGroupAsync(string name)
         {
-            ResourceGroup loaded;
-            if (_resourceGroups.TryGetValue(name, out loaded))
-                return loaded;
+            return await _resourceGroups.GetOrAdd(name, ResourceGroupFactory);
+        }
 
-            if (_root == null)
-                _root = await _client.GetRootAsync();
-
-            loaded = await _client.GetAsync<ResourceGroup>(_root, name + "Resources");
-            _resourceGroups.TryAdd(name, loaded);
-            return loaded;
+        private async Task<ResourceGroup> ResourceGroupFactory(string name)
+        {
+            return await _client.GetAsync<ResourceGroup>(await _root.Value, name + "Resources");
         }
 
         public SeqApiClient Client { get { return _client; } }
