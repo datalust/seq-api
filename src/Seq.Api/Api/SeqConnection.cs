@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Threading.Tasks;
 using Seq.Api.Client;
 using Seq.Api.Model;
@@ -11,13 +11,16 @@ namespace Seq.Api
     public class SeqConnection : ISeqConnection
     {
         readonly SeqApiClient _client;
-        readonly Dictionary<string, ResourceGroup> _resourceGroups = new Dictionary<string, ResourceGroup>();
-        RootEntity _root;
+        readonly ConcurrentDictionary<string, Task<ResourceGroup>> _resourceGroups = new ConcurrentDictionary<string, Task<ResourceGroup>>();
+        readonly Lazy<Task<RootEntity>> _root;
 
         public SeqConnection(string serverUrl, string apiKey = null)
         {
             if (serverUrl == null) throw new ArgumentNullException("serverUrl");
             _client = new SeqApiClient(serverUrl, apiKey);
+            
+            _root = new Lazy<Task<RootEntity>>(() => _client.GetRootAsync());
+
         }
 
         public ApiKeysResourceGroup ApiKeys
@@ -97,16 +100,12 @@ namespace Seq.Api
 
         public async Task<ResourceGroup> LoadResourceGroupAsync(string name)
         {
-            ResourceGroup loaded;
-            if (_resourceGroups.TryGetValue(name, out loaded))
-                return loaded;
+            return await _resourceGroups.GetOrAdd(name, ResourceGroupFactory);
+        }
 
-            if (_root == null)
-                _root = await _client.GetRootAsync();
-
-            loaded = await _client.GetAsync<ResourceGroup>(_root, name + "Resources");
-            _resourceGroups.Add(name, loaded);
-            return loaded;
+        private async Task<ResourceGroup> ResourceGroupFactory(string name)
+        {
+            return await _client.GetAsync<ResourceGroup>(await _root.Value, name + "Resources");
         }
 
         public SeqApiClient Client { get { return _client; } }
