@@ -16,27 +16,27 @@ namespace Seq.Api.ResourceGroups
         public async Task<LicenseEntity> FindAsync(string id)
         {
             if (id == null) throw new ArgumentNullException("id");
-            return await GroupGetAsync<LicenseEntity>("Item", new Dictionary<string, object> { { "id", id } });
+            return await GroupGetAsync<LicenseEntity>("Item", new Dictionary<string, object> { { "id", id } }).ConfigureAwait(false);
         }
 
         public async Task<LicenseEntity> FindCurrentAsync()
         {
-            return await GroupGetAsync<LicenseEntity>("Current");
+            return await GroupGetAsync<LicenseEntity>("Current").ConfigureAwait(false);
         }
 
         public async Task<List<LicenseEntity>> ListAsync()
         {
-            return await GroupListAsync<LicenseEntity>("Items");
+            return await GroupListAsync<LicenseEntity>("Items").ConfigureAwait(false);
         }
 
         public async Task UpdateAsync(LicenseEntity entity)
         {
-            await Client.PutAsync(entity, "Self", entity);
+            await Client.PutAsync(entity, "Self", entity).ConfigureAwait(false);
         }
 
         public async Task DowngradeAsync()
         {
-            await GroupPostAsync("Downgrade", new object());
+            await GroupPostAsync("Downgrade", new object()).ConfigureAwait(false);
         }
     }
 }

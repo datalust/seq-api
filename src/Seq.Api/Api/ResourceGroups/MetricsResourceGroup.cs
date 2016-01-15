@@ -12,7 +12,7 @@ namespace Seq.Api.ResourceGroups
 
         public async Task<MetricsEntity> FindCurrentAsync()
         {
-            return await GroupGetAsync<MetricsEntity>("Current");
+            return await GroupGetAsync<MetricsEntity>("Current").ConfigureAwait(false);
         }
     }
 }

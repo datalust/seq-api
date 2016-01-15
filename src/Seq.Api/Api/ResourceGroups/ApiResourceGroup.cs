@@ -27,38 +27,38 @@ namespace Seq.Api.ResourceGroups
 
         protected async Task<TEntity> GroupGetAsync<TEntity>(string link, IDictionary<string, object> parameters = null)
         {
-            var group = await LoadGroupAsync();
-            return await Client.GetAsync<TEntity>(group, link, parameters);
+            var group = await LoadGroupAsync().ConfigureAwait(false);
+            return await Client.GetAsync<TEntity>(group, link, parameters).ConfigureAwait(false);
         }
 
         protected async Task<List<TEntity>> GroupListAsync<TEntity>(string link, IDictionary<string, object> parameters = null)
         {
-            var group = await LoadGroupAsync();
-            return await Client.ListAsync<TEntity>(group, link, parameters);
+            var group = await LoadGroupAsync().ConfigureAwait(false);
+            return await Client.ListAsync<TEntity>(group, link, parameters).ConfigureAwait(false);
         }
 
         protected async Task GroupPostAsync<TEntity>(string link, TEntity content, IDictionary<string, object> parameters = null)
         {
-            var group = await LoadGroupAsync();
-            await Client.PostAsync(group, link, content, parameters);
+            var group = await LoadGroupAsync().ConfigureAwait(false);
+            await Client.PostAsync(group, link, content, parameters).ConfigureAwait(false);
         }
 
         protected async Task<TResponse> GroupPostAsync<TEntity, TResponse>(string link, TEntity content, IDictionary<string, object> parameters = null)
         {
-            var group = await LoadGroupAsync();
-            return await Client.PostAsync<TEntity, TResponse>(group, link, content, parameters);
+            var group = await LoadGroupAsync().ConfigureAwait(false);
+            return await Client.PostAsync<TEntity, TResponse>(group, link, content, parameters).ConfigureAwait(false);
         }
 
         protected async Task GroupPutAsync<TEntity>(string link, TEntity content, IDictionary<string, object> parameters = null)
         {
-            var group = await LoadGroupAsync();
-            await Client.PutAsync(group, link, content, parameters);
+            var group = await LoadGroupAsync().ConfigureAwait(false);
+            await Client.PutAsync(group, link, content, parameters).ConfigureAwait(false);
         }
 
         protected async Task GroupDeleteAsync<TEntity>(string link, TEntity content, IDictionary<string, object> parameters = null)
         {
-            var group = await LoadGroupAsync();
-            await Client.DeleteAsync(group, link, content, parameters);
+            var group = await LoadGroupAsync().ConfigureAwait(false);
+            await Client.DeleteAsync(group, link, content, parameters).ConfigureAwait(false);
         }
     }
 }

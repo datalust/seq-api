@@ -13,7 +13,7 @@ namespace Seq.Api.ResourceGroups
 
         public async Task<List<AvailableUpdateEntity>> ListAsync()
         {
-            return await GroupListAsync<AvailableUpdateEntity>("Items");
+            return await GroupListAsync<AvailableUpdateEntity>("Items").ConfigureAwait(false);
         }
     }
 }

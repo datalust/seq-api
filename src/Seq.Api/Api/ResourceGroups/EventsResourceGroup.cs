@@ -18,7 +18,7 @@ namespace Seq.Api.ResourceGroups
         public async Task<EventEntity> FindAsync(string id)
         {
             if (id == null) throw new ArgumentNullException("id");
-            return await GroupGetAsync<EventEntity>("Item", new Dictionary<string, object> {{"id", id}});
+            return await GroupGetAsync<EventEntity>("Item", new Dictionary<string, object> { { "id", id } }).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace Seq.Api.ResourceGroups
 
             while (true)
             {
-                var resultSet = await GroupGetAsync<ResultSetPart>("InSignal", parameters);
+                var resultSet = await GroupGetAsync<ResultSetPart>("InSignal", parameters).ConfigureAwait(false);
                 chunks.Add(resultSet.Events);
                 remaining -= resultSet.Events.Count;
 
@@ -108,7 +108,7 @@ namespace Seq.Api.ResourceGroups
             if (shortCircuitAfter != null) { parameters.Add("shortCircuitAfter", shortCircuitAfter.Value); }
 
             var body = signal ?? new SignalEntity();
-            return await GroupPostAsync<SignalEntity, ResultSetPart>("InSignal", body, parameters);
+            return await GroupPostAsync<SignalEntity, ResultSetPart>("InSignal", body, parameters).ConfigureAwait(false);
         }
 
         public async Task<ResultSetPart> InSignalAsync(
@@ -137,7 +137,7 @@ namespace Seq.Api.ResourceGroups
             if (toDateUtc != null) { parameters.Add("toDateUtc", toDateUtc.Value); }
             if (shortCircuitAfter != null) { parameters.Add("shortCircuitAfter", shortCircuitAfter.Value); }
 
-            return await GroupGetAsync<ResultSetPart>("InSignal", parameters);
+            return await GroupGetAsync<ResultSetPart>("InSignal", parameters).ConfigureAwait(false);
         }
 
         public async Task<ResultSetPart> DeleteInSignalAsync(
@@ -154,7 +154,7 @@ namespace Seq.Api.ResourceGroups
             if (toDateUtc != null) { parameters.Add("toDateUtc", toDateUtc.Value); }
 
             var body = signal ?? new SignalEntity();
-            return await GroupPostAsync<SignalEntity, ResultSetPart>("DeleteInSignal", body, parameters);
+            return await GroupPostAsync<SignalEntity, ResultSetPart>("DeleteInSignal", body, parameters).ConfigureAwait(false);
         }
     }
 }
