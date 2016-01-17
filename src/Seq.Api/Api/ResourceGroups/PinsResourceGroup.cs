@@ -26,7 +26,7 @@ namespace Seq.Api.ResourceGroups
                 {"renderEvent", renderEvent},
                 {"includeUser", includeUser}
             };
-            return await GroupGetAsync<PinEntity>("Item", parameters);
+            return await GroupGetAsync<PinEntity>("Item", parameters).ConfigureAwait(false);
         }
 
         public async Task<List<PinEntity>> ListAsync(
@@ -41,27 +41,27 @@ namespace Seq.Api.ResourceGroups
                 {"includeUser", includeUser}
             };
 
-            return await GroupListAsync<PinEntity>("Items", parameters);
+            return await GroupListAsync<PinEntity>("Items", parameters).ConfigureAwait(false);
         }
 
         public async Task<PinEntity> TemplateAsync()
         {
-            return await GroupGetAsync<PinEntity>("Template");
+            return await GroupGetAsync<PinEntity>("Template").ConfigureAwait(false);
         }
 
         public async Task<PinEntity> AddAsync(PinEntity entity)
         {
-            return await Client.PostAsync<PinEntity, PinEntity>(entity, "Create", entity);
+            return await Client.PostAsync<PinEntity, PinEntity>(entity, "Create", entity).ConfigureAwait(false);
         }
 
         public async Task RemoveAsync(PinEntity entity)
         {
-            await Client.DeleteAsync(entity, "Self", entity);
+            await Client.DeleteAsync(entity, "Self", entity).ConfigureAwait(false);
         }
 
         public async Task UpdateAsync(PinEntity entity)
         {
-            await Client.PutAsync(entity, "Self", entity);
+            await Client.PutAsync(entity, "Self", entity).ConfigureAwait(false);
         }
     }
 }

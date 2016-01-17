@@ -15,7 +15,7 @@ namespace Seq.Api.ResourceGroups
         public async Task<WatchEntity> FindAsync(string id)
         {
             if (id == null) throw new ArgumentNullException("id");
-            return await GroupGetAsync<WatchEntity>("Item", new Dictionary<string, object> { { "id", id } });
+            return await GroupGetAsync<WatchEntity>("Item", new Dictionary<string, object> { { "id", id } }).ConfigureAwait(false);
         }
 
         public async Task<List<WatchEntity>> ListAsync(string ownerId = null)
@@ -23,27 +23,27 @@ namespace Seq.Api.ResourceGroups
             var parameters = new Dictionary<string, object>();
             if (ownerId != null)
                 parameters.Add("ownerId", ownerId);
-            return await GroupListAsync<WatchEntity>("Items", parameters);
+            return await GroupListAsync<WatchEntity>("Items", parameters).ConfigureAwait(false);
         }
 
         public async Task<WatchEntity> TemplateAsync()
         {
-            return await GroupGetAsync<WatchEntity>("Template");
+            return await GroupGetAsync<WatchEntity>("Template").ConfigureAwait(false);
         }
 
         public async Task<WatchEntity> AddAsync(WatchEntity entity)
         {
-            return await Client.PostAsync<WatchEntity, WatchEntity>(entity, "Create", entity);
+            return await Client.PostAsync<WatchEntity, WatchEntity>(entity, "Create", entity).ConfigureAwait(false);
         }
 
         public async Task RemoveAsync(WatchEntity entity)
         {
-            await Client.DeleteAsync(entity, "Self", entity);
+            await Client.DeleteAsync(entity, "Self", entity).ConfigureAwait(false);
         }
 
         public async Task UpdateAsync(WatchEntity entity)
         {
-            await Client.PutAsync(entity, "Self", entity);
+            await Client.PutAsync(entity, "Self", entity).ConfigureAwait(false);
         }
     }
 }

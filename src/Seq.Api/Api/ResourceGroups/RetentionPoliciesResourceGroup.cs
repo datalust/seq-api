@@ -15,32 +15,32 @@ namespace Seq.Api.ResourceGroups
         public async Task<RetentionPolicyEntity> FindAsync(string id)
         {
             if (id == null) throw new ArgumentNullException("id");
-            return await GroupGetAsync<RetentionPolicyEntity>("Item", new Dictionary<string, object> { { "id", id } });
+            return await GroupGetAsync<RetentionPolicyEntity>("Item", new Dictionary<string, object> { { "id", id } }).ConfigureAwait(false);
         }
 
         public async Task<List<RetentionPolicyEntity>> ListAsync()
         {
-            return await GroupListAsync<RetentionPolicyEntity>("Items");
+            return await GroupListAsync<RetentionPolicyEntity>("Items").ConfigureAwait(false);
         }
 
         public async Task<RetentionPolicyEntity> TemplateAsync()
         {
-            return await GroupGetAsync<RetentionPolicyEntity>("Template");
+            return await GroupGetAsync<RetentionPolicyEntity>("Template").ConfigureAwait(false);
         }
 
         public async Task<RetentionPolicyEntity> AddAsync(RetentionPolicyEntity entity)
         {
-            return await Client.PostAsync<RetentionPolicyEntity, RetentionPolicyEntity>(entity, "Create", entity);
+            return await Client.PostAsync<RetentionPolicyEntity, RetentionPolicyEntity>(entity, "Create", entity).ConfigureAwait(false);
         }
 
         public async Task RemoveAsync(RetentionPolicyEntity entity)
         {
-            await Client.DeleteAsync(entity, "Self", entity);
+            await Client.DeleteAsync(entity, "Self", entity).ConfigureAwait(false);
         }
 
         public async Task UpdateAsync(RetentionPolicyEntity entity)
         {
-            await Client.PutAsync(entity, "Self", entity);
+            await Client.PutAsync(entity, "Self", entity).ConfigureAwait(false);
         }
     }
 }

@@ -15,32 +15,32 @@ namespace Seq.Api.ResourceGroups
         public async Task<AppEntity> FindAsync(string id)
         {
             if (id == null) throw new ArgumentNullException("id");
-            return await GroupGetAsync<AppEntity>("Item", new Dictionary<string, object> { { "id", id } });
+            return await GroupGetAsync<AppEntity>("Item", new Dictionary<string, object> { { "id", id } }).ConfigureAwait(false);
         }
 
         public async Task<List<AppEntity>> ListAsync()
         {
-            return await GroupListAsync<AppEntity>("Items");
+            return await GroupListAsync<AppEntity>("Items").ConfigureAwait(false);
         }
 
         public async Task<AppEntity> TemplateAsync()
         {
-            return await GroupGetAsync<AppEntity>("Template");
+            return await GroupGetAsync<AppEntity>("Template").ConfigureAwait(false);
         }
 
         public async Task<AppEntity> AddAsync(AppEntity entity)
         {
-            return await Client.PostAsync<AppEntity, AppEntity>(entity, "Create", entity);
+            return await Client.PostAsync<AppEntity, AppEntity>(entity, "Create", entity).ConfigureAwait(false);
         }
 
         public async Task RemoveAsync(AppEntity entity)
         {
-            await Client.DeleteAsync(entity, "Self", entity);
+            await Client.DeleteAsync(entity, "Self", entity).ConfigureAwait(false);
         }
 
         public async Task UpdateAsync(AppEntity entity)
         {
-            await Client.PutAsync(entity, "Self", entity);
+            await Client.PutAsync(entity, "Self", entity).ConfigureAwait(false);
         }
 
         public async Task<AppEntity> InstallPackageAsync(string feedId, string packageId, string version = null)
@@ -49,7 +49,7 @@ namespace Seq.Api.ResourceGroups
             if (packageId == null) throw new ArgumentNullException("packageId");
             var parameters = new Dictionary<string, object>{{ "feedId", feedId}, {"packageId", packageId}};
             if (version != null) parameters.Add("version", version);
-            return await GroupPostAsync<object, AppEntity>("InstallPackage", new object(), parameters);
+            return await GroupPostAsync<object, AppEntity>("InstallPackage", new object(), parameters).ConfigureAwait(false);
         }
     }
 }

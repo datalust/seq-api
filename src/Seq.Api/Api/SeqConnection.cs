@@ -100,12 +100,12 @@ namespace Seq.Api
 
         public async Task<ResourceGroup> LoadResourceGroupAsync(string name)
         {
-            return await _resourceGroups.GetOrAdd(name, ResourceGroupFactory);
+            return await _resourceGroups.GetOrAdd(name, ResourceGroupFactory).ConfigureAwait(false);
         }
 
         private async Task<ResourceGroup> ResourceGroupFactory(string name)
         {
-            return await _client.GetAsync<ResourceGroup>(await _root.Value, name + "Resources");
+            return await _client.GetAsync<ResourceGroup>(await _root.Value, name + "Resources").ConfigureAwait(false);
         }
 
         public SeqApiClient Client { get { return _client; } }

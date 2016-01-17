@@ -77,7 +77,7 @@ namespace Seq.Api.Client
         {
             var linkUri = ResolveLink(entity, link, parameters);
             var request = new HttpRequestMessage(HttpMethod.Post, linkUri) { Content = MakeJsonContent(content) };
-            var stream = await HttpSendAsync(request);
+            var stream = await HttpSendAsync(request).ConfigureAwait(false);
             new StreamReader(stream).ReadToEnd();
         }
 
@@ -85,7 +85,7 @@ namespace Seq.Api.Client
         {
             var linkUri = ResolveLink(entity, link, parameters);
             var request = new HttpRequestMessage(HttpMethod.Post, linkUri) { Content = MakeJsonContent(content) };
-            var stream = await HttpSendAsync(request);
+            var stream = await HttpSendAsync(request).ConfigureAwait(false);
             return _serializer.Deserialize<TResponse>(new JsonTextReader(new StreamReader(stream)));
         }
 
@@ -93,7 +93,7 @@ namespace Seq.Api.Client
         {
             var linkUri = ResolveLink(entity, link, parameters);
             var request = new HttpRequestMessage(HttpMethod.Put, linkUri) { Content = MakeJsonContent(content) };
-            var stream = await HttpSendAsync(request);
+            var stream = await HttpSendAsync(request).ConfigureAwait(false);
             new StreamReader(stream).ReadToEnd();
         }
 
@@ -101,14 +101,14 @@ namespace Seq.Api.Client
         {
             var linkUri = ResolveLink(entity, link, parameters);
             var request = new HttpRequestMessage(HttpMethod.Delete, linkUri) { Content = MakeJsonContent(content) };
-            var stream = await HttpSendAsync(request);
+            var stream = await HttpSendAsync(request).ConfigureAwait(false);
             new StreamReader(stream).ReadToEnd();
         }
 
         async Task<T> HttpGetAsync<T>(string url)
         {
             var request = new HttpRequestMessage(HttpMethod.Get, url);
-            var stream = await HttpSendAsync(request);
+            var stream = await HttpSendAsync(request).ConfigureAwait(false);
             return _serializer.Deserialize<T>(new JsonTextReader(new StreamReader(stream)));
         }
 
@@ -118,9 +118,9 @@ namespace Seq.Api.Client
                 request.Headers.Add("X-Seq-ApiKey", _apiKey);
 
             request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(SeqApiV2MediaType));
-            
-            var response = await _httpClient.SendAsync(request);                
-            var stream = await response.Content.ReadAsStreamAsync();
+
+            var response = await _httpClient.SendAsync(request).ConfigureAwait(false);
+            var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
             
             if (response.IsSuccessStatusCode)
                 return stream;
