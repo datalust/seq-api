@@ -20,5 +20,7 @@ namespace Seq.Api.Model.Signals
         public List<TaggedPropertyPart> TaggedProperties { get; set; }
 
         public bool IsWatched { get; set; }
+
+        public bool IsRestricted { get; set; }
     }
 }

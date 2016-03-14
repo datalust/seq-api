@@ -18,13 +18,12 @@ namespace Seq.Api.Client
 {
     public class SeqApiClient : IDisposable
     {
-        readonly string _serverUrl;
         readonly string _apiKey;
 
         // Future versions of Seq may not completely support v1 features, however
         // providing this as an Accept header will ensure what compatibility is available
         // can be utilised.
-        const string SeqApiV2MediaType = "application/vnd.continuousit.seq.v2+json";
+        const string SeqApiV3MediaType = "application/vnd.continuousit.seq.v3+json";
 
         readonly HttpClient _httpClient;
         readonly JsonSerializer _serializer = JsonSerializer.Create(
@@ -35,9 +34,9 @@ namespace Seq.Api.Client
 
         public SeqApiClient(string serverUrl, string apiKey = null)
         {
-            if (serverUrl == null) throw new ArgumentNullException("serverUrl");
+            if (serverUrl == null) throw new ArgumentNullException(nameof(serverUrl));
 
-            _serverUrl = serverUrl;
+            ServerUrl = serverUrl;
 
             if (!string.IsNullOrEmpty(apiKey))
                 _apiKey = apiKey;
@@ -51,10 +50,7 @@ namespace Seq.Api.Client
             _httpClient = new HttpClient(handler) { BaseAddress = new Uri(baseAddress) };
         }
 
-        public string ServerUrl
-        {
-            get { return _serverUrl; }
-        }
+        public string ServerUrl { get; }
 
         public Task<RootEntity> GetRootAsync()
         {
@@ -65,6 +61,12 @@ namespace Seq.Api.Client
         {
             var linkUri = ResolveLink(entity, link, parameters);
             return HttpGetAsync<TEntity>(linkUri);
+        }
+
+        public Task<string> GetStringAsync(ILinked entity, string link, IDictionary<string, object> parameters = null)
+        {
+            var linkUri = ResolveLink(entity, link, parameters);
+            return HttpGetStringAsync(linkUri);
         }
 
         public Task<List<TEntity>> ListAsync<TEntity>(ILinked entity, string link, IDictionary<string, object> parameters = null)
@@ -87,6 +89,14 @@ namespace Seq.Api.Client
             var request = new HttpRequestMessage(HttpMethod.Post, linkUri) { Content = MakeJsonContent(content) };
             var stream = await HttpSendAsync(request).ConfigureAwait(false);
             return _serializer.Deserialize<TResponse>(new JsonTextReader(new StreamReader(stream)));
+        }
+
+        public async Task<string> PostReadStringAsync<TEntity>(ILinked entity, string link, TEntity content, IDictionary<string, object> parameters = null)
+        {
+            var linkUri = ResolveLink(entity, link, parameters);
+            var request = new HttpRequestMessage(HttpMethod.Post, linkUri) { Content = MakeJsonContent(content) };
+            var stream = await HttpSendAsync(request).ConfigureAwait(false);
+            return await new StreamReader(stream).ReadToEndAsync();
         }
 
         public async Task PutAsync<TEntity>(ILinked entity, string link, TEntity content, IDictionary<string, object> parameters = null)
@@ -112,12 +122,19 @@ namespace Seq.Api.Client
             return _serializer.Deserialize<T>(new JsonTextReader(new StreamReader(stream)));
         }
 
+        async Task<string> HttpGetStringAsync(string url)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Get, url);
+            var stream = await HttpSendAsync(request).ConfigureAwait(false);
+            return await new StreamReader(stream).ReadToEndAsync();
+        }
+
         async Task<Stream> HttpSendAsync(HttpRequestMessage request)
         {
             if (_apiKey != null)
                 request.Headers.Add("X-Seq-ApiKey", _apiKey);
 
-            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(SeqApiV2MediaType));
+            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(SeqApiV3MediaType));
 
             var response = await _httpClient.SendAsync(request).ConfigureAwait(false);
             var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);

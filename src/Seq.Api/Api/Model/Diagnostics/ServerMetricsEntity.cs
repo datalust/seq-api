@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Seq.Api.Model.Metrics
+namespace Seq.Api.Model.Diagnostics
 {
-    public class MetricsEntity : Entity
+    public class ServerMetricsEntity : Entity
     {
-        public MetricsEntity()
+        public ServerMetricsEntity()
         {
             RunningTasks = new List<RunningTaskPart>();
         }
 
-        public int EventStoreDaysRecorded { get; set; }
-        public int EventStoreDaysCached { get; set; }
+        public double EventStoreDaysRecorded { get; set; }
+        public double EventStoreDaysCached { get; set; }
         public int EventStoreEventsCached { get; set; }
         public DateTime? EventStoreFirstSegmentDateUtc { get; set; }
         public DateTime? EventStoreLastSegmentDateUtc { get; set; }

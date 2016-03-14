@@ -2,7 +2,7 @@
 
 namespace Seq.Api.Model.Apps
 {
-    public class AppEntity : Seq.Api.Model.Entity
+    public class AppEntity : Entity
     {
         public AppEntity()
         {
