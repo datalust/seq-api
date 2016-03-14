@@ -48,14 +48,28 @@
   <ItemGroup>
     <Compile Include="Api\Client\SeqApiClient.cs" />
     <Compile Include="Api\Client\SeqApiException.cs" />
+    <Compile Include="Api\Model\Backups\BackupEntity.cs" />
+    <Compile Include="Api\Model\Data\QueryExecutionStatisticsPart.cs" />
+    <Compile Include="Api\Model\Data\QueryResultPart.cs" />
+    <Compile Include="Api\Model\Data\TimeseriesPart.cs" />
+    <Compile Include="Api\Model\Data\TimeSlicePart.cs" />
+    <Compile Include="Api\Model\Diagnostics\ServerMetricsEntity.cs" />
+    <Compile Include="Api\Model\Diagnostics\RunningTaskPart.cs" />
+    <Compile Include="Api\Model\Diagnostics\ServerStatusPart.cs" />
+    <Compile Include="Api\Model\Diagnostics\StatusMessagePart.cs" />
+    <Compile Include="Api\Model\Shared\DeferredRequestEntity.cs" />
     <Compile Include="Api\Model\Signals\SignalEntity.cs" />
     <Compile Include="Api\Model\Signals\SignalFilterPart.cs" />
     <Compile Include="Api\Model\Signals\TaggedPropertyPart.cs" />
     <Compile Include="Api\Model\Updates\AvailableUpdateEntity.cs" />
+    <Compile Include="Api\Model\Users\AuthProviderInfoPart.cs" />
+    <Compile Include="Api\Model\Users\AuthProvidersPart.cs" />
+    <Compile Include="Api\ResourceGroups\BackupsResourceGroup.cs" />
     <Compile Include="Api\ResourceGroups\ApiKeysResourceGroup.cs" />
     <Compile Include="Api\ResourceGroups\ApiResourceGroup.cs" />
     <Compile Include="Api\ResourceGroups\AppInstancesResourceGroup.cs" />
     <Compile Include="Api\ResourceGroups\AppsResourceGroup.cs" />
+    <Compile Include="Api\ResourceGroups\DataResourceGroup.cs" />
     <Compile Include="Api\ResourceGroups\EventsResourceGroup.cs" />
     <Compile Include="Api\ResourceGroups\ExpressionsResourceGroup.cs" />
     <Compile Include="Api\ResourceGroups\FeedsResourceGroup.cs" />
@@ -80,8 +94,6 @@
     <Compile Include="Api\Model\Link.cs" />
     <Compile Include="Api\Model\LinkCollection.cs" />
     <Compile Include="Api\Model\LogEvents\LogEventLevel.cs" />
-    <Compile Include="Api\Model\Metrics\MetricsEntity.cs" />
-    <Compile Include="Api\Model\Metrics\RunningTaskPart.cs" />
     <Compile Include="Api\Model\Pins\PinEntity.cs" />
     <Compile Include="Api\Model\ResourceGroup.cs" />
     <Compile Include="Api\Model\Retention\RetentionPolicyEntity.cs" />
@@ -96,7 +108,7 @@
     <Compile Include="Api\Model\Watches\TimeSliceDuration.cs" />
     <Compile Include="Api\Model\Watches\WatchEntity.cs" />
     <Compile Include="Api\ResourceGroups\LicensesResourceGroup.cs" />
-    <Compile Include="Api\ResourceGroups\MetricsResourceGroup.cs" />
+    <Compile Include="Api\ResourceGroups\DiagnosticsResourceGroup.cs" />
     <Compile Include="Api\ResourceGroups\PinsResourceGroup.cs" />
     <Compile Include="Api\ResourceGroups\SignalsResourceGroup.cs" />
     <Compile Include="Api\ResourceGroups\RetentionPoliciesResourceGroup.cs" />

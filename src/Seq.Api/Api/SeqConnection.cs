@@ -16,87 +16,46 @@ namespace Seq.Api
 
         public SeqConnection(string serverUrl, string apiKey = null)
         {
-            if (serverUrl == null) throw new ArgumentNullException("serverUrl");
+            if (serverUrl == null) throw new ArgumentNullException(nameof(serverUrl));
             _client = new SeqApiClient(serverUrl, apiKey);
             
             _root = new Lazy<Task<RootEntity>>(() => _client.GetRootAsync());
 
         }
 
-        public ApiKeysResourceGroup ApiKeys
-        {
-            get { return new ApiKeysResourceGroup(this); }
-        }
+        public ApiKeysResourceGroup ApiKeys => new ApiKeysResourceGroup(this);
 
-        public AppInstancesResourceGroup AppInstances
-        {
-            get { return new AppInstancesResourceGroup(this); }
-        }
+        public AppInstancesResourceGroup AppInstances => new AppInstancesResourceGroup(this);
 
-        public AppsResourceGroup Apps
-        {
-            get { return new AppsResourceGroup(this); }
-        }
+        public AppsResourceGroup Apps => new AppsResourceGroup(this);
 
-        public EventsResourceGroup Events
-        {
-            get { return new EventsResourceGroup(this); }
-        }
+        public BackupsResourceGroup Backups => new BackupsResourceGroup(this);
 
-        public ExpressionsResourceGroup Expressions
-        {
-            get { return new ExpressionsResourceGroup(this); }
-        }
+        public DataResourceGroup Data => new DataResourceGroup(this);
 
-        public FeedsResourceGroup Feeds
-        {
-            get { return new FeedsResourceGroup(this); }
-        }
+        public DiagnosticsResourceGroup Diagnositcs => new DiagnosticsResourceGroup(this);
 
-        public LicensesResourceGroup Licenses
-        {
-            get { return new LicensesResourceGroup(this); }
-        }
+        public EventsResourceGroup Events => new EventsResourceGroup(this);
 
-        public MetricsResourceGroup Metrics
-        {
-            get { return new MetricsResourceGroup(this); }
-        }
+        public ExpressionsResourceGroup Expressions => new ExpressionsResourceGroup(this);
 
-        public PinsResourceGroup Pins
-        {
-            get { return new PinsResourceGroup(this); }
-        }
+        public FeedsResourceGroup Feeds => new FeedsResourceGroup(this);
 
-        public RetentionPoliciesResourceGroup RetentionPolicies
-        {
-            get { return new RetentionPoliciesResourceGroup(this); }
-        }
+        public LicensesResourceGroup Licenses => new LicensesResourceGroup(this);
 
-        public SettingsResourceGroup Settings
-        {
-            get { return new SettingsResourceGroup(this); }
-        }
+        public PinsResourceGroup Pins => new PinsResourceGroup(this);
 
-        public SignalsResourceGroup Signals
-        {
-            get { return new SignalsResourceGroup(this); }
-        }
+        public RetentionPoliciesResourceGroup RetentionPolicies => new RetentionPoliciesResourceGroup(this);
 
-        public UpdatesResourceGroup Updates
-        {
-            get {  return new UpdatesResourceGroup(this); }
-        }
+        public SettingsResourceGroup Settings => new SettingsResourceGroup(this);
 
-        public UsersResourceGroup Users
-        {
-            get { return new UsersResourceGroup(this); }
-        }
+        public SignalsResourceGroup Signals => new SignalsResourceGroup(this);
 
-        public WatchesResourceGroup Watches
-        {
-            get { return new WatchesResourceGroup(this); }
-        }
+        public UpdatesResourceGroup Updates => new UpdatesResourceGroup(this);
+
+        public UsersResourceGroup Users => new UsersResourceGroup(this);
+
+        public WatchesResourceGroup Watches => new WatchesResourceGroup(this);
 
         public async Task<ResourceGroup> LoadResourceGroupAsync(string name)
         {
@@ -108,6 +67,6 @@ namespace Seq.Api
             return await _client.GetAsync<ResourceGroup>(await _root.Value, name + "Resources").ConfigureAwait(false);
         }
 
-        public SeqApiClient Client { get { return _client; } }
+        public SeqApiClient Client => _client;
     }
 }

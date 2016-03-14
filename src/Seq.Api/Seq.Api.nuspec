@@ -4,7 +4,7 @@
     <id>Seq.Api</id>
     <version>$version$</version>
     <authors>Continuous IT Pty Ltd</authors>
-    <description>Client library for the Seq web UI.</description>
+    <description>Client library for the Seq HTTP API.</description>
     <language>en-US</language>
     <projectUrl>https://getseq.net</projectUrl>
     <iconUrl>http://getseq.net/images/seq-nuget.png</iconUrl>

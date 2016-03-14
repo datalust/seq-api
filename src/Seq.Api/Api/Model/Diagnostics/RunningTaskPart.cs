@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Seq.Api.Model.Metrics
+namespace Seq.Api.Model.Diagnostics
 {
     public class RunningTaskPart
     {

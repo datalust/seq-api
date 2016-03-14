@@ -31,6 +31,12 @@ namespace Seq.Api.ResourceGroups
             return await Client.GetAsync<TEntity>(group, link, parameters).ConfigureAwait(false);
         }
 
+        protected async Task<string> GroupGetStringAsync(string link, IDictionary<string, object> parameters = null)
+        {
+            var group = await LoadGroupAsync().ConfigureAwait(false);
+            return await Client.GetStringAsync(group, link, parameters).ConfigureAwait(false);
+        }
+
         protected async Task<List<TEntity>> GroupListAsync<TEntity>(string link, IDictionary<string, object> parameters = null)
         {
             var group = await LoadGroupAsync().ConfigureAwait(false);
@@ -41,6 +47,12 @@ namespace Seq.Api.ResourceGroups
         {
             var group = await LoadGroupAsync().ConfigureAwait(false);
             await Client.PostAsync(group, link, content, parameters).ConfigureAwait(false);
+        }
+
+        protected async Task<string> GroupPostReadStringAsync<TEntity>(string link, TEntity content, IDictionary<string, object> parameters = null)
+        {
+            var group = await LoadGroupAsync().ConfigureAwait(false);
+            return await Client.PostReadStringAsync(group, link, content, parameters).ConfigureAwait(false);
         }
 
         protected async Task<TResponse> GroupPostAsync<TEntity, TResponse>(string link, TEntity content, IDictionary<string, object> parameters = null)
