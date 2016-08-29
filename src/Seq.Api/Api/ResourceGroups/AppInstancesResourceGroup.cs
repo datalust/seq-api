@@ -14,7 +14,7 @@ namespace Seq.Api.ResourceGroups
 
         public async Task<AppInstanceEntity> FindAsync(string id)
         {
-            if (id == null) throw new ArgumentNullException("id");
+            if (id == null) throw new ArgumentNullException(nameof(id));
             return await GroupGetAsync<AppInstanceEntity>("Item", new Dictionary<string, object> { { "id", id } }).ConfigureAwait(false);
         }
 
@@ -25,7 +25,7 @@ namespace Seq.Api.ResourceGroups
 
         public async Task<AppInstanceEntity> TemplateAsync(string appId)
         {
-            if (appId == null) throw new ArgumentNullException("appId");
+            if (appId == null) throw new ArgumentNullException(nameof(appId));
             return await GroupGetAsync<AppInstanceEntity>("Template", new Dictionary<string, object> { { "appId", appId } }).ConfigureAwait(false);
         }
 

@@ -18,7 +18,7 @@ namespace Seq.Api.ResourceGroups
             bool renderEvent = false, 
             bool includeUser = false)
         {
-            if (id == null) throw new ArgumentNullException("id");
+            if (id == null) throw new ArgumentNullException(nameof(id));
             var parameters = new Dictionary<string, object>
             {
                 {"id", id},

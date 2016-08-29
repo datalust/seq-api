@@ -61,9 +61,14 @@
     <Compile Include="Api\Model\Signals\SignalEntity.cs" />
     <Compile Include="Api\Model\Signals\SignalFilterPart.cs" />
     <Compile Include="Api\Model\Signals\TaggedPropertyPart.cs" />
+    <Compile Include="Api\Model\SqlQueries\SqlQueryEntity.cs" />
     <Compile Include="Api\Model\Updates\AvailableUpdateEntity.cs" />
     <Compile Include="Api\Model\Users\AuthProviderInfoPart.cs" />
     <Compile Include="Api\Model\Users\AuthProvidersPart.cs" />
+    <Compile Include="Api\Model\Users\SearchHistoryEntity.cs" />
+    <Compile Include="Api\Model\Users\SearchHistoryItemPart.cs" />
+    <Compile Include="Api\Model\Users\SearchHistoryItemStatus.cs" />
+    <Compile Include="Api\ResourceGroups\SqlQueriesResourceGroup.cs" />
     <Compile Include="Api\ResourceGroups\BackupsResourceGroup.cs" />
     <Compile Include="Api\ResourceGroups\ApiKeysResourceGroup.cs" />
     <Compile Include="Api\ResourceGroups\ApiResourceGroup.cs" />

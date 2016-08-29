@@ -20,8 +20,8 @@ namespace Seq.Api.Model
 
         public Link(string href, IDictionary<string, object> parameters)
         {
-            if (href == null) throw new ArgumentNullException("href");
-            if (parameters == null) throw new ArgumentNullException("parameters");
+            if (href == null) throw new ArgumentNullException(nameof(href));
+            if (parameters == null) throw new ArgumentNullException(nameof(parameters));
             _href = href;
             _parameters = parameters;
         }
