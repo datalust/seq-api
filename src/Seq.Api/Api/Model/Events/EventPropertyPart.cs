@@ -6,7 +6,7 @@ namespace Seq.Api.Model.Events
     {
         public EventPropertyPart(string name, object value)
         {
-            if (name == null) throw new ArgumentNullException("name");
+            if (name == null) throw new ArgumentNullException(nameof(name));
             Name = name;
             Value = value;
         }

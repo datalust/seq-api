@@ -15,7 +15,7 @@ namespace Seq.Api.ResourceGroups
 
         public async Task<LicenseEntity> FindAsync(string id)
         {
-            if (id == null) throw new ArgumentNullException("id");
+            if (id == null) throw new ArgumentNullException(nameof(id));
             return await GroupGetAsync<LicenseEntity>("Item", new Dictionary<string, object> { { "id", id } }).ConfigureAwait(false);
         }
 

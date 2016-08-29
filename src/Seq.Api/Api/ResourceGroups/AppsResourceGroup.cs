@@ -14,7 +14,7 @@ namespace Seq.Api.ResourceGroups
 
         public async Task<AppEntity> FindAsync(string id)
         {
-            if (id == null) throw new ArgumentNullException("id");
+            if (id == null) throw new ArgumentNullException(nameof(id));
             return await GroupGetAsync<AppEntity>("Item", new Dictionary<string, object> { { "id", id } }).ConfigureAwait(false);
         }
 
@@ -45,8 +45,8 @@ namespace Seq.Api.ResourceGroups
 
         public async Task<AppEntity> InstallPackageAsync(string feedId, string packageId, string version = null)
         {
-            if (feedId == null) throw new ArgumentNullException("feedId");
-            if (packageId == null) throw new ArgumentNullException("packageId");
+            if (feedId == null) throw new ArgumentNullException(nameof(feedId));
+            if (packageId == null) throw new ArgumentNullException(nameof(packageId));
             var parameters = new Dictionary<string, object>{{ "feedId", feedId}, {"packageId", packageId}};
             if (version != null) parameters.Add("version", version);
             return await GroupPostAsync<object, AppEntity>("InstallPackage", new object(), parameters).ConfigureAwait(false);

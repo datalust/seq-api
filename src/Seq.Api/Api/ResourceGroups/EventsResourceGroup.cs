@@ -17,7 +17,7 @@ namespace Seq.Api.ResourceGroups
 
         public async Task<EventEntity> FindAsync(string id)
         {
-            if (id == null) throw new ArgumentNullException("id");
+            if (id == null) throw new ArgumentNullException(nameof(id));
             return await GroupGetAsync<EventEntity>("Item", new Dictionary<string, object> { { "id", id } }).ConfigureAwait(false);
         }
 
@@ -122,7 +122,7 @@ namespace Seq.Api.ResourceGroups
             DateTime? toDateUtc = null,
             int? shortCircuitAfter = null)
         {
-            if (intersectIds == null) throw new ArgumentNullException("intersectIds");
+            if (intersectIds == null) throw new ArgumentNullException(nameof(intersectIds));
 
             var parameters = new Dictionary<string, object>
             {

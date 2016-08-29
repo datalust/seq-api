@@ -14,7 +14,7 @@ namespace Seq.Api.ResourceGroups
 
         public async Task<ApiKeyEntity> FindAsync(string id)
         {
-            if (id == null) throw new ArgumentNullException("id");
+            if (id == null) throw new ArgumentNullException(nameof(id));
             return await GroupGetAsync<ApiKeyEntity>("Item", new Dictionary<string, object> { { "id", id } }).ConfigureAwait(false);
         }
 

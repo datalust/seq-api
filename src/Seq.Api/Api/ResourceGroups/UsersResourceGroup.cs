@@ -14,7 +14,7 @@ namespace Seq.Api.ResourceGroups
 
         public async Task<UserEntity> FindAsync(string id)
         {
-            if (id == null) throw new ArgumentNullException("id");
+            if (id == null) throw new ArgumentNullException(nameof(id));
             return await GroupGetAsync<UserEntity>("Item", new Dictionary<string, object> { { "id", id } }).ConfigureAwait(false);
         }
 
@@ -50,8 +50,8 @@ namespace Seq.Api.ResourceGroups
 
         public async Task<UserEntity> LoginAsync(string username, string password)
         {
-            if (username == null) throw new ArgumentNullException("username");
-            if (password == null) throw new ArgumentNullException("password");
+            if (username == null) throw new ArgumentNullException(nameof(username));
+            if (password == null) throw new ArgumentNullException(nameof(password));
             var credentials = new CredentialsPart {Username = username, Password = password};
             return await GroupPostAsync<CredentialsPart, UserEntity>("Login", credentials).ConfigureAwait(false);
         }
@@ -59,6 +59,11 @@ namespace Seq.Api.ResourceGroups
         public async Task LogoutAsync()
         {
             await GroupPostAsync("Logout", new object()).ConfigureAwait(false);
+        }
+
+        public async Task<SearchHistoryEntity> GetSearchHistoryAsync(UserEntity entity)
+        {
+            return await Client.GetAsync<SearchHistoryEntity>(entity, "SearchHistory").ConfigureAwait(false);
         }
     }
 }
