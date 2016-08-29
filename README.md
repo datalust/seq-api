@@ -1,7 +1,5 @@
-Seq HTTP API Client
+Seq HTTP API Client [![Build status](https://ci.appveyor.com/api/projects/status/bhtx25hyqmmdqhvt?svg=true)](https://ci.appveyor.com/project/datalust/seq-api)
 ===================
-
-[![Build status](https://ci.appveyor.com/api/projects/status/58i2tne3ga4jcx5s?svg=true)](https://ci.appveyor.com/project/NicholasBlumhardt/seq-api)
 
 This library includes:
 
