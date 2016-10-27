@@ -7,7 +7,10 @@
 
   "dependencies": {
     "Seq.Api": { "target": "project" },
-    "docopt.net": "0.6.1.9"
+    "docopt.net": "0.6.1.9",
+    "Serilog.Formatting.Compact.Reader": "1.0.0-dev-00004",
+    "Serilog.Sinks.Literate": "2.0.0",
+    "System.Reactive": "3.0.0"
   },
 
   "frameworks": {

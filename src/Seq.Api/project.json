@@ -12,7 +12,9 @@
   },
 
   "buildOptions": {
-    "warningsAsErrors": true
+    "warningsAsErrors": true,
+    "xmlDoc": true,
+    "nowarn": ["CS1591"]
   },
 
   "configurations": {
@@ -39,7 +41,8 @@
     "netstandard1.3": {
       "dependencies": {
         "System.Collections.Concurrent": "4.0.12",
-        "System.Net.Http": "4.1.0"
+        "System.Net.Http": "4.1.0",
+        "System.Net.WebSockets.Client": "4.0.0"
       }
     },
     "net4.5": {

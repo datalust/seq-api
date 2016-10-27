@@ -13,6 +13,9 @@ using Seq.Api.Model;
 using Seq.Api.Model.Root;
 using Seq.Api.Serialization;
 using Tavis.UriTemplates;
+using System.Threading;
+using Seq.Api.Streams;
+using System.Net.WebSockets;
 
 namespace Seq.Api.Client
 {
@@ -26,6 +29,7 @@ namespace Seq.Api.Client
         const string SeqApiV3MediaType = "application/vnd.continuousit.seq.v3+json";
 
         readonly HttpClient _httpClient;
+        readonly CookieContainer _cookies = new CookieContainer();
         readonly JsonSerializer _serializer = JsonSerializer.Create(
             new JsonSerializerSettings
             {
@@ -41,7 +45,7 @@ namespace Seq.Api.Client
             if (!string.IsNullOrEmpty(apiKey))
                 _apiKey = apiKey;
 
-            var handler = new HttpClientHandler { CookieContainer = new CookieContainer() };
+            var handler = new HttpClientHandler { CookieContainer = _cookies };
 
             var baseAddress = serverUrl;
             if (!baseAddress.EndsWith("/"))
@@ -113,6 +117,30 @@ namespace Seq.Api.Client
             var request = new HttpRequestMessage(HttpMethod.Delete, linkUri) { Content = MakeJsonContent(content) };
             var stream = await HttpSendAsync(request).ConfigureAwait(false);
             new StreamReader(stream).ReadToEnd();
+        }
+
+        public async Task<ObservableStream<TEntity>> StreamAsync<TEntity>(ILinked entity, string link, IDictionary<string, object> parameters = null)
+        {
+            return await WebSocketStreamAsync(entity, link, parameters, reader => _serializer.Deserialize<TEntity>(new JsonTextReader(reader)));
+        }
+
+        public async Task<ObservableStream<string>> StreamTextAsync(ILinked entity, string link, IDictionary<string, object> parameters = null)
+        {
+            return await WebSocketStreamAsync(entity, link, parameters, reader => reader.ReadToEnd());
+        }
+
+        async Task<ObservableStream<T>> WebSocketStreamAsync<T>(ILinked entity, string link, IDictionary<string, object> parameters, Func<TextReader, T> deserialize)
+        {
+            var linkUri = ResolveLink(entity, link, parameters);
+
+            var socket = new ClientWebSocket();
+            socket.Options.Cookies = _cookies;
+            if (_apiKey != null)
+                socket.Options.SetRequestHeader("X-Seq-ApiKey", _apiKey);
+
+            await socket.ConnectAsync(new Uri(linkUri), CancellationToken.None);
+
+            return new ObservableStream<T>(socket, deserialize);
         }
 
         async Task<T> HttpGetAsync<T>(string url)
