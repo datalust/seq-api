@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "seq-tail": {
+      "executablePath": "C:\\Development\\nblumhardt\\seq-api\\example\\SeqTail\\bin\\Debug\\net46\\win7-x64\\seq-tail.exe",
+      "commandLineArgs": "http://localhost:5341 --apikey=fSCcBOyOfttZ0kiZFgq"
+    }
+  }
+}
