@@ -34,6 +34,8 @@ Options:
                 .WriteTo.LiterateConsole()
                 .CreateLogger();
 
+            TaskScheduler.UnobservedTaskException += (s,e) => Log.Fatal(e.Exception, "Unobserved task exception");
+
             try
             {
                 var arguments = new Docopt().Apply(Usage, args, version: "Seq Tail 0.2", exit: true);
