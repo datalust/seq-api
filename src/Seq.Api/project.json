@@ -47,7 +47,6 @@
     },
     "net4.5": {
       "frameworkAssemblies": {
-        "System.Collections.Concurrent": "",
         "System.Net.Http": ""
       }
     }
