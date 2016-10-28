@@ -94,7 +94,6 @@ namespace Seq.Api.Streams
                 if (received.MessageType == WebSocketMessageType.Close)
                 {
                     await _socket.CloseAsync(WebSocketCloseStatus.NormalClosure, "", CancellationToken.None);
-                    End();
                 }
                 else
                 {
@@ -112,6 +111,8 @@ namespace Seq.Api.Streams
                     }
                 }
             }
+
+            End();
         }
 
         void Emit(T value)
@@ -205,8 +206,6 @@ namespace Seq.Api.Streams
                 }
             }
             catch { }
-
-            End();
 
             if (_run != null)
                 _run.ConfigureAwait(false).GetAwaiter().GetResult();
