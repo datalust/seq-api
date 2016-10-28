@@ -6,8 +6,8 @@ using Seq.Api;
 using Serilog;
 using System.Reactive.Linq;
 using Serilog.Formatting.Compact.Reader;
-using System.IO;
-using Serilog.Events;
+using System.Threading;
+using Newtonsoft.Json.Linq;
 
 namespace SeqTail
 {
@@ -42,7 +42,13 @@ Options:
                 var apiKey = Normalize(arguments["--apikey"]);
                 var filter = Normalize(arguments["--filter"]);
 
-                Run(server, apiKey, filter).GetAwaiter().GetResult();
+                var cancel = new CancellationTokenSource();
+                Console.WriteLine("Tailing, press Ctrl+C to exit.");
+                Console.CancelKeyPress += (s,a) => cancel.Cancel();
+
+                var run = Task.Run(() => Run(server, apiKey, filter, cancel));
+
+                run.GetAwaiter().GetResult();
             }
             catch (Exception ex)
             {
@@ -58,7 +64,7 @@ Options:
             return string.IsNullOrWhiteSpace(s) ? null : s;
         }
 
-        static async Task Run(string server, string apiKey, string filter)
+        static async Task Run(string server, string apiKey, string filter, CancellationTokenSource cancel)
         {
             var connection = new SeqConnection(server, apiKey);
 
@@ -69,18 +75,13 @@ Options:
                 strict = converted.StrictExpression;
             }
 
-            using (var stream = await connection.Events.StreamDocumentsAsync(filter: strict))
+            using (var stream = await connection.Events.StreamAsync<JObject>(filter: strict))
             {
-                var subscription = stream.Subscribe(document =>
-                {
-                    var reader = new LogEventReader(new StringReader(document));
-                    LogEvent evt;
-                    if (!reader.TryRead(out evt))
-                        throw new InvalidOperationException("Expected document to contain data.");
-                    Log.Write(evt);
-                });
+                var subscription = stream
+                    .Select(jObject => LogEventReader.ReadFromJObject(jObject))
+                    .Subscribe(evt => Log.Write(evt), () => cancel.Cancel());
 
-                Console.ReadKey(true);
+                cancel.Token.WaitHandle.WaitOne();
                 subscription.Dispose();
             }
         }
