@@ -16,14 +16,13 @@ namespace SeqTail
         const string Usage = @"seq-tail: watch a Seq query from your console.
 
 Usage:
-    seq-tail.exe <server> [--filter=<f>] [--apikey=<k>] [--window=<w>]
+    seq-tail.exe <server> [--filter=<f>] [--apikey=<k>]
     seq-tail.exe (-h | --help)
 
 Options:
     -h --help     Show this screen.
     --filter=<f>  Filter expression or free text to match.
     --apikey=<k>  Seq API key.
-    --window=<w>  Window size [default: 100].
 
     ";
 
