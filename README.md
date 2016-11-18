@@ -1,5 +1,5 @@
-Seq HTTP API Client [![Build status](https://ci.appveyor.com/api/projects/status/bhtx25hyqmmdqhvt?svg=true)](https://ci.appveyor.com/project/datalust/seq-api)
-===================
+# Seq HTTP API Client [![Build status](https://ci.appveyor.com/api/projects/status/bhtx25hyqmmdqhvt?svg=true)](https://ci.appveyor.com/project/datalust/seq-api) [![NuGet Pre Release](https://img.shields.io/nuget/vpre/Seq.Api.svg)](https://nuget.org/packages/seq.api) [![Join the chat at https://gitter.im/datalust/seq](https://img.shields.io/gitter/room/datalust/seq.svg)](https://gitter.im/datalust/seq)
+
 
 This library includes:
 

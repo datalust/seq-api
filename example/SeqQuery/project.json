@@ -1,0 +1,28 @@
+﻿{
+  "version": "1.0.0-*",
+  "buildOptions": {
+    "emitEntryPoint": true,
+    "outputName": "seq-query"
+  },
+
+  "dependencies": {
+    "Seq.Api": { "target": "project" },
+    "docopt.net": "0.6.1.9"
+  },
+
+  "frameworks": {
+    "net4.6": {},
+    "netcoreapp1.0": {
+      "dependencies": {
+        "Microsoft.NETCore.App": {
+          "type": "platform",
+          "version": "1.0.0"
+        }
+      },
+      "imports": [
+        "dnxcore50",
+        "portable-net45+win8"
+      ]
+    }
+  }
+}

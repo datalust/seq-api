@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Seq.Api.Model.Events;
 using Seq.Api.Model.Shared;
 using Seq.Api.Model.Signals;
+using Seq.Api.Streams;
 
 namespace Seq.Api.ResourceGroups
 {
@@ -155,6 +156,48 @@ namespace Seq.Api.ResourceGroups
 
             var body = signal ?? new SignalEntity();
             return await GroupPostAsync<SignalEntity, ResultSetPart>("DeleteInSignal", body, parameters).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Connect to the live event stream. Dispose the resulting stream to disconnect.
+        /// </summary>
+        /// <typeparam name="T">The type into which events should be deserialized.</typeparam>
+        /// <param name="intersectIds">If provided, a list of signal ids whose intersection will be filtered for the result.</param>
+        /// <param name="filter">A strict Seq filter expression to match (text expressions must be in double quotes). To
+        /// convert a "fuzzy" filter into a strict one the way the Seq UI does, use connection.Expressions.ToStrictAsync().</param>
+        /// <returns>An observable that will stream events from the server to subscribers. Events will be buffered server-side until the first
+        /// subscriber connects, ensure at least one subscription is made in order to avoid event loss.</returns>
+        public async Task<ObservableStream<T>> StreamAsync<T>(
+            string[] intersectIds = null,
+            string filter = null)
+        {
+            var parameters = new Dictionary<string, object>();
+            if (intersectIds != null && intersectIds.Length > 0) { parameters.Add("intersectIds", string.Join(",", intersectIds)); }
+            if (filter != null) { parameters.Add("filter", filter); }
+
+            var group = await LoadGroupAsync().ConfigureAwait(false);
+            return await Client.StreamAsync<T>(group, "Stream", parameters).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Retrieve a list of events that match a set of conditions. The complete result is buffered into memory,
+        /// so if a large result set is expected, use InSignalAsync() and lastReadEventId to page the results.
+        /// </summary>
+        /// <param name="intersectIds">If provided, a list of signal ids whose intersection will be filtered for the result.</param>
+        /// <param name="filter">A strict Seq filter expression to match (text expressions must be in double quotes). To
+        /// convert a "fuzzy" filter into a strict one the way the Seq UI does, use connection.Expressions.ToStrictAsync().</param>
+        /// <returns>An observable that will stream events from the server to subscribers. Events will be buffered server-side until the first
+        /// subscriber connects, ensure at least one subscription is made in order to avoid event loss.</returns>
+        public async Task<ObservableStream<string>> StreamDocumentsAsync(
+            string[] intersectIds = null,
+            string filter = null)
+        {
+            var parameters = new Dictionary<string, object>();
+            if (intersectIds != null && intersectIds.Length > 0) { parameters.Add("intersectIds", string.Join(",", intersectIds)); }
+            if (filter != null) { parameters.Add("filter", filter); }
+
+            var group = await LoadGroupAsync().ConfigureAwait(false);
+            return await Client.StreamTextAsync(group, "Stream", parameters).ConfigureAwait(false);
         }
     }
 }
