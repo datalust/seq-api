@@ -32,7 +32,6 @@
   },
 
   "dependencies": {
-    "NETStandard.Library": "1.6.0",
     "Newtonsoft.Json": "9.0.1",
     "Tavis.UriTemplates": "1.1.0"
   },
@@ -40,6 +39,7 @@
   "frameworks": {
     "netstandard1.3": {
       "dependencies": {
+        "NETStandard.Library": "1.6.0",
         "System.Collections.Concurrent": "4.0.12",
         "System.Net.Http": "4.1.0",
         "System.Net.WebSockets.Client": "4.0.0"
