@@ -10,8 +10,7 @@ It's useful for querying events and working with configuration data - *everythin
 
 If you want to *write events* to Seq, use one of the logging framework clients, such as _Serilog.Sinks.Seq_ or _Seq.Client.Slab_ instead.
 
-Getting Started
----------------
+### Getting started
 
 Install from NuGet:
 
@@ -35,8 +34,7 @@ var installedApps = await connection.Apps.ListAsync();
 
 For a more complete example, see the [seq-tail app included in the source](https://github.com/continuousit/seq-api/blob/master/example/SeqTail/Program.cs);
 
-Reading Events
---------------
+### Reading events
 
 Seq internally limits the resources a query is allowed to consume. The query methods on `SeqConnection.Events` include a _status_ with each result set - a `Partial` status indicates that further results must be retrieved.
 
@@ -76,8 +74,28 @@ foreach (var evt in resultSet)
 
 All methods that retrieve events require a `count`. The API client defaults this value to `30` if not specified.
 
-Working with the Basic Client
------------------------------
+### Streaming events
+
+Seq 3.4 provides live streaming of events matching a filter and/or set of signals.
+
+```csharp
+var filter = "@Level = 'Error'";
+
+using (var stream = await connection.Events.StreamAsync<JObject>(filter: filter))
+using (stream.Select(jObject => LogEventReader.ReadFromJObject(jObject))
+             .Subscribe(evt => Log.Write(evt)))
+{
+    await stream;
+}
+```
+
+The `Events.StreamAsync()` method returns a hot `IObservable<T>` over a _WebSocket_. The observable will keep producing events until either it's disposed, or the server is shut down.
+
+Seq streams the events in [compact JSON format](https://github.com/serilog/serilog-formatting-compact), which the Seq API client library can deserialize into JSON.NET `JObjects` for consumption.
+
+[_Serilog.Formatting.Compact.Reader_](https://github.com/serilog/serilog-formatting-compact-reader) provides the `LogEventReader` class used above to turn these documents back into Serilog `LogEvent`s. Having the events represented in Serilog’s object model means they can be passed back into a logging pipeline, as performed above using `Log.Write()`.
+
+### Working with the basic client
 
 The `SeqApiClient` class implements the low level interactions with the API's entities and links. It's one step up from `System.Net.HttpClient` - you may be able to use it in cases not supported by the high-level wrapper. 
 
@@ -94,7 +112,7 @@ var root = await client.GetRootAsync();
 var events = await client.GetAsync<ResourceGroup>(root, "EventsResources");
 ```
 
-(Available resource groups, like `events`, `users` and so-on, can be seen in the root document's `Links` collection.)
+(Available resource groups, like `Events`, `Users` and so-on, can be seen in the root document's `Links` collection.)
 
 Use the client to navigate links from entity to entity:
 
@@ -107,11 +125,3 @@ var matched = await client.List<EventEntity>(
 foreach (var match in matched)
   Console.WriteLine(matched.RenderedMessage);
 ```
-
-Status
-------
-
-This library is under active development.
-
-* The entity types etc. are complete: they're the same ones Seq uses internally.
-* The helper classes such as `SeqConnection` and `SeqApiClient` are evolving and may change in response to feedback (and PRs!).
