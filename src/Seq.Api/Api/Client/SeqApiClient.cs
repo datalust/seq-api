@@ -170,17 +170,19 @@ namespace Seq.Api.Client
             if (response.IsSuccessStatusCode)
                 return stream;
 
+            Dictionary<string, object> payload = null;
             try
             {
-                var payload = _serializer.Deserialize<Dictionary<string, object>>(new JsonTextReader(new StreamReader(stream)));
-                object error;
-                if (payload.TryGetValue("Error", out error) && error != null)
-                    throw new SeqApiException(error.ToString());
+                payload = _serializer.Deserialize<Dictionary<string, object>>(new JsonTextReader(new StreamReader(stream)));
             }
             // ReSharper disable once EmptyGeneralCatchClause
             catch { }
 
-            throw new SeqApiException("The Seq request failed (" + response.StatusCode + ").");
+            object error;
+            if (payload != null && payload.TryGetValue("Error", out error) && error != null)
+                throw new SeqApiException($"{(int)response.StatusCode} - {error}");
+
+            throw new SeqApiException($"The Seq request failed ({(int)response.StatusCode}).");
         }
 
         HttpContent MakeJsonContent(object content)

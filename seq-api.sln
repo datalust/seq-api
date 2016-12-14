@@ -31,6 +31,8 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "seq-query", "example\SeqQue
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "seq-tail", "example\SeqTail\seq-tail.xproj", "{42CEBFBA-208F-40F1-AC95-13F05F6D5412}"
 EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "signal-copy", "example\SignalCopy\signal-copy.xproj", "{E8CDDE17-8E29-4EB4-A4BB-38BCE346A752}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -53,6 +55,10 @@ Global
 		{42CEBFBA-208F-40F1-AC95-13F05F6D5412}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{42CEBFBA-208F-40F1-AC95-13F05F6D5412}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{42CEBFBA-208F-40F1-AC95-13F05F6D5412}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E8CDDE17-8E29-4EB4-A4BB-38BCE346A752}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E8CDDE17-8E29-4EB4-A4BB-38BCE346A752}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E8CDDE17-8E29-4EB4-A4BB-38BCE346A752}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E8CDDE17-8E29-4EB4-A4BB-38BCE346A752}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -62,5 +68,6 @@ Global
 		{CD473266-4AED-4207-89FD-0B185239F1C7} = {5E7A565B-A8EE-43E7-A225-5B640A5D29A0}
 		{34BBD428-8297-484E-B771-0B72C172C264} = {1C66E116-DC21-4C8F-833E-A4C2DDF58487}
 		{42CEBFBA-208F-40F1-AC95-13F05F6D5412} = {1C66E116-DC21-4C8F-833E-A4C2DDF58487}
+		{E8CDDE17-8E29-4EB4-A4BB-38BCE346A752} = {1C66E116-DC21-4C8F-833E-A4C2DDF58487}
 	EndGlobalSection
 EndGlobal

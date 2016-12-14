@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "SignalCopy": {
+      "commandName": "Project",
+      "commandLineArgs": "http://localhost:5341 http://localhost:5342 --srckey=fSCcBOyOfttZ0kiZFgq"
+    }
+  }
+}
