@@ -1,6 +1,5 @@
 # Seq HTTP API Client [![Build status](https://ci.appveyor.com/api/projects/status/bhtx25hyqmmdqhvt?svg=true)](https://ci.appveyor.com/project/datalust/seq-api) [![NuGet Pre Release](https://img.shields.io/nuget/vpre/Seq.Api.svg)](https://nuget.org/packages/seq.api) [![Join the chat at https://gitter.im/datalust/seq](https://img.shields.io/gitter/room/datalust/seq.svg)](https://gitter.im/datalust/seq)
 
-
 This library includes:
 
  * C# representations of the entities exposed by the Seq HTTP API
@@ -32,7 +31,19 @@ var installedApps = await connection.Apps.ListAsync();
 
 **To authenticate**, the `SeqConnection` constructor accepts an `apiKey` parameter (make sure the API key permits _user-level access_) or, if you want to log in with personal credentials you can `await connection.Users.Login(username, password)`.
 
-For a more complete example, see the [seq-tail app included in the source](https://github.com/continuousit/seq-api/blob/master/example/SeqTail/Program.cs);
+For a more complete example, see the [seq-tail app included in the source](https://github.com/datalust/seq-api/blob/master/example/SeqTail/Program.cs).
+
+#### Creating entities
+
+The Seq API provides a `/template` resource for each resource group that provides a new instance of the resource with defaults populated. The API client uses this pattern when creating new entities:
+
+```csharp
+var signal = await connection.Signals.TemplateAsync();
+signal.Title = "Signal 123";
+await connection.Signals.AddAsync(signal);
+```
+
+See the [signal-copy app](https://github.com/datalust/seq-api/blob/master/example/SignalCopy/Program.cs) for an example of this pattern in action.
 
 ### Reading events
 
@@ -46,7 +57,7 @@ string lastReadEventId = null;
 while(true)
 {
   var resultSet = await connection.Events.InSignalAsync(
-      filter: "Environment == \"Test\"",
+      filter: "Environment = 'Test'",
       render: true,
       afterId: lastReadEventId);
       
@@ -64,7 +75,7 @@ If the result set is expected to be small, `ListAsync()` will buffer results and
 
 ```csharp
 var resultSet = await connection.Events.ListAsync(
-    filter: "Environment == \"Test\"",
+    filter: "Environment = 'Test'",
     render: true,
     count: 1000);
   
