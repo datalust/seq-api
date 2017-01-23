@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Seq.Api.Model.Users;
+using System.Linq;
+using Seq.Api.Client;
 
 namespace Seq.Api.ResourceGroups
 {
@@ -64,6 +66,17 @@ namespace Seq.Api.ResourceGroups
         public async Task<SearchHistoryEntity> GetSearchHistoryAsync(UserEntity entity)
         {
             return await Client.GetAsync<SearchHistoryEntity>(entity, "SearchHistory").ConfigureAwait(false);
+        }
+
+        public async Task<UserEntity> LoginWindowsIntegratedAsync()
+        {
+            var providers = await GroupGetAsync<AuthProvidersPart>("AuthenticationProviders");
+            var provider = providers.Providers.SingleOrDefault(p => p.Name == "Integrated Windows Authentication");
+            if (provider == null)
+                throw new SeqApiException("The Integrated Windows Authentication provider is not available.");
+            var response = await Client.HttpClient.GetAsync(provider.Url);
+            response.EnsureSuccessStatusCode();
+            return await FindCurrentAsync();
         }
     }
 }
