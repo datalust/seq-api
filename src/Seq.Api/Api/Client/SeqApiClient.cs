@@ -45,7 +45,7 @@ namespace Seq.Api.Client
             if (!string.IsNullOrEmpty(apiKey))
                 _apiKey = apiKey;
 
-            var handler = new HttpClientHandler { CookieContainer = _cookies };
+            var handler = new HttpClientHandler { CookieContainer = _cookies, UseDefaultCredentials = true };
 
             var baseAddress = serverUrl;
             if (!baseAddress.EndsWith("/"))
@@ -55,6 +55,8 @@ namespace Seq.Api.Client
         }
 
         public string ServerUrl { get; }
+
+        public HttpClient HttpClient => _httpClient;
 
         public Task<RootEntity> GetRootAsync()
         {
