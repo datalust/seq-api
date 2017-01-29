@@ -121,6 +121,14 @@ namespace Seq.Api.Client
             new StreamReader(stream).ReadToEnd();
         }
 
+        public async Task<TResponse> DeleteAsync<TEntity, TResponse>(ILinked entity, string link, TEntity content, IDictionary<string, object> parameters = null)
+        {
+            var linkUri = ResolveLink(entity, link, parameters);
+            var request = new HttpRequestMessage(HttpMethod.Delete, linkUri) { Content = MakeJsonContent(content) };
+            var stream = await HttpSendAsync(request).ConfigureAwait(false);
+            return _serializer.Deserialize<TResponse>(new JsonTextReader(new StreamReader(stream)));
+        }
+
         public async Task<ObservableStream<TEntity>> StreamAsync<TEntity>(ILinked entity, string link, IDictionary<string, object> parameters = null)
         {
             return await WebSocketStreamAsync(entity, link, parameters, reader => _serializer.Deserialize<TEntity>(new JsonTextReader(reader)));
