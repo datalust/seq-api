@@ -155,7 +155,7 @@ namespace Seq.Api.ResourceGroups
             if (toDateUtc != null) { parameters.Add("toDateUtc", toDateUtc.Value); }
 
             var body = signal ?? new SignalEntity();
-            return await GroupPostAsync<SignalEntity, ResultSetPart>("DeleteInSignal", body, parameters).ConfigureAwait(false);
+            return await GroupDeleteAsync<SignalEntity, ResultSetPart>("DeleteInSignal", body, parameters).ConfigureAwait(false);
         }
 
         /// <summary>
