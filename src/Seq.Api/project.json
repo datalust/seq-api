@@ -1,5 +1,5 @@
 {
-  "version": "3.4.3-*",
+  "version": "3.4.4-*",
 
   "description": "Client library for the Seq HTTP API.",
   "authors": [ "Datalust", "Contributors" ],
