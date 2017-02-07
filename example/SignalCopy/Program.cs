@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using DocoptNet;
 using Seq.Api;
-using System.Linq;
 using Seq.Api.Model.Signals;
 using System.Collections.Generic;
 

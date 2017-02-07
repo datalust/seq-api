@@ -72,5 +72,11 @@ namespace Seq.Api.ResourceGroups
             var group = await LoadGroupAsync().ConfigureAwait(false);
             await Client.DeleteAsync(group, link, content, parameters).ConfigureAwait(false);
         }
+
+        protected async Task<TResponse> GroupDeleteAsync<TEntity, TResponse>(string link, TEntity content, IDictionary<string, object> parameters = null)
+        {
+            var group = await LoadGroupAsync().ConfigureAwait(false);
+            return await Client.DeleteAsync<TEntity, TResponse>(group, link, content, parameters).ConfigureAwait(false);
+        }
     }
 }
