@@ -33,7 +33,7 @@ namespace Seq.Api
 
         public DataResourceGroup Data => new DataResourceGroup(this);
 
-        public DiagnosticsResourceGroup Diagnositcs => new DiagnosticsResourceGroup(this);
+        public DiagnosticsResourceGroup Diagnostics => new DiagnosticsResourceGroup(this);
 
         public EventsResourceGroup Events => new EventsResourceGroup(this);
 
