@@ -19,6 +19,7 @@ namespace Seq.Api.Model.Diagnostics
 
         public int EndpointArrivalsPerMinute { get; set; }
         public int EndpointInfluxPerMinute { get; set; }
+        public long EndpointIngestedBytesPerMinute { get; set; }
         public int EndpointInvalidPayloadsPerMinute { get; set; }
         public int EndpointUnauthorizedPayloadsPerMinute { get; set; }
 
@@ -31,5 +32,12 @@ namespace Seq.Api.Model.Diagnostics
         public double SystemMemoryUtilization { get; set; }
 
         public List<RunningTaskPart> RunningTasks { get; set; }
+
+        public int QueriesPerMinute { get; set; }
+        public int QueryCacheTimeSliceHitsPerMinute { get; set; }
+        public int QueryCacheInvalidationsPerMinute { get; set; }
+
+        public int DocumentStoreActiveSessions { get; set; }
+        public int DocumentStoreActiveTransactions { get; set; }
     }
 }

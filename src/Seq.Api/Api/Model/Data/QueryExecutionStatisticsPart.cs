@@ -1,4 +1,4 @@
-namespace Seq.Api.Data
+namespace Seq.Api.Model.Data
 {
     public class QueryExecutionStatisticsPart
     {
