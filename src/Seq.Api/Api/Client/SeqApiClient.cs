@@ -26,7 +26,7 @@ namespace Seq.Api.Client
         // Future versions of Seq may not completely support v1 features, however
         // providing this as an Accept header will ensure what compatibility is available
         // can be utilised.
-        const string SeqApiV3MediaType = "application/vnd.continuousit.seq.v3+json";
+        const string SeqApiV4MediaType = "application/vnd.continuousit.seq.v4+json";
 
         readonly HttpClient _httpClient;
         readonly CookieContainer _cookies = new CookieContainer();
@@ -38,9 +38,7 @@ namespace Seq.Api.Client
 
         public SeqApiClient(string serverUrl, string apiKey = null)
         {
-            if (serverUrl == null) throw new ArgumentNullException(nameof(serverUrl));
-
-            ServerUrl = serverUrl;
+            ServerUrl = serverUrl ?? throw new ArgumentNullException(nameof(serverUrl));
 
             if (!string.IsNullOrEmpty(apiKey))
                 _apiKey = apiKey;
@@ -172,7 +170,7 @@ namespace Seq.Api.Client
             if (_apiKey != null)
                 request.Headers.Add("X-Seq-ApiKey", _apiKey);
 
-            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(SeqApiV3MediaType));
+            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(SeqApiV4MediaType));
 
             var response = await _httpClient.SendAsync(request).ConfigureAwait(false);
             var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);

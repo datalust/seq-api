@@ -31,6 +31,8 @@ namespace Seq.Api
 
         public BackupsResourceGroup Backups => new BackupsResourceGroup(this);
 
+        public DashboardsResourceGroup Dashboards => new DashboardsResourceGroup(this);
+
         public DataResourceGroup Data => new DataResourceGroup(this);
 
         public DiagnosticsResourceGroup Diagnostics => new DiagnosticsResourceGroup(this);
@@ -43,7 +45,7 @@ namespace Seq.Api
 
         public LicensesResourceGroup Licenses => new LicensesResourceGroup(this);
 
-        public PinsResourceGroup Pins => new PinsResourceGroup(this);
+        public PermalinksResourceGroup Permalinks => new PermalinksResourceGroup(this);
 
         public RetentionPoliciesResourceGroup RetentionPolicies => new RetentionPoliciesResourceGroup(this);
 
@@ -55,14 +57,12 @@ namespace Seq.Api
 
         public UsersResourceGroup Users => new UsersResourceGroup(this);
 
-        public WatchesResourceGroup Watches => new WatchesResourceGroup(this);
-
         public async Task<ResourceGroup> LoadResourceGroupAsync(string name)
         {
             return await _resourceGroups.GetOrAdd(name, ResourceGroupFactory).ConfigureAwait(false);
         }
 
-        private async Task<ResourceGroup> ResourceGroupFactory(string name)
+        async Task<ResourceGroup> ResourceGroupFactory(string name)
         {
             return await _client.GetAsync<ResourceGroup>(await _root.Value, name + "Resources").ConfigureAwait(false);
         }

@@ -18,5 +18,13 @@ namespace Seq.Api.ResourceGroups
                 {"fuzzy", fuzzy}
             });
         }
+
+        public Task<ExpressionPart> ToSqlAsync(string fuzzy)
+        {
+            return GroupGetAsync<ExpressionPart>("ToSql", new Dictionary<string, object>
+            {
+                {"fuzzy", fuzzy}
+            });
+        }
     }
 }

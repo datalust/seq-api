@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace Seq.Api.Data
+namespace Seq.Api.Model.Data
 {
     public class QueryResultPart
     {

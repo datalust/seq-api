@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Seq.Api.Data;
+using Seq.Api.Model.Data;
 using Seq.Api.Model.Signals;
 
 namespace Seq.Api.ResourceGroups
