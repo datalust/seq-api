@@ -38,6 +38,5 @@ namespace Seq.Api.Model.Diagnostics
         public int QueryCacheInvalidationsPerMinute { get; set; }
 
         public int DocumentStoreActiveSessions { get; set; }
-        public int DocumentStoreActiveTransactions { get; set; }
     }
 }
