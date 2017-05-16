@@ -19,8 +19,10 @@ namespace Seq.Api.Model.Inputs
         public SignalFilterPart InputFilter { get; set; }
         public bool CanActAsPrincipal { get; set; }
         public LogEventLevel? MinimumLevel { get; set; }
+        public bool UseServerTimestamps { get; set; }
         public int InfluxPerMinute { get; set; }
         public int ArrivalsPerMinute { get; set; }
         public ApiKeyMetricsPart Metrics { get; set; }
+        public bool IsDefault { get; set; }
     }
 }

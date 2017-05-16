@@ -11,6 +11,9 @@ namespace Seq.Api.Model.Events
         public string PropertyName { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string RawText { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string FormattedValue { get; set; }
     }
 }

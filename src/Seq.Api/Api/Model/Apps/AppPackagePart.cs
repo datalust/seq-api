@@ -8,5 +8,6 @@
         public string Authors { get; set; }
         public string IconUrl { get; set; }
         public string LicenseUrl { get; set; }
+        public bool UpdateAvailable { get; set; }
     }
 }
