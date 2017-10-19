@@ -1,24 +1,28 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using DocoptNet;
 using Seq.Api;
 using Seq.Api.Model.Signals;
-using System.Collections.Generic;
 
-namespace SeqQuery
+namespace SeqConsole
 {
     class Program
     {
-        const string Usage = @"signal-copy: copy Seq signals from one server to another.
+        const string Usage = @"signal-copy: copy/print/delete Seq signals from one server to another.
 
 Usage:
-    signal-copy.exe <src> <dst> [--srckey=<sk>] [--dstkey=<dk>]
+    signal-copy.exe [--action=<a>] <src> <dst> [--srckey=<sk>] [--dstkey=<dk>]
+    signal-copy.exe [--action=<a>] <src> [--srckey=<sk>] [--signal=<sg>]
+    signal-copy.exe [--action=<a>] <src> [--srckey=<sk>]
     signal-copy.exe (-h | --help)
 
 Options:
     -h --help     Show this screen.
+    --action=<a> Action, can be 'copy', 'print' or 'delete'.
     --srckey=<sk> Source server API key.
     --dstkey=<dk> Destination server API key.
+    --signal=<sg> Signal title.
 
     ";
 
@@ -30,12 +34,28 @@ Options:
                 {
                     var arguments = new Docopt().Apply(Usage, args, version: "Seq Signal Copy 0.1", exit: true);
 
-                    var src = arguments["<src>"].ToString();
-                    var dst = arguments["<dst>"].ToString();
+                    var action = Normalize(arguments["--action"]);
+                    var src = arguments["<src>"].Value.ToString();
+                    var dst = arguments["<dst>"]?.Value?.ToString();
                     var srcKey = Normalize(arguments["--srckey"]);
                     var dstKey = Normalize(arguments["--dstkey"]);
+                    var signal = Normalize(arguments["--signal"]);
 
-                    await Run(src, srcKey, dst, dstKey);
+                    switch (action)
+                    {
+                        case "copy":
+                            await RunCopy(src, srcKey, dst, dstKey);
+                            break;
+                        case "delete":
+                            await RunDelete(src, srcKey, signal);
+                            break;
+                        case "print":
+                            await RunPrint(src, srcKey);
+                            break;
+                        default:
+                            Console.WriteLine($"Unknown action: '{action}'");
+                            break;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -55,7 +75,61 @@ Options:
             return string.IsNullOrWhiteSpace(s) ? null : s;
         }
 
-        static async Task Run(string src, string srcKey, string dst, string dstKey)
+        static async Task RunPrint(string src, string srcKey)
+        {
+            var srcConnection = new SeqConnection(src, srcKey);
+            var count = 0;
+            var countAll = 0;
+
+            foreach (var signal in await srcConnection.Signals.ListAsync())
+            {
+                Console.WriteLine();
+                Console.WriteLine($"---- Signal Title: '{signal.Title}', Id: '{signal.Id}' ----");
+                Console.WriteLine($"Restricted: '{signal.IsRestricted}', Watched: '{signal.IsWatched}:'");
+                Console.WriteLine($"Description: '{signal.Description}'");
+                foreach (var property in signal.TaggedProperties)
+                {
+                    Console.Write($"Property {count}: {property.PropertyName}; ");
+                    count++;
+                }
+                Console.WriteLine();
+                count = 0;
+                foreach (var filter in signal.Filters)
+                {
+                    Console.Write($"Filter {count}: {filter.Filter}, {filter.Description}; ");
+                    count++;
+                }
+                Console.WriteLine();
+                countAll++;
+            }
+            Console.WriteLine($"Done, {countAll} signals printed.");
+        }
+
+        static async Task RunDelete(string src, string srcKey, string signalName)
+        {
+            var srcConnection = new SeqConnection(src, srcKey);
+            var count = 0;
+
+            foreach (var signal in await srcConnection.Signals.ListAsync())
+            {
+                if (signalName != null && signal.Title == signalName)
+                {
+                    Console.WriteLine($"Deleting signal '{signal.Title}' with id='{signal.Id}'");
+                    await srcConnection.Signals.RemoveAsync(signal);
+                    ++count;
+                }
+                else if (signalName == null)
+                {
+                    Console.WriteLine($"Deleting signal '{signal.Title}' with id='{signal.Id}'");
+                    await srcConnection.Signals.RemoveAsync(signal);
+                    ++count;
+                }
+            }
+
+            Console.WriteLine($"Done, {count} signals deleted.");
+        }
+
+        static async Task RunCopy(string src, string srcKey, string dst, string dstKey)
         {
             var srcConnection = new SeqConnection(src, srcKey);
             var dstConnection = new SeqConnection(dst, dstKey);
