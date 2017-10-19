@@ -5,7 +5,7 @@ using DocoptNet;
 using Seq.Api;
 using Seq.Api.Model.Signals;
 
-namespace SeqConsole
+namespace SignalCopy
 {
     class Program
     {
