@@ -7,7 +7,7 @@ This library includes:
 
 It's useful for querying events and working with configuration data - *everything you can do using the Seq web UI*, you can do programmatically via the API.
 
-If you want to *write events* to Seq, use one of the logging framework clients, such as _Serilog.Sinks.Seq_ or _Seq.Client.Slab_ instead.
+If you want to *write events* to Seq, use one of the logging framework clients, such as _Serilog.Sinks.Seq_ or _NLog.Targets.Seq_ instead.
 
 ### Getting started
 
@@ -136,3 +136,7 @@ var matched = await client.List<EventEntity>(
 foreach (var match in matched)
   Console.WriteLine(matched.RenderedMessage);
 ```
+
+### Package versioning
+
+This package does not follow the SemVer rule of major version increments for breaking changes. Instead, the package version tracks the Seq version it supports.
