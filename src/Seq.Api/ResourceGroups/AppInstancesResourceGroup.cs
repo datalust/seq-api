@@ -31,17 +31,29 @@ namespace Seq.Api.ResourceGroups
 
         public async Task<AppInstanceEntity> AddAsync(AppInstanceEntity entity, bool runOnExisting = false)
         {
+            if (entity == null) throw new ArgumentNullException(nameof(entity));
             return await Client.PostAsync<AppInstanceEntity, AppInstanceEntity>(entity, "Create", entity, new Dictionary<string, object> { { "runOnExisting", runOnExisting } }).ConfigureAwait(false);
         }
 
         public async Task RemoveAsync(AppInstanceEntity entity)
         {
+            if (entity == null) throw new ArgumentNullException(nameof(entity));
             await Client.DeleteAsync(entity, "Self", entity).ConfigureAwait(false);
         }
 
         public async Task UpdateAsync(AppInstanceEntity entity)
         {
+            if (entity == null) throw new ArgumentNullException(nameof(entity));
             await Client.PutAsync(entity, "Self", entity).ConfigureAwait(false);
+        }
+
+        public async Task InvokeAsync(AppInstanceEntity entity, string eventId, IReadOnlyDictionary<string, string> settingOverrides)
+        {
+            if (entity == null) throw new ArgumentNullException(nameof(entity));
+            if (eventId == null) throw new ArgumentNullException(nameof(eventId));
+
+            var postedSettings = settingOverrides ?? new Dictionary<string, string>();
+            await Client.PostAsync(entity, "Invoke", postedSettings, new Dictionary<string, object>{{"eventId", eventId}});
         }
     }
 }

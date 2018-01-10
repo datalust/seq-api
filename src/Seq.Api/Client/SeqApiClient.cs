@@ -204,7 +204,7 @@ namespace Seq.Api.Client
         {
             Link linkItem;
             if (!entity.Links.TryGetValue(link, out linkItem))
-                throw new NotSupportedException("The requested link isn't available.");
+                throw new NotSupportedException($"The requested link `{link}` isn't available on entity `{entity}`.");
 
             var expression = linkItem.GetUri();
             var template = new UriTemplate(expression);
@@ -212,12 +212,12 @@ namespace Seq.Api.Client
             {
                 var missing = parameters.Select(p => p.Key).Except(template.GetParameterNames()).ToArray();
                 if (missing.Any())
-                    throw new ArgumentException("The URI template '" + expression + "' does not contain parameter: " + string.Join(",", missing));
+                    throw new ArgumentException($"The URI template `{expression}` does not contain parameter: `{string.Join("`, `", missing)}`.");
 
                 foreach (var parameter in parameters)
                 {
-                    var value = parameter.Value is DateTime
-                        ? ((DateTime) parameter.Value).ToString("O")
+                    var value = parameter.Value is DateTime time
+                        ? time.ToString("O")
                         : parameter.Value;
 
                     template.SetParameter(parameter.Key, value);

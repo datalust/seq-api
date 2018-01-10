@@ -5,6 +5,7 @@
         Line,
         Bar,
         Point,
-        Value
+        Value,
+        Pie
     }
 }
