@@ -30,7 +30,7 @@ Options:
         {
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Verbose()
-                .WriteTo.LiterateConsole()
+                .WriteTo.Console()
                 .CreateLogger();
 
             TaskScheduler.UnobservedTaskException += (s,e) => Log.Fatal(e.Exception, "Unobserved task exception");
