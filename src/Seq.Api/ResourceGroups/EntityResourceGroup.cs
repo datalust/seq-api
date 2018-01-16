@@ -13,9 +13,21 @@ namespace Seq.Api.ResourceGroups
         protected async Task<TResponse> GroupCreateAsync<TEntity, TResponse>(TEntity entity,
             IDictionary<string, object> parameters = null) where TEntity : ILinked
         {
-            var link = entity.Links.ContainsKey("Create") ? "Create" : "Items";
-            var group = await LoadGroupAsync().ConfigureAwait(false);
-            return await Client.PostAsync<TEntity, TResponse>(group, link, entity, parameters).ConfigureAwait(false);
+            ILinked resource;
+            string link;
+
+            if (entity.Links.ContainsKey("Create"))
+            {
+                resource = entity;
+                link = "Create";
+            }
+            else
+            {
+                resource = await LoadGroupAsync().ConfigureAwait(false);
+                link = "Items";
+            }
+
+            return await Client.PostAsync<TEntity, TResponse>(resource, link, entity, parameters).ConfigureAwait(false);
         }
     }
 }
