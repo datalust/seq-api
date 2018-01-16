@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Description>Client library for the Seq HTTP API.</Description>
-    <VersionPrefix>4.2.1</VersionPrefix>
+    <VersionPrefix>4.2.2</VersionPrefix>
     <Authors>Datalust;Contributors</Authors>
     <TargetFrameworks>netstandard1.3;net452</TargetFrameworks>
     <NoWarn>$(NoWarn);CS1591</NoWarn>
