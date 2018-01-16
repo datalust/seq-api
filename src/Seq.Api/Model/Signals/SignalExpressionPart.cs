@@ -74,7 +74,7 @@ namespace Seq.Api.Model.Signals
                 return $"{Group(Left)},{Group(Right)}";
 
             if (Kind == SignalExpressionKind.Union)
-                return $"{Group(Left)}+{Group(Right)}";
+                return $"{Group(Left)}~{Group(Right)}";
 
             throw new InvalidOperationException("Invalid signal expression kind.");
         }
