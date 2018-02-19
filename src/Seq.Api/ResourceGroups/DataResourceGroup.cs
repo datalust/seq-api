@@ -26,7 +26,7 @@ namespace Seq.Api.ResourceGroups
         /// <returns>A structured result set.</returns>
         public async Task<QueryResultPart> QueryAsync(
             string query,
-            DateTime rangeStartUtc,
+            DateTime? rangeStartUtc = null,
             DateTime? rangeEndUtc = null,
             SignalExpressionPart signal = null,
             SignalEntity unsavedSignal = null,
@@ -49,7 +49,7 @@ namespace Seq.Api.ResourceGroups
         /// <returns>A CSV result set.</returns>
         public async Task<string> QueryCsvAsync(
             string query,
-            DateTime rangeStartUtc,
+            DateTime? rangeStartUtc = null,
             DateTime? rangeEndUtc = null,
             SignalExpressionPart signal = null,
             SignalEntity unsavedSignal = null,
@@ -62,7 +62,7 @@ namespace Seq.Api.ResourceGroups
 
         static void MakeParameters(
             string query,
-            DateTime rangeStartUtc,
+            DateTime? rangeStartUtc,
             DateTime? rangeEndUtc,
             SignalExpressionPart signal,
             SignalEntity unsavedSignal,
@@ -72,10 +72,13 @@ namespace Seq.Api.ResourceGroups
         {
             parameters = new Dictionary<string, object>
             {
-                {"q", query},
-                {nameof(rangeStartUtc), rangeStartUtc}
+                {"q", query}
             };
 
+            if (rangeStartUtc != null)
+            {
+                parameters.Add(nameof(rangeStartUtc), rangeStartUtc);
+            }
             if (rangeEndUtc != null)
             {
                 parameters.Add(nameof(rangeEndUtc), rangeEndUtc.Value);
