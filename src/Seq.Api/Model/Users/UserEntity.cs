@@ -9,9 +9,9 @@ namespace Seq.Api.Model.Users
         public string DisplayName { get; set; }
         public string EmailAddress { get; set; }
         public Dictionary<string, object> Preferences { get; set; }
-        public bool IsAdministrator { get; set; }
         public string NewPassword { get; set; }
         public SignalFilterPart ViewFilter { get; set; }
         public bool MustChangePassword { get; set; }
+        public HashSet<string> RoleIds { get; set; } = new HashSet<string>();
     }
 }

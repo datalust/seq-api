@@ -15,30 +15,26 @@ namespace Seq.Api.ResourceGroups
         public async Task<PermalinkEntity> FindAsync(
             string id,
             bool includeEvent = false, 
-            bool renderEvent = false, 
-            bool includeUser = false)
+            bool renderEvent = false)
         {
             if (id == null) throw new ArgumentNullException(nameof(id));
             var parameters = new Dictionary<string, object>
             {
                 {"id", id},
                 {"includeEvent", includeEvent},
-                {"renderEvent", renderEvent},
-                {"includeUser", includeUser}
+                {"renderEvent", renderEvent}
             };
             return await GroupGetAsync<PermalinkEntity>("Item", parameters).ConfigureAwait(false);
         }
 
         public async Task<List<PermalinkEntity>> ListAsync(
             bool includeEvent = false, 
-            bool renderEvent = false, 
-            bool includeUser = false)
+            bool renderEvent = false)
         {
             var parameters = new Dictionary<string, object>
             {
                 {"includeEvent", includeEvent},
-                {"renderEvent", renderEvent},
-                {"includeUser", includeUser}
+                {"renderEvent", renderEvent}
             };
 
             return await GroupListAsync<PermalinkEntity>("Items", parameters).ConfigureAwait(false);
@@ -51,7 +47,7 @@ namespace Seq.Api.ResourceGroups
 
         public async Task<PermalinkEntity> AddAsync(PermalinkEntity entity)
         {
-            return await Client.PostAsync<PermalinkEntity, PermalinkEntity>(entity, "Create", entity).ConfigureAwait(false);
+            return await GroupCreateAsync<PermalinkEntity, PermalinkEntity>(entity).ConfigureAwait(false);
         }
 
         public async Task RemoveAsync(PermalinkEntity entity)

@@ -18,9 +18,10 @@ namespace Seq.Api.ResourceGroups
             return await GroupGetAsync<ApiKeyEntity>("Item", new Dictionary<string, object> { { "id", id } }).ConfigureAwait(false);
         }
 
-        public async Task<List<ApiKeyEntity>> ListAsync()
+        public async Task<List<ApiKeyEntity>> ListAsync(string ownerId = null)
         {
-            return await GroupListAsync<ApiKeyEntity>("Items").ConfigureAwait(false);
+            var parameters = new Dictionary<string, object> { { "ownerId", ownerId } };
+            return await GroupListAsync<ApiKeyEntity>("Items", parameters).ConfigureAwait(false);
         }
 
         public async Task<ApiKeyEntity> TemplateAsync()
@@ -30,7 +31,7 @@ namespace Seq.Api.ResourceGroups
 
         public async Task<ApiKeyEntity> AddAsync(ApiKeyEntity entity)
         {
-            return await Client.PostAsync<ApiKeyEntity, ApiKeyEntity>(entity, "Create", entity).ConfigureAwait(false);
+            return await GroupCreateAsync<ApiKeyEntity, ApiKeyEntity>(entity).ConfigureAwait(false);
         }
 
         public async Task RemoveAsync(ApiKeyEntity entity)

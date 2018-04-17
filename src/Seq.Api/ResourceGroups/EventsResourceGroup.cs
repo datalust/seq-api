@@ -16,10 +16,23 @@ namespace Seq.Api.ResourceGroups
         {
         }
 
-        public async Task<EventEntity> FindAsync(string id)
+        /// <summary>Find an event, given its id.</summary>
+        /// <param name="id">The id of the event to retrieve.</param>
+        /// <param name="render">If specified, the event's message template and properties will be rendered into its RenderedMessage property.</param>
+        /// <param name="permalinkId">If the request is for a permalinked event, specifying the id of the permalink here will
+        /// allow events that have otherwise been deleted to be found. The special value `"unknown"` provides backwards compatibility
+        /// with versions prior to 5.0, which did not mark permalinks explicitly.</param>
+        /// <returns>The event.</returns>
+        public async Task<EventEntity> FindAsync(
+            string id,
+            bool render = false,
+            string permalinkId = null)
         {
             if (id == null) throw new ArgumentNullException(nameof(id));
-            return await GroupGetAsync<EventEntity>("Item", new Dictionary<string, object> { { "id", id } }).ConfigureAwait(false);
+
+            var parameters = new Dictionary<string, object> {{"id", id}};
+
+            return await GroupGetAsync<EventEntity>("Item", parameters).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -38,6 +51,9 @@ namespace Seq.Api.ResourceGroups
         /// <param name="shortCircuitAfter">If specified, the number of events after the first match to keep searching before a partial
         /// result set is returned. Used to improve responsiveness when the result is displayed in a user interface, not typically used in
         /// batch processing scenarios.</param>
+        /// <param name="permalinkId">If the request is for a permalinked event, specifying the id of the permalink here will
+        /// allow events that have otherwise been deleted to be found. The special value `"unknown"` provides backwards compatibility
+        /// with versions prior to 5.0, which did not mark permalinks explicitly.</param>
         /// <returns>The complete list of events, ordered from least to most recent.</returns>
         public async Task<List<EventEntity>> ListAsync(
             SignalExpressionPart signal = null,
@@ -48,7 +64,8 @@ namespace Seq.Api.ResourceGroups
             bool render = false,
             DateTime? fromDateUtc = null,
             DateTime? toDateUtc = null,
-            int? shortCircuitAfter = null)
+            int? shortCircuitAfter = null,
+            string permalinkId = null)
         {
             var parameters = new Dictionary<string, object> { { "count", count } };
             if (signal != null) { parameters.Add("signal", signal.ToString()); }
@@ -59,6 +76,7 @@ namespace Seq.Api.ResourceGroups
             if (fromDateUtc != null) { parameters.Add("fromDateUtc", fromDateUtc.Value); }
             if (toDateUtc != null) { parameters.Add("toDateUtc", toDateUtc.Value); }
             if (shortCircuitAfter != null) { parameters.Add("shortCircuitAfter", shortCircuitAfter.Value); }
+            if (permalinkId != null) { parameters.Add("permalinkId", permalinkId); }
 
             var chunks = new List<List<EventEntity>>();
             var remaining = count;
@@ -104,6 +122,9 @@ namespace Seq.Api.ResourceGroups
         /// <param name="shortCircuitAfter">If specified, the number of events after the first match to keep searching before a partial
         /// result set is returned. Used to improve responsiveness when the result is displayed in a user interface, not typically used in
         /// batch processing scenarios.</param>
+        /// <param name="permalinkId">If the request is for a permalinked event, specifying the id of the permalink here will
+        /// allow events that have otherwise been deleted to be found. The special value `"unknown"` provides backwards compatibility
+        /// with versions prior to 5.0, which did not mark permalinks explicitly.</param>
         /// <returns>The complete list of events, ordered from least to most recent.</returns>
         public async Task<ResultSetPart> InSignalAsync(
             SignalEntity unsavedSignal = null,
@@ -115,7 +136,8 @@ namespace Seq.Api.ResourceGroups
             bool render = false,
             DateTime? fromDateUtc = null,
             DateTime? toDateUtc = null,
-            int? shortCircuitAfter = null)
+            int? shortCircuitAfter = null,
+            string permalinkId = null)
         {
             var parameters = new Dictionary<string, object>{{ "count", count }};
             if (signal != null) { parameters.Add("signal", signal.ToString()); }
@@ -126,11 +148,32 @@ namespace Seq.Api.ResourceGroups
             if (fromDateUtc != null) { parameters.Add("fromDateUtc", fromDateUtc.Value); }
             if (toDateUtc != null) { parameters.Add("toDateUtc", toDateUtc.Value); }
             if (shortCircuitAfter != null) { parameters.Add("shortCircuitAfter", shortCircuitAfter.Value); }
+            if (permalinkId != null) { parameters.Add("permalinkId", permalinkId); }
 
             var body = unsavedSignal ?? new SignalEntity();
             return await GroupPostAsync<SignalEntity, ResultSetPart>("InSignal", body, parameters).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Retrieve a list of events that match a set of conditions. The complete result is buffered into memory,
+        /// so if a large result set is expected, use InSignalAsync() and lastReadEventId to page the results.
+        /// </summary>
+        /// <param name="signal">If provided, a signal expression describing the set of events that will be filtered for the result.</param>
+        /// <param name="filter">A strict Seq filter expression to match (text expressions must be in double quotes). To
+        /// convert a "fuzzy" filter into a strict one the way the Seq UI does, use connection.Expressions.ToStrictAsync().</param>
+        /// <param name="count">The number of events to retrieve. If not specified will default to 30.</param>
+        /// <param name="startAtId">An event id from which to start searching (inclusively).</param>
+        /// <param name="afterId">An event id to search after (exclusively).</param>
+        /// <param name="render">If specified, the event's message template and properties will be rendered into its RenderedMessage property.</param>
+        /// <param name="fromDateUtc">Earliest (inclusive) date/time from which to search.</param>
+        /// <param name="toDateUtc">Latest (exclusive) date/time from which to search.</param>
+        /// <param name="shortCircuitAfter">If specified, the number of events after the first match to keep searching before a partial
+        /// result set is returned. Used to improve responsiveness when the result is displayed in a user interface, not typically used in
+        /// batch processing scenarios.</param>
+        /// <param name="permalinkId">If the request is for a permalinked event, specifying the id of the permalink here will
+        /// allow events that have otherwise been deleted to be found. The special value `"unknown"` provides backwards compatibility
+        /// with versions prior to 5.0, which did not mark permalinks explicitly.</param>
+        /// <returns>The complete list of events, ordered from least to most recent.</returns>
         public async Task<ResultSetPart> InSignalAsync(
             SignalExpressionPart signal,
             string filter = null, 
@@ -140,7 +183,8 @@ namespace Seq.Api.ResourceGroups
             bool render = false,
             DateTime? fromDateUtc = null,
             DateTime? toDateUtc = null,
-            int? shortCircuitAfter = null)
+            int? shortCircuitAfter = null,
+            string permalinkId = null)
         {
             if (signal == null) throw new ArgumentNullException(nameof(signal));
 
@@ -156,6 +200,7 @@ namespace Seq.Api.ResourceGroups
             if (fromDateUtc != null) { parameters.Add("fromDateUtc", fromDateUtc.Value); }
             if (toDateUtc != null) { parameters.Add("toDateUtc", toDateUtc.Value); }
             if (shortCircuitAfter != null) { parameters.Add("shortCircuitAfter", shortCircuitAfter.Value); }
+            if (permalinkId != null) { parameters.Add("permalinkId", permalinkId); }
 
             return await GroupGetAsync<ResultSetPart>("InSignal", parameters).ConfigureAwait(false);
         }

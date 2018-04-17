@@ -5,7 +5,7 @@ using Seq.Api.Model.Signals;
 
 namespace Seq.Api.ResourceGroups
 {
-    public class SignalsResourceGroup : EntityResourceGroup
+    public class SignalsResourceGroup : ApiResourceGroup
     {
         internal SignalsResourceGroup(ISeqConnection connection)
             : base("Signals", connection)

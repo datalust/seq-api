@@ -208,7 +208,13 @@ namespace Seq.Api.Streams
             catch { }
 
             if (_run != null)
-                _run.ConfigureAwait(false).GetAwaiter().GetResult();
+            {
+                try
+                {
+                    _run.ConfigureAwait(false).GetAwaiter().GetResult();
+                }
+                catch (TaskCanceledException) { }
+            }
 
             _socket.Dispose();
         }

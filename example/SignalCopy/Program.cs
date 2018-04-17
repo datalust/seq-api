@@ -5,7 +5,7 @@ using Seq.Api;
 using Seq.Api.Model.Signals;
 using System.Collections.Generic;
 
-namespace SeqQuery
+namespace SignalCopy
 {
     class Program
     {
@@ -76,10 +76,9 @@ Options:
 
             foreach (var signal in await srcConnection.Signals.ListAsync())
             {
-                SignalEntity target;
-                if (dstSignals.TryGetValue(signal.Title, out target))
+                if (dstSignals.TryGetValue(signal.Title, out var target))
                 {
-                    if (target.IsRestricted)
+                    if (target.IsProtected)
                     {
                         Console.WriteLine($"Skipping restricted signal '{signal.Title}' ({target.Id})");
                         continue;

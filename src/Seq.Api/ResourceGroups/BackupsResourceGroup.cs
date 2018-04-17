@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using Seq.Api.Model.Backups;
 
@@ -21,6 +22,11 @@ namespace Seq.Api.ResourceGroups
         public async Task<List<BackupEntity>> ListAsync()
         {
             return await GroupListAsync<BackupEntity>("Items").ConfigureAwait(false);
+        }
+
+        public async Task<Stream> DownloadImmediateAsync()
+        {
+            return await GroupPostReadBytesAsync("Immediate", new object()).ConfigureAwait(false);
         }
     }
 }
