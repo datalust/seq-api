@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Seq.Api.Model.Signals
 {
@@ -21,7 +22,11 @@ namespace Seq.Api.Model.Signals
 
         public bool IsWatched { get; set; }
 
-        public bool IsRestricted { get; set; }
+        [Obsolete("This member has been renamed `IsProtected` to better reflect its purpose.")]
+        // ReSharper disable once UnusedMember.Global
+        public bool? IsRestricted { get; set; }
+
+        public bool IsProtected { get; set; }
 
         public SignalGrouping Grouping { get; set; }
 

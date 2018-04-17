@@ -73,7 +73,7 @@ namespace Seq.Api.ResourceGroups
             var providers = await GroupGetAsync<AuthProvidersPart>("AuthenticationProviders").ConfigureAwait(false);
             var provider = providers.Providers.SingleOrDefault(p => p.Name == "Integrated Windows Authentication");
             if (provider == null)
-                throw new SeqApiException("The Integrated Windows Authentication provider is not available.");
+                throw new SeqApiException("The Integrated Windows Authentication provider is not available.", null);
             var response = await Client.HttpClient.GetAsync(provider.Url).ConfigureAwait(false);
             response.EnsureSuccessStatusCode();
             return await FindCurrentAsync().ConfigureAwait(false);

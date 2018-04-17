@@ -76,21 +76,16 @@ namespace Seq.Api.ResourceGroups
             };
 
             if (rangeStartUtc != null)
-            {
                 parameters.Add(nameof(rangeStartUtc), rangeStartUtc);
-            }
+            
             if (rangeEndUtc != null)
-            {
                 parameters.Add(nameof(rangeEndUtc), rangeEndUtc.Value);
-            }
+
             if (signal != null)
-            {
                 parameters.Add(nameof(signal), signal.ToString());
-            }
+
             if (timeout != null)
-            {
                 parameters.Add("timeoutMS", timeout.Value.TotalMilliseconds.ToString("0"));
-            }
 
             body = unsavedSignal ?? new SignalEntity();
         }

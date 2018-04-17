@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Threading.Tasks;
 using Seq.Api.Client;
 using Seq.Api.Model;
@@ -55,6 +56,12 @@ namespace Seq.Api.ResourceGroups
             return await Client.PostReadStringAsync(group, link, content, parameters).ConfigureAwait(false);
         }
 
+        protected async Task<Stream> GroupPostReadBytesAsync<TEntity>(string link, TEntity content, IDictionary<string, object> parameters = null)
+        {
+            var group = await LoadGroupAsync().ConfigureAwait(false);
+            return await Client.PostReadStreamAsync(group, link, content, parameters).ConfigureAwait(false);
+        }
+
         protected async Task<TResponse> GroupPostAsync<TEntity, TResponse>(string link, TEntity content, IDictionary<string, object> parameters = null)
         {
             var group = await LoadGroupAsync().ConfigureAwait(false);
@@ -82,6 +89,26 @@ namespace Seq.Api.ResourceGroups
         protected string GetLink<TEntity>(TEntity entity, string link, string orElse) where TEntity : ILinked
         {
             return entity.Links.ContainsKey(link) ? link : orElse;
+        }
+
+        protected async Task<TResponse> GroupCreateAsync<TEntity, TResponse>(TEntity entity,
+            IDictionary<string, object> parameters = null) where TEntity : ILinked
+        {
+            ILinked resource;
+            string link;
+
+            if (entity.Links.ContainsKey("Create"))
+            {
+                resource = entity;
+                link = "Create";
+            }
+            else
+            {
+                resource = await LoadGroupAsync().ConfigureAwait(false);
+                link = "Items";
+            }
+
+            return await Client.PostAsync<TEntity, TResponse>(resource, link, entity, parameters).ConfigureAwait(false);
         }
     }
 }
