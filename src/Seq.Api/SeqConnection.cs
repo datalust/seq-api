@@ -18,7 +18,7 @@ namespace Seq.Api
         {
             if (serverUrl == null) throw new ArgumentNullException(nameof(serverUrl));
             _client = new SeqApiClient(serverUrl, apiKey, useDefaultCredentials);
-            
+
             _root = new Lazy<Task<RootEntity>>(() => _client.GetRootAsync());
         }
 

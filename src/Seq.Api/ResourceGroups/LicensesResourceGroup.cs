@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Seq.Api.Model.Inputs;
 using Seq.Api.Model.License;
 
 namespace Seq.Api.ResourceGroups
