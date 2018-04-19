@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Seq.Api.Model.Data;
 using Seq.Api.Model.Signals;
@@ -30,10 +31,11 @@ namespace Seq.Api.ResourceGroups
             DateTime? rangeEndUtc = null,
             SignalExpressionPart signal = null,
             SignalEntity unsavedSignal = null,
-            TimeSpan? timeout = null)
+            TimeSpan? timeout = null,
+            CancellationToken token = default)
         {
             MakeParameters(query, rangeStartUtc, rangeEndUtc, signal, unsavedSignal, timeout, out var body, out var parameters);
-            return await GroupPostAsync<SignalEntity, QueryResultPart>("Query", body, parameters).ConfigureAwait(false);
+            return await GroupPostAsync<SignalEntity, QueryResultPart>("Query", body, parameters, token).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -53,11 +55,12 @@ namespace Seq.Api.ResourceGroups
             DateTime? rangeEndUtc = null,
             SignalExpressionPart signal = null,
             SignalEntity unsavedSignal = null,
-            TimeSpan? timeout = null)
+            TimeSpan? timeout = null,
+            CancellationToken token = default)
         {
             MakeParameters(query, rangeStartUtc, rangeEndUtc, signal, unsavedSignal, timeout, out var body, out var parameters);
             parameters.Add("format", "text/csv");
-            return await GroupPostReadStringAsync("Query", body, parameters).ConfigureAwait(false);
+            return await GroupPostReadStringAsync("Query", body, parameters, token).ConfigureAwait(false);
         }
 
         static void MakeParameters(
@@ -77,7 +80,7 @@ namespace Seq.Api.ResourceGroups
 
             if (rangeStartUtc != null)
                 parameters.Add(nameof(rangeStartUtc), rangeStartUtc);
-            
+
             if (rangeEndUtc != null)
                 parameters.Add(nameof(rangeEndUtc), rangeEndUtc.Value);
 

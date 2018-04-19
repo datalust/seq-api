@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Threading;
 using System.Threading.Tasks;
 using Seq.Api.Client;
 using Seq.Api.Model;
@@ -14,12 +15,12 @@ namespace Seq.Api
         readonly ConcurrentDictionary<string, Task<ResourceGroup>> _resourceGroups = new ConcurrentDictionary<string, Task<ResourceGroup>>();
         readonly Lazy<Task<RootEntity>> _root;
 
-        public SeqConnection(string serverUrl, string apiKey = null, bool useDefaultCredentials = true)
+        public SeqConnection(string serverUrl, string apiKey = null, bool useDefaultCredentials = true, CancellationToken token = default)
         {
             if (serverUrl == null) throw new ArgumentNullException(nameof(serverUrl));
             _client = new SeqApiClient(serverUrl, apiKey, useDefaultCredentials);
 
-            _root = new Lazy<Task<RootEntity>>(() => _client.GetRootAsync());
+            _root = new Lazy<Task<RootEntity>>(() => _client.GetRootAsync(token));
         }
 
         public ApiKeysResourceGroup ApiKeys => new ApiKeysResourceGroup(this);
@@ -56,14 +57,14 @@ namespace Seq.Api
 
         public UsersResourceGroup Users => new UsersResourceGroup(this);
 
-        public async Task<ResourceGroup> LoadResourceGroupAsync(string name)
+        public async Task<ResourceGroup> LoadResourceGroupAsync(string name, CancellationToken token = default)
         {
-            return await _resourceGroups.GetOrAdd(name, ResourceGroupFactory).ConfigureAwait(false);
+            return await _resourceGroups.GetOrAdd(name, s => ResourceGroupFactory(s, token)).ConfigureAwait(false);
         }
 
-        async Task<ResourceGroup> ResourceGroupFactory(string name)
+        async Task<ResourceGroup> ResourceGroupFactory(string name, CancellationToken token = default)
         {
-            return await _client.GetAsync<ResourceGroup>(await _root.Value, name + "Resources").ConfigureAwait(false);
+            return await _client.GetAsync<ResourceGroup>(await _root.Value, name + "Resources", token: token).ConfigureAwait(false);
         }
 
         public SeqApiClient Client => _client;

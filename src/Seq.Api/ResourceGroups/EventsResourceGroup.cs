@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Seq.Api.Model.Events;
 using Seq.Api.Model.Shared;
@@ -26,13 +27,14 @@ namespace Seq.Api.ResourceGroups
         public async Task<EventEntity> FindAsync(
             string id,
             bool render = false,
-            string permalinkId = null)
+            string permalinkId = null,
+            CancellationToken token = default)
         {
             if (id == null) throw new ArgumentNullException(nameof(id));
 
             var parameters = new Dictionary<string, object> {{"id", id}};
 
-            return await GroupGetAsync<EventEntity>("Item", parameters).ConfigureAwait(false);
+            return await GroupGetAsync<EventEntity>("Item", parameters, token).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -57,7 +59,7 @@ namespace Seq.Api.ResourceGroups
         /// <returns>The complete list of events, ordered from least to most recent.</returns>
         public async Task<List<EventEntity>> ListAsync(
             SignalExpressionPart signal = null,
-            string filter = null, 
+            string filter = null,
             int count = 30,
             string startAtId = null,
             string afterId = null,
@@ -65,7 +67,8 @@ namespace Seq.Api.ResourceGroups
             DateTime? fromDateUtc = null,
             DateTime? toDateUtc = null,
             int? shortCircuitAfter = null,
-            string permalinkId = null)
+            string permalinkId = null,
+            CancellationToken token = default)
         {
             var parameters = new Dictionary<string, object> { { "count", count } };
             if (signal != null) { parameters.Add("signal", signal.ToString()); }
@@ -83,7 +86,7 @@ namespace Seq.Api.ResourceGroups
 
             while (true)
             {
-                var resultSet = await GroupGetAsync<ResultSetPart>("InSignal", parameters).ConfigureAwait(false);
+                var resultSet = await GroupGetAsync<ResultSetPart>("InSignal", parameters, token).ConfigureAwait(false);
                 chunks.Add(resultSet.Events);
                 remaining -= resultSet.Events.Count;
 
@@ -129,15 +132,16 @@ namespace Seq.Api.ResourceGroups
         public async Task<ResultSetPart> InSignalAsync(
             SignalEntity unsavedSignal = null,
             SignalExpressionPart signal = null,
-            string filter = null, 
+            string filter = null,
             int count = 30,
             string startAtId = null,
-            string afterId = null, 
+            string afterId = null,
             bool render = false,
             DateTime? fromDateUtc = null,
             DateTime? toDateUtc = null,
             int? shortCircuitAfter = null,
-            string permalinkId = null)
+            string permalinkId = null,
+            CancellationToken token = default)
         {
             var parameters = new Dictionary<string, object>{{ "count", count }};
             if (signal != null) { parameters.Add("signal", signal.ToString()); }
@@ -151,7 +155,7 @@ namespace Seq.Api.ResourceGroups
             if (permalinkId != null) { parameters.Add("permalinkId", permalinkId); }
 
             var body = unsavedSignal ?? new SignalEntity();
-            return await GroupPostAsync<SignalEntity, ResultSetPart>("InSignal", body, parameters).ConfigureAwait(false);
+            return await GroupPostAsync<SignalEntity, ResultSetPart>("InSignal", body, parameters, token).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -176,15 +180,16 @@ namespace Seq.Api.ResourceGroups
         /// <returns>The complete list of events, ordered from least to most recent.</returns>
         public async Task<ResultSetPart> InSignalAsync(
             SignalExpressionPart signal,
-            string filter = null, 
+            string filter = null,
             int count = 30,
             string startAtId = null,
-            string afterId = null, 
+            string afterId = null,
             bool render = false,
             DateTime? fromDateUtc = null,
             DateTime? toDateUtc = null,
             int? shortCircuitAfter = null,
-            string permalinkId = null)
+            string permalinkId = null,
+            CancellationToken token = default)
         {
             if (signal == null) throw new ArgumentNullException(nameof(signal));
 
@@ -202,7 +207,7 @@ namespace Seq.Api.ResourceGroups
             if (shortCircuitAfter != null) { parameters.Add("shortCircuitAfter", shortCircuitAfter.Value); }
             if (permalinkId != null) { parameters.Add("permalinkId", permalinkId); }
 
-            return await GroupGetAsync<ResultSetPart>("InSignal", parameters).ConfigureAwait(false);
+            return await GroupGetAsync<ResultSetPart>("InSignal", parameters, token).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -219,9 +224,10 @@ namespace Seq.Api.ResourceGroups
         public async Task<DeleteResultPart> DeleteInSignalAsync(
             SignalEntity unsavedSignal = null,
             SignalExpressionPart signal = null,
-            string filter = null, 
+            string filter = null,
             DateTime? fromDateUtc = null,
-            DateTime? toDateUtc = null)
+            DateTime? toDateUtc = null,
+            CancellationToken token = default)
         {
             var parameters = new Dictionary<string, object>();
             if (signal != null) { parameters.Add("signal", signal.ToString()); }
@@ -230,7 +236,7 @@ namespace Seq.Api.ResourceGroups
             if (toDateUtc != null) { parameters.Add("toDateUtc", toDateUtc.Value); }
 
             var body = unsavedSignal ?? new SignalEntity();
-            return await GroupDeleteAsync<SignalEntity, DeleteResultPart>("DeleteInSignal", body, parameters).ConfigureAwait(false);
+            return await GroupDeleteAsync<SignalEntity, DeleteResultPart>("DeleteInSignal", body, parameters, token).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -244,14 +250,15 @@ namespace Seq.Api.ResourceGroups
         /// subscriber connects, ensure at least one subscription is made in order to avoid event loss.</returns>
         public async Task<ObservableStream<T>> StreamAsync<T>(
             SignalExpressionPart signal = null,
-            string filter = null)
+            string filter = null,
+            CancellationToken token = default)
         {
             var parameters = new Dictionary<string, object>();
             if (signal != null) { parameters.Add("signal", signal.ToString()); }
             if (filter != null) { parameters.Add("filter", filter); }
 
-            var group = await LoadGroupAsync().ConfigureAwait(false);
-            return await Client.StreamAsync<T>(group, "Stream", parameters).ConfigureAwait(false);
+            var group = await LoadGroupAsync(token).ConfigureAwait(false);
+            return await Client.StreamAsync<T>(group, "Stream", parameters, token).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -265,14 +272,15 @@ namespace Seq.Api.ResourceGroups
         /// subscriber connects, ensure at least one subscription is made in order to avoid event loss.</returns>
         public async Task<ObservableStream<string>> StreamDocumentsAsync(
             SignalExpressionPart signal = null,
-            string filter = null)
+            string filter = null,
+            CancellationToken token = default)
         {
             var parameters = new Dictionary<string, object>();
             if (signal != null) { parameters.Add("signal", signal.ToString()); }
             if (filter != null) { parameters.Add("filter", filter); }
 
-            var group = await LoadGroupAsync().ConfigureAwait(false);
-            return await Client.StreamTextAsync(group, "Stream", parameters).ConfigureAwait(false);
+            var group = await LoadGroupAsync(token).ConfigureAwait(false);
+            return await Client.StreamTextAsync(group, "Stream", parameters, token).ConfigureAwait(false);
         }
     }
 }
