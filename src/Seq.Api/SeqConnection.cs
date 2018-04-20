@@ -15,12 +15,12 @@ namespace Seq.Api
         readonly ConcurrentDictionary<string, Task<ResourceGroup>> _resourceGroups = new ConcurrentDictionary<string, Task<ResourceGroup>>();
         readonly Lazy<Task<RootEntity>> _root;
 
-        public SeqConnection(string serverUrl, string apiKey = null, bool useDefaultCredentials = true, CancellationToken token = default)
+        public SeqConnection(string serverUrl, string apiKey = null, bool useDefaultCredentials = true)
         {
             if (serverUrl == null) throw new ArgumentNullException(nameof(serverUrl));
             _client = new SeqApiClient(serverUrl, apiKey, useDefaultCredentials);
 
-            _root = new Lazy<Task<RootEntity>>(() => _client.GetRootAsync(token));
+            _root = new Lazy<Task<RootEntity>>(() => _client.GetRootAsync());
         }
 
         public ApiKeysResourceGroup ApiKeys => new ApiKeysResourceGroup(this);
