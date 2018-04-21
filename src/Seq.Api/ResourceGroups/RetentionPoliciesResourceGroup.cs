@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Seq.Api.Model.Retention;
 
@@ -12,35 +13,35 @@ namespace Seq.Api.ResourceGroups
         {
         }
 
-        public async Task<RetentionPolicyEntity> FindAsync(string id)
+        public async Task<RetentionPolicyEntity> FindAsync(string id, CancellationToken token = default)
         {
             if (id == null) throw new ArgumentNullException(nameof(id));
-            return await GroupGetAsync<RetentionPolicyEntity>("Item", new Dictionary<string, object> { { "id", id } }).ConfigureAwait(false);
+            return await GroupGetAsync<RetentionPolicyEntity>("Item", new Dictionary<string, object> { { "id", id } }, token).ConfigureAwait(false);
         }
 
-        public async Task<List<RetentionPolicyEntity>> ListAsync()
+        public async Task<List<RetentionPolicyEntity>> ListAsync(CancellationToken token = default)
         {
-            return await GroupListAsync<RetentionPolicyEntity>("Items").ConfigureAwait(false);
+            return await GroupListAsync<RetentionPolicyEntity>("Items", token: token).ConfigureAwait(false);
         }
 
-        public async Task<RetentionPolicyEntity> TemplateAsync()
+        public async Task<RetentionPolicyEntity> TemplateAsync(CancellationToken token = default)
         {
-            return await GroupGetAsync<RetentionPolicyEntity>("Template").ConfigureAwait(false);
+            return await GroupGetAsync<RetentionPolicyEntity>("Template", token: token).ConfigureAwait(false);
         }
 
-        public async Task<RetentionPolicyEntity> AddAsync(RetentionPolicyEntity entity)
+        public async Task<RetentionPolicyEntity> AddAsync(RetentionPolicyEntity entity, CancellationToken token = default)
         {
-            return await Client.PostAsync<RetentionPolicyEntity, RetentionPolicyEntity>(entity, "Create", entity).ConfigureAwait(false);
+            return await Client.PostAsync<RetentionPolicyEntity, RetentionPolicyEntity>(entity, "Create", entity, token: token).ConfigureAwait(false);
         }
 
-        public async Task RemoveAsync(RetentionPolicyEntity entity)
+        public async Task RemoveAsync(RetentionPolicyEntity entity, CancellationToken token = default)
         {
-            await Client.DeleteAsync(entity, "Self", entity).ConfigureAwait(false);
+            await Client.DeleteAsync(entity, "Self", entity, token: token).ConfigureAwait(false);
         }
 
-        public async Task UpdateAsync(RetentionPolicyEntity entity)
+        public async Task UpdateAsync(RetentionPolicyEntity entity, CancellationToken token = default)
         {
-            await Client.PutAsync(entity, "Self", entity).ConfigureAwait(false);
+            await Client.PutAsync(entity, "Self", entity, token: token).ConfigureAwait(false);
         }
     }
 }

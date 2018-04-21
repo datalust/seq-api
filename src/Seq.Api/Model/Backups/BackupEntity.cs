@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Seq.Api.Model.Backups
+﻿namespace Seq.Api.Model.Backups
 {
     public class BackupEntity : Entity
     {
