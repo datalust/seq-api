@@ -128,13 +128,13 @@ var events = await client.GetAsync<ResourceGroup>(root, "EventsResources");
 Use the client to navigate links from entity to entity:
 
 ```csharp
-var matched = await client.List<EventEntity>(
+var matched = await client.ListAsync<EventEntity>(
   events,
   "Items",
   new Dictionary<string, object>{{"count", 10}, {"render", true}});
 
 foreach (var match in matched)
-  Console.WriteLine(matched.RenderedMessage);
+  Console.WriteLine(match.RenderedMessage);
 ```
 
 ### Package versioning
