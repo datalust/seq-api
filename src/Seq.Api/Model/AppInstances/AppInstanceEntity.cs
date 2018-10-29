@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using Seq.Api.Model.Apps;
 using Seq.Api.Model.Signals;
 
@@ -13,9 +14,7 @@ namespace Seq.Api.Model.AppInstances
             InvocationOverridableSettings = new List<string>();
             InvocationOverridableSettingDefinitions = new List<AppSettingPart>();
             EventsPerSuppressionWindow = 1;
-#pragma warning disable 618
-            SignalIds = new List<string>();
-#pragma warning restore 618
+            Metrics = new AppInstanceMetricsPart();
         }
 
         public string Title { get; set; }
@@ -29,11 +28,10 @@ namespace Seq.Api.Model.AppInstances
         public int ChannelCapacity { get; set; }
         public TimeSpan SuppressionTime { get; set; }
         public int EventsPerSuppressionWindow { get; set; }
-        public int? ProcessedEventsPerMinute { get; set; }
-
-        [Obsolete("Replaced by InputSignalExpression.")]
-        public List<string> SignalIds { get; set; }
 
         public List<AppSettingPart> InvocationOverridableSettingDefinitions { get; set; }
+
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public AppInstanceMetricsPart Metrics { get; set; }
     }
 }

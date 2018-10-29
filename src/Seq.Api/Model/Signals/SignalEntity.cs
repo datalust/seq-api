@@ -21,8 +21,6 @@ namespace Seq.Api.Model.Signals
 
         public List<TaggedPropertyPart> TaggedProperties { get; set; }
 
-        public bool IsWatched { get; set; }
-
         // ReSharper disable once UnusedMember.Global
         [Obsolete("This member has been renamed `IsProtected` to better reflect its purpose.")]
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
@@ -33,5 +31,7 @@ namespace Seq.Api.Model.Signals
         public SignalGrouping Grouping { get; set; }
 
         public string ExplicitGroupName { get; set; }
+
+        public string OwnerId { get; set; }
     }
 }

@@ -3,7 +3,7 @@
     <Description>Client library for the Seq HTTP API.</Description>
     <VersionPrefix>5.0.0</VersionPrefix>
     <Authors>Datalust;Contributors</Authors>
-    <TargetFrameworks>netstandard1.3</TargetFrameworks>
+    <TargetFrameworks>netstandard1.3;net46;netstandard2.0</TargetFrameworks>
     <NoWarn>$(NoWarn);CS1591;CS1573</NoWarn>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
@@ -15,6 +15,7 @@
     <PackageProjectUrl>https://github.com/datalust/seq-api</PackageProjectUrl>
     <PackageLicenseUrl>http://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
     <RootNamespace>Seq.Api</RootNamespace>
+    <LangVersion>7.1</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />

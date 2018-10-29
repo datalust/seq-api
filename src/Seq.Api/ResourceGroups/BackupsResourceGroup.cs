@@ -14,20 +14,20 @@ namespace Seq.Api.ResourceGroups
         {
         }
 
-        public async Task<BackupEntity> FindAsync(string id, CancellationToken token = default)
+        public async Task<BackupEntity> FindAsync(string id, CancellationToken cancellationToken = default)
         {
             if (id == null) throw new ArgumentNullException(nameof(id));
-            return await GroupGetAsync<BackupEntity>("Item", new Dictionary<string, object> { { "id", id } }, token).ConfigureAwait(false);
+            return await GroupGetAsync<BackupEntity>("Item", new Dictionary<string, object> { { "id", id } }, cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task<List<BackupEntity>> ListAsync(CancellationToken token = default)
+        public async Task<List<BackupEntity>> ListAsync(CancellationToken cancellationToken = default)
         {
-            return await GroupListAsync<BackupEntity>("Items", token: token).ConfigureAwait(false);
+            return await GroupListAsync<BackupEntity>("Items", cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task<Stream> DownloadImmediateAsync(CancellationToken token = default)
+        public async Task<Stream> DownloadImmediateAsync(CancellationToken cancellationToken = default)
         {
-            return await GroupPostReadBytesAsync("Immediate", new object(), token: token).ConfigureAwait(false);
+            return await GroupPostReadBytesAsync("Immediate", new object(), cancellationToken: cancellationToken).ConfigureAwait(false);
         }
     }
 }

@@ -13,35 +13,35 @@ namespace Seq.Api.ResourceGroups
         {
         }
 
-        public async Task<NuGetFeedEntity> FindAsync(string id, CancellationToken token = default)
+        public async Task<NuGetFeedEntity> FindAsync(string id, CancellationToken cancellationToken = default)
         {
             if (id == null) throw new ArgumentNullException(nameof(id));
-            return await GroupGetAsync<NuGetFeedEntity>("Item", new Dictionary<string, object> { { "id", id } }, token).ConfigureAwait(false);
+            return await GroupGetAsync<NuGetFeedEntity>("Item", new Dictionary<string, object> { { "id", id } }, cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task<List<NuGetFeedEntity>> ListAsync(CancellationToken token = default)
+        public async Task<List<NuGetFeedEntity>> ListAsync(CancellationToken cancellationToken = default)
         {
-            return await GroupListAsync<NuGetFeedEntity>("Items", token: token).ConfigureAwait(false);
+            return await GroupListAsync<NuGetFeedEntity>("Items", cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task<NuGetFeedEntity> TemplateAsync(CancellationToken token = default)
+        public async Task<NuGetFeedEntity> TemplateAsync(CancellationToken cancellationToken = default)
         {
-            return await GroupGetAsync<NuGetFeedEntity>("Template", token: token).ConfigureAwait(false);
+            return await GroupGetAsync<NuGetFeedEntity>("Template", cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task<NuGetFeedEntity> AddAsync(NuGetFeedEntity entity, CancellationToken token = default)
+        public async Task<NuGetFeedEntity> AddAsync(NuGetFeedEntity entity, CancellationToken cancellationToken = default)
         {
-            return await Client.PostAsync<NuGetFeedEntity, NuGetFeedEntity>(entity, "Create", entity, token: token).ConfigureAwait(false);
+            return await Client.PostAsync<NuGetFeedEntity, NuGetFeedEntity>(entity, "Create", entity, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task RemoveAsync(NuGetFeedEntity entity, CancellationToken token = default)
+        public async Task RemoveAsync(NuGetFeedEntity entity, CancellationToken cancellationToken = default)
         {
-            await Client.DeleteAsync(entity, "Self", entity, token: token).ConfigureAwait(false);
+            await Client.DeleteAsync(entity, "Self", entity, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task UpdateAsync(NuGetFeedEntity entity, CancellationToken token = default)
+        public async Task UpdateAsync(NuGetFeedEntity entity, CancellationToken cancellationToken = default)
         {
-            await Client.PutAsync(entity, "Self", entity, token: token).ConfigureAwait(false);
+            await Client.PutAsync(entity, "Self", entity, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
     }
 }

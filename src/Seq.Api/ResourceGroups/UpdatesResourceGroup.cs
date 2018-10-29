@@ -12,9 +12,9 @@ namespace Seq.Api.ResourceGroups
         {
         }
 
-        public async Task<List<AvailableUpdateEntity>> ListAsync(CancellationToken token = default)
+        public async Task<List<AvailableUpdateEntity>> ListAsync(CancellationToken cancellationToken = default)
         {
-            return await GroupListAsync<AvailableUpdateEntity>("Items", token: token).ConfigureAwait(false);
+            return await GroupListAsync<AvailableUpdateEntity>("Items", cancellationToken: cancellationToken).ConfigureAwait(false);
         }
     }
 }

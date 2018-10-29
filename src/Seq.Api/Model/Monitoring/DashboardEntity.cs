@@ -9,6 +9,8 @@ namespace Seq.Api.Model.Monitoring
 
         public string Title { get; set; }
 
+        public bool IsProtected { get; set; }
+
         public SignalExpressionPart SignalExpression { get; set; }
 
         public List<ChartPart> Charts { get; set; } = new List<ChartPart>();

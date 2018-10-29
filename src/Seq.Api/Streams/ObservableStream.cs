@@ -38,11 +38,8 @@ namespace Seq.Api.Streams
 
         internal ObservableStream(ClientWebSocket socket, Func<TextReader, T> deserialize)
         {
-            if (socket == null) throw new ArgumentNullException(nameof(socket));
-            if (deserialize == null) throw new ArgumentNullException(nameof(deserialize));
-
-            _deserialize = deserialize;
-            _socket = socket;
+            _deserialize = deserialize ?? throw new ArgumentNullException(nameof(deserialize));
+            _socket = socket ?? throw new ArgumentNullException(nameof(socket));
         }
 
         public IDisposable Subscribe(IObserver<T> observer)
@@ -179,7 +176,7 @@ namespace Seq.Api.Streams
                 OnError(exceptions);
         }
 
-        void OnError(IList<Exception> exceptions)
+        static void OnError(IEnumerable<Exception> exceptions)
         {
             // This will hit TaskScheduler.UnobservedTaskException
             throw new AggregateException("At least one observer failed to accept the event", exceptions);            
@@ -205,7 +202,10 @@ namespace Seq.Api.Streams
                     }
                 }
             }
-            catch { }
+            catch
+            {
+                // Don't mask exceptions by throwing here during unwinding
+            }
 
             if (_run != null)
             {
@@ -213,7 +213,9 @@ namespace Seq.Api.Streams
                 {
                     _run.ConfigureAwait(false).GetAwaiter().GetResult();
                 }
-                catch (TaskCanceledException) { }
+                catch (TaskCanceledException)
+                {
+                }
             }
 
             _socket.Dispose();

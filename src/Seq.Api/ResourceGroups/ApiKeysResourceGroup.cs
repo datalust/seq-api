@@ -13,36 +13,36 @@ namespace Seq.Api.ResourceGroups
         {
         }
 
-        public async Task<ApiKeyEntity> FindAsync(string id, CancellationToken token = default)
+        public async Task<ApiKeyEntity> FindAsync(string id, CancellationToken cancellationToken = default)
         {
             if (id == null) throw new ArgumentNullException(nameof(id));
-            return await GroupGetAsync<ApiKeyEntity>("Item", new Dictionary<string, object> { { "id", id } }, token).ConfigureAwait(false);
+            return await GroupGetAsync<ApiKeyEntity>("Item", new Dictionary<string, object> { { "id", id } }, cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task<List<ApiKeyEntity>> ListAsync(string ownerId = null, CancellationToken token = default)
+        public async Task<List<ApiKeyEntity>> ListAsync(string ownerId = null, CancellationToken cancellationToken = default)
         {
             var parameters = new Dictionary<string, object> { { "ownerId", ownerId } };
-            return await GroupListAsync<ApiKeyEntity>("Items", parameters, token).ConfigureAwait(false);
+            return await GroupListAsync<ApiKeyEntity>("Items", parameters, cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task<ApiKeyEntity> TemplateAsync(CancellationToken token = default)
+        public async Task<ApiKeyEntity> TemplateAsync(CancellationToken cancellationToken = default)
         {
-            return await GroupGetAsync<ApiKeyEntity>("Template", token: token).ConfigureAwait(false);
+            return await GroupGetAsync<ApiKeyEntity>("Template", cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task<ApiKeyEntity> AddAsync(ApiKeyEntity entity, CancellationToken token = default)
+        public async Task<ApiKeyEntity> AddAsync(ApiKeyEntity entity, CancellationToken cancellationToken = default)
         {
-            return await GroupCreateAsync<ApiKeyEntity, ApiKeyEntity>(entity, token: token).ConfigureAwait(false);
+            return await GroupCreateAsync<ApiKeyEntity, ApiKeyEntity>(entity, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task RemoveAsync(ApiKeyEntity entity, CancellationToken token = default)
+        public async Task RemoveAsync(ApiKeyEntity entity, CancellationToken cancellationToken = default)
         {
-            await Client.DeleteAsync(entity, "Self", entity, token: token).ConfigureAwait(false);
+            await Client.DeleteAsync(entity, "Self", entity, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task UpdateAsync(ApiKeyEntity entity, CancellationToken token = default)
+        public async Task UpdateAsync(ApiKeyEntity entity, CancellationToken cancellationToken = default)
         {
-            await Client.PutAsync(entity, "Self", entity, token: token).ConfigureAwait(false);
+            await Client.PutAsync(entity, "Self", entity, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
     }
 }

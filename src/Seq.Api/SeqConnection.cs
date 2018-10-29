@@ -11,16 +11,15 @@ namespace Seq.Api
 {
     public class SeqConnection : ISeqConnection
     {
-        readonly SeqApiClient _client;
         readonly ConcurrentDictionary<string, Task<ResourceGroup>> _resourceGroups = new ConcurrentDictionary<string, Task<ResourceGroup>>();
         readonly Lazy<Task<RootEntity>> _root;
 
         public SeqConnection(string serverUrl, string apiKey = null, bool useDefaultCredentials = true)
         {
             if (serverUrl == null) throw new ArgumentNullException(nameof(serverUrl));
-            _client = new SeqApiClient(serverUrl, apiKey, useDefaultCredentials);
+            Client = new SeqApiClient(serverUrl, apiKey, useDefaultCredentials);
 
-            _root = new Lazy<Task<RootEntity>>(() => _client.GetRootAsync());
+            _root = new Lazy<Task<RootEntity>>(() => Client.GetRootAsync());
         }
 
         public ApiKeysResourceGroup ApiKeys => new ApiKeysResourceGroup(this);
@@ -53,20 +52,24 @@ namespace Seq.Api
 
         public SignalsResourceGroup Signals => new SignalsResourceGroup(this);
 
+        public SqlQueriesResourceGroup SqlQueries => new SqlQueriesResourceGroup(this);
+
         public UpdatesResourceGroup Updates => new UpdatesResourceGroup(this);
 
         public UsersResourceGroup Users => new UsersResourceGroup(this);
 
-        public async Task<ResourceGroup> LoadResourceGroupAsync(string name, CancellationToken token = default)
+        public WorkspacesResourceGroup Workspaces => new WorkspacesResourceGroup(this);
+
+        public async Task<ResourceGroup> LoadResourceGroupAsync(string name, CancellationToken cancellationToken = default)
         {
-            return await _resourceGroups.GetOrAdd(name, s => ResourceGroupFactory(s, token)).ConfigureAwait(false);
+            return await _resourceGroups.GetOrAdd(name, s => ResourceGroupFactory(s, cancellationToken)).ConfigureAwait(false);
         }
 
-        async Task<ResourceGroup> ResourceGroupFactory(string name, CancellationToken token = default)
+        async Task<ResourceGroup> ResourceGroupFactory(string name, CancellationToken cancellationToken = default)
         {
-            return await _client.GetAsync<ResourceGroup>(await _root.Value, name + "Resources", token: token).ConfigureAwait(false);
+            return await Client.GetAsync<ResourceGroup>(await _root.Value, name + "Resources", cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
-        public SeqApiClient Client => _client;
+        public SeqApiClient Client { get; }
     }
 }

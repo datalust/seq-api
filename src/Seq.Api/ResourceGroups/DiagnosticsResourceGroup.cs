@@ -11,19 +11,19 @@ namespace Seq.Api.ResourceGroups
         {
         }
 
-        public async Task<ServerMetricsEntity> GetServerMetricsAsync(CancellationToken token = default)
+        public async Task<ServerMetricsEntity> GetServerMetricsAsync(CancellationToken cancellationToken = default)
         {
-            return await GroupGetAsync<ServerMetricsEntity>("ServerMetrics", token: token).ConfigureAwait(false);
+            return await GroupGetAsync<ServerMetricsEntity>("ServerMetrics", cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task<ServerStatusPart> GetServerStatusAsync(CancellationToken token = default)
+        public async Task<ServerStatusPart> GetServerStatusAsync(CancellationToken cancellationToken = default)
         {
-            return await GroupGetAsync<ServerStatusPart>("ServerStatus", token: token).ConfigureAwait(false);
+            return await GroupGetAsync<ServerStatusPart>("ServerStatus", cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task<string> GetIngestionLogAsync(CancellationToken token = default)
+        public async Task<string> GetIngestionLogAsync(CancellationToken cancellationToken = default)
         {
-            return await GroupGetStringAsync("IngestionLog", token: token).ConfigureAwait(false);
+            return await GroupGetStringAsync("IngestionLog", cancellationToken: cancellationToken).ConfigureAwait(false);
         }
     }
 }
