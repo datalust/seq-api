@@ -18,9 +18,10 @@ namespace Seq.Api.ResourceGroups
             return await GroupGetAsync<SqlQueryEntity>("Item", new Dictionary<string, object> { { "id", id } }).ConfigureAwait(false);
         }
 
-        public async Task<List<SqlQueryEntity>> ListAsync()
+        public async Task<List<SqlQueryEntity>> ListAsync(string ownerId = null, bool shared = false)
         {
-            return await GroupListAsync<SqlQueryEntity>("Items").ConfigureAwait(false);
+            var parameters = new Dictionary<string, object> { { "ownerId", ownerId }, { "shared", shared } };
+            return await GroupListAsync<SqlQueryEntity>("Items", parameters).ConfigureAwait(false);
         }
 
         public async Task<SqlQueryEntity> TemplateAsync()
@@ -30,7 +31,7 @@ namespace Seq.Api.ResourceGroups
 
         public async Task<SqlQueryEntity> AddAsync(SqlQueryEntity entity)
         {
-            return await Client.PostAsync<SqlQueryEntity, SqlQueryEntity>(entity, "Create", entity).ConfigureAwait(false);
+            return await GroupCreateAsync<SqlQueryEntity, SqlQueryEntity>(entity).ConfigureAwait(false);
         }
 
         public async Task RemoveAsync(SqlQueryEntity entity)

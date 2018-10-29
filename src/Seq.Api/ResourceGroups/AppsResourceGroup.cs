@@ -47,9 +47,18 @@ namespace Seq.Api.ResourceGroups
         {
             if (feedId == null) throw new ArgumentNullException(nameof(feedId));
             if (packageId == null) throw new ArgumentNullException(nameof(packageId));
-            var parameters = new Dictionary<string, object>{{ "feedId", feedId}, {"packageId", packageId}};
+            var parameters = new Dictionary<string, object> { { "feedId", feedId }, { "packageId", packageId } };
             if (version != null) parameters.Add("version", version);
             return await GroupPostAsync<object, AppEntity>("InstallPackage", new object(), parameters).ConfigureAwait(false);
+        }
+
+        public async Task<AppEntity> UpdatePackageAsync(AppEntity entity, string version = null, bool force = false)
+        {
+            if (entity == null) throw new ArgumentNullException(nameof(entity));
+            var parameters = new Dictionary<string, object>();
+            if (force) parameters.Add("force", true);
+            if (version != null) parameters.Add("version", version);
+            return await Client.PostAsync<object, AppEntity>(entity, "UpdatePackage", new object(), parameters).ConfigureAwait(false);
         }
     }
 }

@@ -31,7 +31,7 @@ namespace Seq.Api.ResourceGroups
 
         public async Task<DashboardEntity> AddAsync(DashboardEntity entity)
         {
-            return await Client.PostAsync<DashboardEntity, DashboardEntity>(entity, "Create", entity).ConfigureAwait(false);
+            return await GroupCreateAsync<DashboardEntity, DashboardEntity>(entity).ConfigureAwait(false);
         }
 
         public async Task RemoveAsync(DashboardEntity entity)

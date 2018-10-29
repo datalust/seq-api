@@ -18,9 +18,10 @@ namespace Seq.Api.ResourceGroups
             return await GroupGetAsync<SignalEntity>("Item", new Dictionary<string, object> { { "id", id } }).ConfigureAwait(false);
         }
 
-        public async Task<List<SignalEntity>> ListAsync()
+        public async Task<List<SignalEntity>> ListAsync(string ownerId = null, bool shared = false)
         {
-            return await GroupListAsync<SignalEntity>("Items").ConfigureAwait(false);
+            var parameters = new Dictionary<string, object> { { "ownerId", ownerId }, { "shared", shared } };
+            return await GroupListAsync<SignalEntity>("Items", parameters).ConfigureAwait(false);
         }
 
         public async Task<SignalEntity> TemplateAsync()

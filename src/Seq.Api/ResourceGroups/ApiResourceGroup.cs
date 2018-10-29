@@ -19,7 +19,7 @@ namespace Seq.Api.ResourceGroups
             _connection = connection;
         }
 
-        protected SeqApiClient Client { get { return _connection.Client; } }
+        protected SeqApiClient Client => _connection.Client;
 
         protected Task<ResourceGroup> LoadGroupAsync()
         {

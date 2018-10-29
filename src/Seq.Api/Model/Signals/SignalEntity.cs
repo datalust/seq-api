@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace Seq.Api.Model.Signals
 {
@@ -20,9 +21,8 @@ namespace Seq.Api.Model.Signals
 
         public List<TaggedPropertyPart> TaggedProperties { get; set; }
 
-        public bool IsWatched { get; set; }
-
         [Obsolete("This member has been renamed `IsProtected` to better reflect its purpose.")]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         // ReSharper disable once UnusedMember.Global
         public bool? IsRestricted { get; set; }
 
@@ -31,5 +31,7 @@ namespace Seq.Api.Model.Signals
         public SignalGrouping Grouping { get; set; }
 
         public string ExplicitGroupName { get; set; }
+
+        public string OwnerId { get; set; }
     }
 }

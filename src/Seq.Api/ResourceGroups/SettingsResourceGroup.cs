@@ -47,5 +47,15 @@ namespace Seq.Api.ResourceGroups
         {
             await Client.PutAsync(entity, "Self", entity).ConfigureAwait(false);
         }
+
+        public async Task<InternalErrorReportingSettingsPart> GetInternalErrorReportingAsync()
+        {
+            return await GroupGetAsync<InternalErrorReportingSettingsPart>("InternalErrorReporting").ConfigureAwait(false);
+        }
+
+        public async Task UpdateInternalErrorReportingAsync(InternalErrorReportingSettingsPart internalErrorReporting)
+        {
+            await GroupPutAsync("InternalErrorReporting", internalErrorReporting).ConfigureAwait(false);
+        }
     }
 }

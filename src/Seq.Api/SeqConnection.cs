@@ -52,9 +52,13 @@ namespace Seq.Api
 
         public SignalsResourceGroup Signals => new SignalsResourceGroup(this);
 
+        public SqlQueriesResourceGroup SqlQueries => new SqlQueriesResourceGroup(this);
+
         public UpdatesResourceGroup Updates => new UpdatesResourceGroup(this);
 
         public UsersResourceGroup Users => new UsersResourceGroup(this);
+
+        public WorkspacesResourceGroup Workspaces => new WorkspacesResourceGroup(this);
 
         public async Task<ResourceGroup> LoadResourceGroupAsync(string name)
         {

@@ -10,6 +10,7 @@ namespace Seq.Api.Model.Monitoring
 
         public string Id { get; set; }
         public string Condition { get; set; }
+        public string Title { get; set; }
         public TimeSpan MeasurementWindow { get; set; }
         public TimeSpan StabilizationWindow { get; set; } = TimeSpan.FromSeconds(30);
         public TimeSpan SuppressionTime { get; set; }
