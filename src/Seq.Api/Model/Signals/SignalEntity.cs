@@ -21,7 +21,6 @@ namespace Seq.Api.Model.Signals
 
         public List<TaggedPropertyPart> TaggedProperties { get; set; }
 
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         // ReSharper disable once UnusedMember.Global
         [Obsolete("This member has been renamed `IsProtected` to better reflect its purpose.")]
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]

@@ -13,40 +13,40 @@ namespace Seq.Api.ResourceGroups
         {
         }
 
-        public async Task<SettingEntity> FindAsync(string id, CancellationToken token = default)
+        public async Task<SettingEntity> FindAsync(string id, CancellationToken cancellationToken = default)
         {
             if (id == null) throw new ArgumentNullException(nameof(id));
-            return await GroupGetAsync<SettingEntity>("Item", new Dictionary<string, object> { { "id", id } }, token).ConfigureAwait(false);
+            return await GroupGetAsync<SettingEntity>("Item", new Dictionary<string, object> { { "id", id } }, cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task<SettingEntity> FindNamedAsync(SettingName name, CancellationToken token = default)
+        public async Task<SettingEntity> FindNamedAsync(SettingName name, CancellationToken cancellationToken = default)
         {
-            return await GroupGetAsync<SettingEntity>(name.ToString(), token: token).ConfigureAwait(false);
+            return await GroupGetAsync<SettingEntity>(name.ToString(), cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task<List<SettingEntity>> ListAsync(CancellationToken token = default)
+        public async Task<List<SettingEntity>> ListAsync(CancellationToken cancellationToken = default)
         {
-            return await GroupListAsync<SettingEntity>("Items", token: token).ConfigureAwait(false);
+            return await GroupListAsync<SettingEntity>("Items", cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task<SettingEntity> TemplateAsync(CancellationToken token = default)
+        public async Task<SettingEntity> TemplateAsync(CancellationToken cancellationToken = default)
         {
-            return await GroupGetAsync<SettingEntity>("Template", token: token).ConfigureAwait(false);
+            return await GroupGetAsync<SettingEntity>("Template", cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task<SettingEntity> AddAsync(SettingEntity entity, CancellationToken token = default)
+        public async Task<SettingEntity> AddAsync(SettingEntity entity, CancellationToken cancellationToken = default)
         {
-            return await Client.PostAsync<SettingEntity, SettingEntity>(entity, "Create", entity, token: token).ConfigureAwait(false);
+            return await Client.PostAsync<SettingEntity, SettingEntity>(entity, "Create", entity, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task RemoveAsync(SettingEntity entity, CancellationToken token = default)
+        public async Task RemoveAsync(SettingEntity entity, CancellationToken cancellationToken = default)
         {
-            await Client.DeleteAsync(entity, "Self", entity, token: token).ConfigureAwait(false);
+            await Client.DeleteAsync(entity, "Self", entity, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task UpdateAsync(SettingEntity entity, CancellationToken token = default)
+        public async Task UpdateAsync(SettingEntity entity, CancellationToken cancellationToken = default)
         {
-            await Client.PutAsync(entity, "Self", entity, token: token).ConfigureAwait(false);
+            await Client.PutAsync(entity, "Self", entity, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         public async Task<InternalErrorReportingSettingsPart> GetInternalErrorReportingAsync()

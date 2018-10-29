@@ -12,20 +12,20 @@ namespace Seq.Api.ResourceGroups
         {
         }
 
-        public Task<ExpressionPart> ToStrictAsync(string fuzzy, CancellationToken token = default)
+        public Task<ExpressionPart> ToStrictAsync(string fuzzy, CancellationToken cancellationToken = default)
         {
             return GroupGetAsync<ExpressionPart>("ToStrict", new Dictionary<string, object>
             {
                 {"fuzzy", fuzzy}
-            }, token);
+            }, cancellationToken);
         }
 
-        public Task<ExpressionPart> ToSqlAsync(string fuzzy, CancellationToken token = default)
+        public Task<ExpressionPart> ToSqlAsync(string fuzzy, CancellationToken cancellationToken = default)
         {
             return GroupGetAsync<ExpressionPart>("ToSql", new Dictionary<string, object>
             {
                 {"fuzzy", fuzzy}
-            }, token);
+            }, cancellationToken);
         }
     }
 }

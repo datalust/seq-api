@@ -13,30 +13,30 @@ namespace Seq.Api.ResourceGroups
         {
         }
 
-        public async Task<LicenseEntity> FindAsync(string id, CancellationToken token = default)
+        public async Task<LicenseEntity> FindAsync(string id, CancellationToken cancellationToken = default)
         {
             if (id == null) throw new ArgumentNullException(nameof(id));
-            return await GroupGetAsync<LicenseEntity>("Item", new Dictionary<string, object> { { "id", id } }, token).ConfigureAwait(false);
+            return await GroupGetAsync<LicenseEntity>("Item", new Dictionary<string, object> { { "id", id } }, cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task<LicenseEntity> FindCurrentAsync(CancellationToken token = default)
+        public async Task<LicenseEntity> FindCurrentAsync(CancellationToken cancellationToken = default)
         {
-            return await GroupGetAsync<LicenseEntity>("Current", token: token).ConfigureAwait(false);
+            return await GroupGetAsync<LicenseEntity>("Current", cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task<List<LicenseEntity>> ListAsync(CancellationToken token = default)
+        public async Task<List<LicenseEntity>> ListAsync(CancellationToken cancellationToken = default)
         {
-            return await GroupListAsync<LicenseEntity>("Items", token: token).ConfigureAwait(false);
+            return await GroupListAsync<LicenseEntity>("Items", cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task UpdateAsync(LicenseEntity entity, CancellationToken token = default)
+        public async Task UpdateAsync(LicenseEntity entity, CancellationToken cancellationToken = default)
         {
-            await Client.PutAsync(entity, "Self", entity, token: token).ConfigureAwait(false);
+            await Client.PutAsync(entity, "Self", entity, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task DowngradeAsync(CancellationToken token = default)
+        public async Task DowngradeAsync(CancellationToken cancellationToken = default)
         {
-            await GroupPostAsync("Downgrade", new object(), token: token).ConfigureAwait(false);
+            await GroupPostAsync("Downgrade", new object(), cancellationToken: cancellationToken).ConfigureAwait(false);
         }
     }
 }

@@ -15,6 +15,7 @@
     <PackageProjectUrl>https://github.com/datalust/seq-api</PackageProjectUrl>
     <PackageLicenseUrl>http://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
     <RootNamespace>Seq.Api</RootNamespace>
+    <LangVersion>7.1</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />

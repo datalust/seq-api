@@ -13,36 +13,36 @@ namespace Seq.Api.ResourceGroups
         {
         }
 
-        public async Task<SqlQueryEntity> FindAsync(string id, CancellationToken token = default)
+        public async Task<SqlQueryEntity> FindAsync(string id, CancellationToken cancellationToken = default)
         {
             if (id == null) throw new ArgumentNullException(nameof(id));
-            return await GroupGetAsync<SqlQueryEntity>("Item", new Dictionary<string, object> { { "id", id } }, token).ConfigureAwait(false);
+            return await GroupGetAsync<SqlQueryEntity>("Item", new Dictionary<string, object> { { "id", id } }, cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task<List<SqlQueryEntity>> ListAsync(string ownerId = null, bool shared = false, CancellationToken token)
+        public async Task<List<SqlQueryEntity>> ListAsync(string ownerId = null, bool shared = false, CancellationToken cancellationToken = default)
         {
             var parameters = new Dictionary<string, object> { { "ownerId", ownerId }, { "shared", shared } };
-            return await GroupListAsync<SqlQueryEntity>("Items", parameters, token: token).ConfigureAwait(false);
+            return await GroupListAsync<SqlQueryEntity>("Items", parameters, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task<SqlQueryEntity> TemplateAsync(CancellationToken token = default)
+        public async Task<SqlQueryEntity> TemplateAsync(CancellationToken cancellationToken = default)
         {
-            return await GroupGetAsync<SqlQueryEntity>("Template", token: token).ConfigureAwait(false);
+            return await GroupGetAsync<SqlQueryEntity>("Template", cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task<SqlQueryEntity> AddAsync(SqlQueryEntity entity, CancellationToken token = default)
+        public async Task<SqlQueryEntity> AddAsync(SqlQueryEntity entity, CancellationToken cancellationToken = default)
         {
-            return await GroupCreateAsync<SqlQueryEntity, SqlQueryEntity>(entity, token: token).ConfigureAwait(false);
+            return await GroupCreateAsync<SqlQueryEntity, SqlQueryEntity>(entity, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task RemoveAsync(SqlQueryEntity entity, CancellationToken token = default)
+        public async Task RemoveAsync(SqlQueryEntity entity, CancellationToken cancellationToken = default)
         {
-            await Client.DeleteAsync(entity, "Self", entity, token: token).ConfigureAwait(false);
+            await Client.DeleteAsync(entity, "Self", entity, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task UpdateAsync(SqlQueryEntity entity, CancellationToken token = default)
+        public async Task UpdateAsync(SqlQueryEntity entity, CancellationToken cancellationToken = default)
         {
-            await Client.PutAsync(entity, "Self", entity, token: token).ConfigureAwait(false);
+            await Client.PutAsync(entity, "Self", entity, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
     }
 }

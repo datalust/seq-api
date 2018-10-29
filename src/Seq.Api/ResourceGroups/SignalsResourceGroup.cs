@@ -13,36 +13,36 @@ namespace Seq.Api.ResourceGroups
         {
         }
 
-        public async Task<SignalEntity> FindAsync(string id, CancellationToken token = default)
+        public async Task<SignalEntity> FindAsync(string id, CancellationToken cancellationToken = default)
         {
             if (id == null) throw new ArgumentNullException(nameof(id));
-            return await GroupGetAsync<SignalEntity>("Item", new Dictionary<string, object> { { "id", id } }, token).ConfigureAwait(false);
+            return await GroupGetAsync<SignalEntity>("Item", new Dictionary<string, object> { { "id", id } }, cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task<List<SignalEntity>> ListAsync(string ownerId = null, bool shared = false, CancellationToken token)
+        public async Task<List<SignalEntity>> ListAsync(string ownerId = null, bool shared = false, CancellationToken cancellationToken = default)
         {
             var parameters = new Dictionary<string, object> { { "ownerId", ownerId }, { "shared", shared } };
-            return await GroupListAsync<SignalEntity>("Items", parameters, token: token).ConfigureAwait(false);
+            return await GroupListAsync<SignalEntity>("Items", parameters, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task<SignalEntity> TemplateAsync(CancellationToken token = default)
+        public async Task<SignalEntity> TemplateAsync(CancellationToken cancellationToken = default)
         {
-            return await GroupGetAsync<SignalEntity>("Template", token: token).ConfigureAwait(false);
+            return await GroupGetAsync<SignalEntity>("Template", cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task<SignalEntity> AddAsync(SignalEntity entity, CancellationToken token = default)
+        public async Task<SignalEntity> AddAsync(SignalEntity entity, CancellationToken cancellationToken = default)
         {
-            return await GroupCreateAsync<SignalEntity, SignalEntity>(entity, token: token).ConfigureAwait(false);
+            return await GroupCreateAsync<SignalEntity, SignalEntity>(entity, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task RemoveAsync(SignalEntity entity, CancellationToken token = default)
+        public async Task RemoveAsync(SignalEntity entity, CancellationToken cancellationToken = default)
         {
-            await Client.DeleteAsync(entity, "Self", entity, token: token).ConfigureAwait(false);
+            await Client.DeleteAsync(entity, "Self", entity, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task UpdateAsync(SignalEntity entity, CancellationToken token = default)
+        public async Task UpdateAsync(SignalEntity entity, CancellationToken cancellationToken = default)
         {
-            await Client.PutAsync(entity, "Self", entity, token: token).ConfigureAwait(false);
+            await Client.PutAsync(entity, "Self", entity, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
     }
 }
