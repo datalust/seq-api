@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Seq.Api.Model.Permalinks;
 
@@ -14,8 +15,9 @@ namespace Seq.Api.ResourceGroups
 
         public async Task<PermalinkEntity> FindAsync(
             string id,
-            bool includeEvent = false, 
-            bool renderEvent = false)
+            bool includeEvent = false,
+            bool renderEvent = false,
+            CancellationToken token = default)
         {
             if (id == null) throw new ArgumentNullException(nameof(id));
             var parameters = new Dictionary<string, object>
@@ -24,12 +26,13 @@ namespace Seq.Api.ResourceGroups
                 {"includeEvent", includeEvent},
                 {"renderEvent", renderEvent}
             };
-            return await GroupGetAsync<PermalinkEntity>("Item", parameters).ConfigureAwait(false);
+            return await GroupGetAsync<PermalinkEntity>("Item", parameters, token).ConfigureAwait(false);
         }
 
         public async Task<List<PermalinkEntity>> ListAsync(
-            bool includeEvent = false, 
-            bool renderEvent = false)
+            bool includeEvent = false,
+            bool renderEvent = false,
+            CancellationToken token = default)
         {
             var parameters = new Dictionary<string, object>
             {
@@ -37,27 +40,27 @@ namespace Seq.Api.ResourceGroups
                 {"renderEvent", renderEvent}
             };
 
-            return await GroupListAsync<PermalinkEntity>("Items", parameters).ConfigureAwait(false);
+            return await GroupListAsync<PermalinkEntity>("Items", parameters, token).ConfigureAwait(false);
         }
 
-        public async Task<PermalinkEntity> TemplateAsync()
+        public async Task<PermalinkEntity> TemplateAsync(CancellationToken token = default)
         {
-            return await GroupGetAsync<PermalinkEntity>("Template").ConfigureAwait(false);
+            return await GroupGetAsync<PermalinkEntity>("Template", token: token).ConfigureAwait(false);
         }
 
-        public async Task<PermalinkEntity> AddAsync(PermalinkEntity entity)
+        public async Task<PermalinkEntity> AddAsync(PermalinkEntity entity, CancellationToken token = default)
         {
-            return await GroupCreateAsync<PermalinkEntity, PermalinkEntity>(entity).ConfigureAwait(false);
+            return await GroupCreateAsync<PermalinkEntity, PermalinkEntity>(entity, token: token).ConfigureAwait(false);
         }
 
-        public async Task RemoveAsync(PermalinkEntity entity)
+        public async Task RemoveAsync(PermalinkEntity entity, CancellationToken token = default)
         {
-            await Client.DeleteAsync(entity, "Self", entity).ConfigureAwait(false);
+            await Client.DeleteAsync(entity, "Self", entity, token: token).ConfigureAwait(false);
         }
 
-        public async Task UpdateAsync(PermalinkEntity entity)
+        public async Task UpdateAsync(PermalinkEntity entity, CancellationToken token = default)
         {
-            await Client.PutAsync(entity, "Self", entity).ConfigureAwait(false);
+            await Client.PutAsync(entity, "Self", entity, token: token).ConfigureAwait(false);
         }
     }
 }

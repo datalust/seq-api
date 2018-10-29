@@ -29,7 +29,7 @@ Navigate the "resource groups" exposed as properties of the `connnection`:
 var installedApps = await connection.Apps.ListAsync();
 ```
 
-**To authenticate**, the `SeqConnection` constructor accepts an `apiKey` parameter (make sure the API key permits _user-level access_) or, if you want to log in with personal credentials you can `await connection.Users.Login(username, password)`.
+**To authenticate**, the `SeqConnection` constructor accepts an `apiKey` parameter (make sure the API key permits _user-level access_) or, if you want to log in with personal credentials you can `await connection.Users.LoginAsync(username, password)`.
 
 For a more complete example, see the [seq-tail app included in the source](https://github.com/datalust/seq-api/blob/master/example/SeqTail/Program.cs).
 
@@ -128,13 +128,13 @@ var events = await client.GetAsync<ResourceGroup>(root, "EventsResources");
 Use the client to navigate links from entity to entity:
 
 ```csharp
-var matched = await client.List<EventEntity>(
+var matched = await client.ListAsync<EventEntity>(
   events,
   "Items",
   new Dictionary<string, object>{{"count", 10}, {"render", true}});
 
 foreach (var match in matched)
-  Console.WriteLine(matched.RenderedMessage);
+  Console.WriteLine(match.RenderedMessage);
 ```
 
 ### Package versioning

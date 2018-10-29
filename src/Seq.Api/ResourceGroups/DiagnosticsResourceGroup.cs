@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using Seq.Api.Model.Diagnostics;
 
 namespace Seq.Api.ResourceGroups
@@ -10,19 +11,19 @@ namespace Seq.Api.ResourceGroups
         {
         }
 
-        public async Task<ServerMetricsEntity> GetServerMetricsAsync()
+        public async Task<ServerMetricsEntity> GetServerMetricsAsync(CancellationToken token = default)
         {
-            return await GroupGetAsync<ServerMetricsEntity>("ServerMetrics").ConfigureAwait(false);
+            return await GroupGetAsync<ServerMetricsEntity>("ServerMetrics", token: token).ConfigureAwait(false);
         }
 
-        public async Task<ServerStatusPart> GetServerStatusAsync()
+        public async Task<ServerStatusPart> GetServerStatusAsync(CancellationToken token = default)
         {
-            return await GroupGetAsync<ServerStatusPart>("ServerStatus").ConfigureAwait(false);
+            return await GroupGetAsync<ServerStatusPart>("ServerStatus", token: token).ConfigureAwait(false);
         }
 
-        public async Task<string> GetIngestionLogAsync()
+        public async Task<string> GetIngestionLogAsync(CancellationToken token = default)
         {
-            return await GroupGetStringAsync("IngestionLog").ConfigureAwait(false);
+            return await GroupGetStringAsync("IngestionLog", token: token).ConfigureAwait(false);
         }
     }
 }

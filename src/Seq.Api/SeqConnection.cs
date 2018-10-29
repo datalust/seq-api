@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Threading;
 using System.Threading.Tasks;
 using Seq.Api.Client;
 using Seq.Api.Model;
@@ -18,7 +19,7 @@ namespace Seq.Api
         {
             if (serverUrl == null) throw new ArgumentNullException(nameof(serverUrl));
             _client = new SeqApiClient(serverUrl, apiKey, useDefaultCredentials);
-            
+
             _root = new Lazy<Task<RootEntity>>(() => _client.GetRootAsync());
         }
 
@@ -60,14 +61,14 @@ namespace Seq.Api
 
         public WorkspacesResourceGroup Workspaces => new WorkspacesResourceGroup(this);
 
-        public async Task<ResourceGroup> LoadResourceGroupAsync(string name)
+        public async Task<ResourceGroup> LoadResourceGroupAsync(string name, CancellationToken token = default)
         {
-            return await _resourceGroups.GetOrAdd(name, ResourceGroupFactory).ConfigureAwait(false);
+            return await _resourceGroups.GetOrAdd(name, s => ResourceGroupFactory(s, token)).ConfigureAwait(false);
         }
 
-        async Task<ResourceGroup> ResourceGroupFactory(string name)
+        async Task<ResourceGroup> ResourceGroupFactory(string name, CancellationToken token = default)
         {
-            return await _client.GetAsync<ResourceGroup>(await _root.Value, name + "Resources").ConfigureAwait(false);
+            return await _client.GetAsync<ResourceGroup>(await _root.Value, name + "Resources", token: token).ConfigureAwait(false);
         }
 
         public SeqApiClient Client => _client;
