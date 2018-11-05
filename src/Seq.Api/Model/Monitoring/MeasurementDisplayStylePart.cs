@@ -6,6 +6,7 @@
         public bool LineFillToZeroY { get; set; }
         public bool LineShowMarkers { get; set; } = true;
         public bool BarOverlaySum { get; set; }
+        public bool SuppressLegend { get; set; }
         public MeasurementDisplayPalette Palette { get; set; } = MeasurementDisplayPalette.Default;
     }
 }

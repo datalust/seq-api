@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Seq.Api.Model.Users;
 using System.Linq;
+using System.Threading;
 using Seq.Api.Client;
 
 namespace Seq.Api.ResourceGroups
@@ -14,69 +15,69 @@ namespace Seq.Api.ResourceGroups
         {
         }
 
-        public async Task<UserEntity> FindAsync(string id)
+        public async Task<UserEntity> FindAsync(string id, CancellationToken cancellationToken = default)
         {
             if (id == null) throw new ArgumentNullException(nameof(id));
-            return await GroupGetAsync<UserEntity>("Item", new Dictionary<string, object> { { "id", id } }).ConfigureAwait(false);
+            return await GroupGetAsync<UserEntity>("Item", new Dictionary<string, object> { { "id", id } }, cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task<UserEntity> FindCurrentAsync()
+        public async Task<UserEntity> FindCurrentAsync(CancellationToken cancellationToken = default)
         {
-            return await GroupGetAsync<UserEntity>("Current").ConfigureAwait(false);
+            return await GroupGetAsync<UserEntity>("Current", cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task<List<UserEntity>> ListAsync()
+        public async Task<List<UserEntity>> ListAsync(CancellationToken cancellationToken = default)
         {
-            return await GroupListAsync<UserEntity>("Items").ConfigureAwait(false);
+            return await GroupListAsync<UserEntity>("Items", cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task<UserEntity> TemplateAsync()
+        public async Task<UserEntity> TemplateAsync(CancellationToken cancellationToken = default)
         {
-            return await GroupGetAsync<UserEntity>("Template").ConfigureAwait(false);
+            return await GroupGetAsync<UserEntity>("Template", cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task<UserEntity> AddAsync(UserEntity entity)
+        public async Task<UserEntity> AddAsync(UserEntity entity, CancellationToken cancellationToken = default)
         {
-            return await Client.PostAsync<UserEntity, UserEntity>(entity, "Create", entity).ConfigureAwait(false);
+            return await Client.PostAsync<UserEntity, UserEntity>(entity, "Create", entity, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task RemoveAsync(UserEntity entity)
+        public async Task RemoveAsync(UserEntity entity, CancellationToken cancellationToken = default)
         {
-            await Client.DeleteAsync(entity, "Self", entity).ConfigureAwait(false);
+            await Client.DeleteAsync(entity, "Self", entity, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task UpdateAsync(UserEntity entity)
+        public async Task UpdateAsync(UserEntity entity, CancellationToken cancellationToken = default)
         {
-            await Client.PutAsync(entity, "Self", entity).ConfigureAwait(false);
+            await Client.PutAsync(entity, "Self", entity, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task<UserEntity> LoginAsync(string username, string password)
+        public async Task<UserEntity> LoginAsync(string username, string password, CancellationToken cancellationToken = default)
         {
             if (username == null) throw new ArgumentNullException(nameof(username));
             if (password == null) throw new ArgumentNullException(nameof(password));
             var credentials = new CredentialsPart {Username = username, Password = password};
-            return await GroupPostAsync<CredentialsPart, UserEntity>("Login", credentials).ConfigureAwait(false);
+            return await GroupPostAsync<CredentialsPart, UserEntity>("Login", credentials, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task LogoutAsync()
+        public async Task LogoutAsync(CancellationToken cancellationToken = default)
         {
-            await GroupPostAsync("Logout", new object()).ConfigureAwait(false);
+            await GroupPostAsync("Logout", new object(), cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task<SearchHistoryEntity> GetSearchHistoryAsync(UserEntity entity)
+        public async Task<SearchHistoryEntity> GetSearchHistoryAsync(UserEntity entity, CancellationToken cancellationToken = default)
         {
-            return await Client.GetAsync<SearchHistoryEntity>(entity, "SearchHistory").ConfigureAwait(false);
+            return await Client.GetAsync<SearchHistoryEntity>(entity, "SearchHistory", cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task<UserEntity> LoginWindowsIntegratedAsync()
+        public async Task<UserEntity> LoginWindowsIntegratedAsync(CancellationToken cancellationToken = default)
         {
-            var providers = await GroupGetAsync<AuthProvidersPart>("AuthenticationProviders").ConfigureAwait(false);
+            var providers = await GroupGetAsync<AuthProvidersPart>("AuthenticationProviders", cancellationToken: cancellationToken).ConfigureAwait(false);
             var provider = providers.Providers.SingleOrDefault(p => p.Name == "Integrated Windows Authentication");
             if (provider == null)
-                throw new SeqApiException("The Integrated Windows Authentication provider is not available.");
-            var response = await Client.HttpClient.GetAsync(provider.Url).ConfigureAwait(false);
+                throw new SeqApiException("The Integrated Windows Authentication provider is not available.", null);
+            var response = await Client.HttpClient.GetAsync(provider.Url, cancellationToken).ConfigureAwait(false);
             response.EnsureSuccessStatusCode();
-            return await FindCurrentAsync().ConfigureAwait(false);
+            return await FindCurrentAsync(cancellationToken).ConfigureAwait(false);
         }
     }
 }

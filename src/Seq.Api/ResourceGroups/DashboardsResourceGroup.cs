@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Seq.Api.Model.Monitoring;
 
@@ -12,36 +13,36 @@ namespace Seq.Api.ResourceGroups
         {
         }
 
-        public async Task<DashboardEntity> FindAsync(string id)
+        public async Task<DashboardEntity> FindAsync(string id, CancellationToken cancellationToken = default)
         {
             if (id == null) throw new ArgumentNullException(nameof(id));
-            return await GroupGetAsync<DashboardEntity>("Item", new Dictionary<string, object> { { "id", id } }).ConfigureAwait(false);
+            return await GroupGetAsync<DashboardEntity>("Item", new Dictionary<string, object> { { "id", id } }, cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task<List<DashboardEntity>> ListAsync(string ownerId = null, bool shared = false)
+        public async Task<List<DashboardEntity>> ListAsync(string ownerId = null, bool shared = false, CancellationToken cancellationToken = default)
         {
             var parameters = new Dictionary<string, object> { { "ownerId", ownerId }, { "shared", shared } };
-            return await GroupListAsync<DashboardEntity>("Items", parameters).ConfigureAwait(false);
+            return await GroupListAsync<DashboardEntity>("Items", parameters, cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task<DashboardEntity> TemplateAsync()
+        public async Task<DashboardEntity> TemplateAsync(CancellationToken cancellationToken = default)
         {
-            return await GroupGetAsync<DashboardEntity>("Template").ConfigureAwait(false);
+            return await GroupGetAsync<DashboardEntity>("Template", cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task<DashboardEntity> AddAsync(DashboardEntity entity)
+        public async Task<DashboardEntity> AddAsync(DashboardEntity entity, CancellationToken cancellationToken = default)
         {
-            return await Client.PostAsync<DashboardEntity, DashboardEntity>(entity, "Create", entity).ConfigureAwait(false);
+            return await GroupCreateAsync<DashboardEntity, DashboardEntity>(entity, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task RemoveAsync(DashboardEntity entity)
+        public async Task RemoveAsync(DashboardEntity entity, CancellationToken cancellationToken = default)
         {
-            await Client.DeleteAsync(entity, "Self", entity).ConfigureAwait(false);
+            await Client.DeleteAsync(entity, "Self", entity, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task UpdateAsync(DashboardEntity entity)
+        public async Task UpdateAsync(DashboardEntity entity, CancellationToken cancellationToken = default)
         {
-            await Client.PutAsync(entity, "Self", entity).ConfigureAwait(false);
+            await Client.PutAsync(entity, "Self", entity, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
     }
 }

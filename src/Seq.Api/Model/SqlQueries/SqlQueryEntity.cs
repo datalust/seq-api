@@ -14,6 +14,9 @@
 
         public string Sql { get; set; }
 
-        public bool Show { get; set; }
+        public bool IsProtected { get; set; }
+
+        public string OwnerId { get; set; }
+
     }
 }

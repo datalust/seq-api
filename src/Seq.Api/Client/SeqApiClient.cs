@@ -26,7 +26,7 @@ namespace Seq.Api.Client
         // Future versions of Seq may not completely support v1 features, however
         // providing this as an Accept header will ensure what compatibility is available
         // can be utilised.
-        const string SeqApiV5MediaType = "application/vnd.datalust.seq.v5+json";
+        const string SeqApiV6MediaType = "application/vnd.datalust.seq.v6+json";
 
         readonly HttpClient _httpClient;
         readonly CookieContainer _cookies = new CookieContainer();
@@ -36,14 +36,18 @@ namespace Seq.Api.Client
                 Converters = { new StringEnumConverter(), new LinkCollectionConverter() }
             });
 
-        public SeqApiClient(string serverUrl, string apiKey = null)
+        public SeqApiClient(string serverUrl, string apiKey = null, bool useDefaultCredentials = true)
         {
             ServerUrl = serverUrl ?? throw new ArgumentNullException(nameof(serverUrl));
 
             if (!string.IsNullOrEmpty(apiKey))
                 _apiKey = apiKey;
 
-            var handler = new HttpClientHandler { CookieContainer = _cookies, UseDefaultCredentials = true };
+            var handler = new HttpClientHandler
+            {
+                CookieContainer = _cookies,
+                UseDefaultCredentials = useDefaultCredentials
+            };
 
             var baseAddress = serverUrl;
             if (!baseAddress.EndsWith("/"))
@@ -56,88 +60,95 @@ namespace Seq.Api.Client
 
         public HttpClient HttpClient => _httpClient;
 
-        public Task<RootEntity> GetRootAsync()
+        public Task<RootEntity> GetRootAsync(CancellationToken cancellationToken = default)
         {
-            return HttpGetAsync<RootEntity>("api");
+            return HttpGetAsync<RootEntity>("api", cancellationToken);
         }
 
-        public Task<TEntity> GetAsync<TEntity>(ILinked entity, string link, IDictionary<string, object> parameters = null)
-        {
-            var linkUri = ResolveLink(entity, link, parameters);
-            return HttpGetAsync<TEntity>(linkUri);
-        }
-
-        public Task<string> GetStringAsync(ILinked entity, string link, IDictionary<string, object> parameters = null)
+        public Task<TEntity> GetAsync<TEntity>(ILinked entity, string link, IDictionary<string, object> parameters = null, CancellationToken cancellationToken = default)
         {
             var linkUri = ResolveLink(entity, link, parameters);
-            return HttpGetStringAsync(linkUri);
+            return HttpGetAsync<TEntity>(linkUri, cancellationToken);
         }
 
-        public Task<List<TEntity>> ListAsync<TEntity>(ILinked entity, string link, IDictionary<string, object> parameters = null)
+        public Task<string> GetStringAsync(ILinked entity, string link, IDictionary<string, object> parameters = null, CancellationToken cancellationToken = default)
         {
             var linkUri = ResolveLink(entity, link, parameters);
-            return HttpGetAsync<List<TEntity>>(linkUri);
+            return HttpGetStringAsync(linkUri, cancellationToken);
         }
 
-        public async Task PostAsync<TEntity>(ILinked entity, string link, TEntity content, IDictionary<string, object> parameters = null)
+        public Task<List<TEntity>> ListAsync<TEntity>(ILinked entity, string link, IDictionary<string, object> parameters = null, CancellationToken cancellationToken = default)
+        {
+            var linkUri = ResolveLink(entity, link, parameters);
+            return HttpGetAsync<List<TEntity>>(linkUri, cancellationToken);
+        }
+
+        public async Task PostAsync<TEntity>(ILinked entity, string link, TEntity content, IDictionary<string, object> parameters = null, CancellationToken cancellationToken = default)
         {
             var linkUri = ResolveLink(entity, link, parameters);
             var request = new HttpRequestMessage(HttpMethod.Post, linkUri) { Content = MakeJsonContent(content) };
-            var stream = await HttpSendAsync(request).ConfigureAwait(false);
+            var stream = await HttpSendAsync(request, cancellationToken).ConfigureAwait(false);
             new StreamReader(stream).ReadToEnd();
         }
 
-        public async Task<TResponse> PostAsync<TEntity, TResponse>(ILinked entity, string link, TEntity content, IDictionary<string, object> parameters = null)
+        public async Task<TResponse> PostAsync<TEntity, TResponse>(ILinked entity, string link, TEntity content, IDictionary<string, object> parameters = null, CancellationToken cancellationToken = default)
         {
             var linkUri = ResolveLink(entity, link, parameters);
             var request = new HttpRequestMessage(HttpMethod.Post, linkUri) { Content = MakeJsonContent(content) };
-            var stream = await HttpSendAsync(request).ConfigureAwait(false);
+            var stream = await HttpSendAsync(request, cancellationToken).ConfigureAwait(false);
             return _serializer.Deserialize<TResponse>(new JsonTextReader(new StreamReader(stream)));
         }
 
-        public async Task<string> PostReadStringAsync<TEntity>(ILinked entity, string link, TEntity content, IDictionary<string, object> parameters = null)
+        public async Task<string> PostReadStringAsync<TEntity>(ILinked entity, string link, TEntity content, IDictionary<string, object> parameters = null, CancellationToken cancellationToken = default)
         {
             var linkUri = ResolveLink(entity, link, parameters);
             var request = new HttpRequestMessage(HttpMethod.Post, linkUri) { Content = MakeJsonContent(content) };
-            var stream = await HttpSendAsync(request).ConfigureAwait(false);
+            var stream = await HttpSendAsync(request, cancellationToken).ConfigureAwait(false);
             return await new StreamReader(stream).ReadToEndAsync();
         }
 
-        public async Task PutAsync<TEntity>(ILinked entity, string link, TEntity content, IDictionary<string, object> parameters = null)
+        public async Task<Stream> PostReadStreamAsync<TEntity>(ILinked entity, string link, TEntity content, IDictionary<string, object> parameters = null, CancellationToken cancellationToken = default)
+        {
+            var linkUri = ResolveLink(entity, link, parameters);
+            var request = new HttpRequestMessage(HttpMethod.Post, linkUri) { Content = MakeJsonContent(content) };
+            return await HttpSendAsync(request, cancellationToken).ConfigureAwait(false);
+        }
+
+        public async Task PutAsync<TEntity>(ILinked entity, string link, TEntity content, IDictionary<string, object> parameters = null, CancellationToken cancellationToken = default)
         {
             var linkUri = ResolveLink(entity, link, parameters);
             var request = new HttpRequestMessage(HttpMethod.Put, linkUri) { Content = MakeJsonContent(content) };
-            var stream = await HttpSendAsync(request).ConfigureAwait(false);
+            var stream = await HttpSendAsync(request, cancellationToken).ConfigureAwait(false);
             new StreamReader(stream).ReadToEnd();
         }
 
-        public async Task DeleteAsync<TEntity>(ILinked entity, string link, TEntity content, IDictionary<string, object> parameters = null)
+        public async Task DeleteAsync<TEntity>(ILinked entity, string link, TEntity content, IDictionary<string, object> parameters = null, CancellationToken cancellationToken = default)
         {
             var linkUri = ResolveLink(entity, link, parameters);
             var request = new HttpRequestMessage(HttpMethod.Delete, linkUri) { Content = MakeJsonContent(content) };
-            var stream = await HttpSendAsync(request).ConfigureAwait(false);
+            var stream = await HttpSendAsync(request, cancellationToken).ConfigureAwait(false);
             new StreamReader(stream).ReadToEnd();
         }
 
-        public async Task<TResponse> DeleteAsync<TEntity, TResponse>(ILinked entity, string link, TEntity content, IDictionary<string, object> parameters = null)
+        public async Task<TResponse> DeleteAsync<TEntity, TResponse>(ILinked entity, string link, TEntity content, IDictionary<string, object> parameters = null, CancellationToken cancellationToken = default)
         {
             var linkUri = ResolveLink(entity, link, parameters);
             var request = new HttpRequestMessage(HttpMethod.Delete, linkUri) { Content = MakeJsonContent(content) };
-            var stream = await HttpSendAsync(request).ConfigureAwait(false);
+            var stream = await HttpSendAsync(request, cancellationToken).ConfigureAwait(false);
             return _serializer.Deserialize<TResponse>(new JsonTextReader(new StreamReader(stream)));
         }
 
-        public async Task<ObservableStream<TEntity>> StreamAsync<TEntity>(ILinked entity, string link, IDictionary<string, object> parameters = null)
+        public async Task<ObservableStream<TEntity>> StreamAsync<TEntity>(ILinked entity, string link, IDictionary<string, object> parameters = null, CancellationToken cancellationToken = default)
         {
-            return await WebSocketStreamAsync(entity, link, parameters, reader => _serializer.Deserialize<TEntity>(new JsonTextReader(reader)));
+            return await WebSocketStreamAsync(entity, link, parameters, reader => _serializer.Deserialize<TEntity>(new JsonTextReader(reader)), cancellationToken);
         }
 
-        public async Task<ObservableStream<string>> StreamTextAsync(ILinked entity, string link, IDictionary<string, object> parameters = null)
+        public async Task<ObservableStream<string>> StreamTextAsync(ILinked entity, string link, IDictionary<string, object> parameters = null, CancellationToken cancellationToken = default)
         {
-            return await WebSocketStreamAsync(entity, link, parameters, reader => reader.ReadToEnd());
+            return await WebSocketStreamAsync(entity, link, parameters, reader => reader.ReadToEnd(), cancellationToken);
         }
 
-        async Task<ObservableStream<T>> WebSocketStreamAsync<T>(ILinked entity, string link, IDictionary<string, object> parameters, Func<TextReader, T> deserialize)
+        async Task<ObservableStream<T>> WebSocketStreamAsync<T>(ILinked entity, string link, IDictionary<string, object> parameters, Func<TextReader, T> deserialize, CancellationToken cancellationToken = default)
         {
             var linkUri = ResolveLink(entity, link, parameters);
 
@@ -146,35 +157,35 @@ namespace Seq.Api.Client
             if (_apiKey != null)
                 socket.Options.SetRequestHeader("X-Seq-ApiKey", _apiKey);
 
-            await socket.ConnectAsync(new Uri(linkUri), CancellationToken.None);
+            await socket.ConnectAsync(new Uri(linkUri), cancellationToken);
 
             return new ObservableStream<T>(socket, deserialize);
         }
 
-        async Task<T> HttpGetAsync<T>(string url)
+        async Task<T> HttpGetAsync<T>(string url, CancellationToken cancellationToken = default)
         {
             var request = new HttpRequestMessage(HttpMethod.Get, url);
-            var stream = await HttpSendAsync(request).ConfigureAwait(false);
+            var stream = await HttpSendAsync(request, cancellationToken).ConfigureAwait(false);
             return _serializer.Deserialize<T>(new JsonTextReader(new StreamReader(stream)));
         }
 
-        async Task<string> HttpGetStringAsync(string url)
+        async Task<string> HttpGetStringAsync(string url, CancellationToken cancellationToken = default)
         {
             var request = new HttpRequestMessage(HttpMethod.Get, url);
-            var stream = await HttpSendAsync(request).ConfigureAwait(false);
+            var stream = await HttpSendAsync(request, cancellationToken).ConfigureAwait(false);
             return await new StreamReader(stream).ReadToEndAsync();
         }
 
-        async Task<Stream> HttpSendAsync(HttpRequestMessage request)
+        async Task<Stream> HttpSendAsync(HttpRequestMessage request, CancellationToken cancellationToken = default)
         {
             if (_apiKey != null)
                 request.Headers.Add("X-Seq-ApiKey", _apiKey);
 
-            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(SeqApiV5MediaType));
+            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(SeqApiV6MediaType));
 
-            var response = await _httpClient.SendAsync(request).ConfigureAwait(false);
+            var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
             var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-            
+
             if (response.IsSuccessStatusCode)
                 return stream;
 
@@ -186,11 +197,10 @@ namespace Seq.Api.Client
             // ReSharper disable once EmptyGeneralCatchClause
             catch { }
 
-            object error;
-            if (payload != null && payload.TryGetValue("Error", out error) && error != null)
-                throw new SeqApiException($"{(int)response.StatusCode} - {error}");
+            if (payload != null && payload.TryGetValue("Error", out var error) && error != null)
+                throw new SeqApiException($"{(int)response.StatusCode} - {error}", response.StatusCode);
 
-            throw new SeqApiException($"The Seq request failed ({(int)response.StatusCode}).");
+            throw new SeqApiException($"The Seq request failed ({(int)response.StatusCode}).", response.StatusCode);
         }
 
         HttpContent MakeJsonContent(object content)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Seq.Api.Model.Data;
 using Seq.Api.Model.Signals;
@@ -23,17 +24,19 @@ namespace Seq.Api.ResourceGroups
         /// <param name="unsavedSignal">A constructed signal that may not appear on the server, for example, a <see cref="SignalEntity"/> that has been
         /// created but not saved, a signal from another server, or the modified representation of an entity already persisted.</param>
         /// <param name="timeout">The query timeout; if not specified, the query will run until completion.</param>
+        /// <param name="cancellationToken">Token through which the operation can be cancelled.</param>
         /// <returns>A structured result set.</returns>
         public async Task<QueryResultPart> QueryAsync(
             string query,
-            DateTime rangeStartUtc,
+            DateTime? rangeStartUtc = null,
             DateTime? rangeEndUtc = null,
             SignalExpressionPart signal = null,
             SignalEntity unsavedSignal = null,
-            TimeSpan? timeout = null)
+            TimeSpan? timeout = null,
+            CancellationToken cancellationToken = default)
         {
             MakeParameters(query, rangeStartUtc, rangeEndUtc, signal, unsavedSignal, timeout, out var body, out var parameters);
-            return await GroupPostAsync<SignalEntity, QueryResultPart>("Query", body, parameters).ConfigureAwait(false);
+            return await GroupPostAsync<SignalEntity, QueryResultPart>("Query", body, parameters, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -46,23 +49,25 @@ namespace Seq.Api.ResourceGroups
         /// <param name="unsavedSignal">A constructed signal that may not appear on the server, for example, a <see cref="SignalEntity"/> that has been
         /// created but not saved, a signal from another server, or the modified representation of an entity already persisted.</param>
         /// <param name="timeout">The query timeout; if not specified, the query will run until completion.</param>
+        /// <param name="cancellationToken">Token through which the operation can be cancelled.</param>
         /// <returns>A CSV result set.</returns>
         public async Task<string> QueryCsvAsync(
             string query,
-            DateTime rangeStartUtc,
+            DateTime? rangeStartUtc = null,
             DateTime? rangeEndUtc = null,
             SignalExpressionPart signal = null,
             SignalEntity unsavedSignal = null,
-            TimeSpan? timeout = null)
+            TimeSpan? timeout = null,
+            CancellationToken cancellationToken = default)
         {
             MakeParameters(query, rangeStartUtc, rangeEndUtc, signal, unsavedSignal, timeout, out var body, out var parameters);
             parameters.Add("format", "text/csv");
-            return await GroupPostReadStringAsync("Query", body, parameters).ConfigureAwait(false);
+            return await GroupPostReadStringAsync("Query", body, parameters, cancellationToken).ConfigureAwait(false);
         }
 
         static void MakeParameters(
             string query,
-            DateTime rangeStartUtc,
+            DateTime? rangeStartUtc,
             DateTime? rangeEndUtc,
             SignalExpressionPart signal,
             SignalEntity unsavedSignal,
@@ -72,22 +77,20 @@ namespace Seq.Api.ResourceGroups
         {
             parameters = new Dictionary<string, object>
             {
-                {"q", query},
-                {nameof(rangeStartUtc), rangeStartUtc}
+                {"q", query}
             };
 
+            if (rangeStartUtc != null)
+                parameters.Add(nameof(rangeStartUtc), rangeStartUtc);
+
             if (rangeEndUtc != null)
-            {
                 parameters.Add(nameof(rangeEndUtc), rangeEndUtc.Value);
-            }
+
             if (signal != null)
-            {
                 parameters.Add(nameof(signal), signal.ToString());
-            }
+
             if (timeout != null)
-            {
                 parameters.Add("timeoutMS", timeout.Value.TotalMilliseconds.ToString("0"));
-            }
 
             body = unsavedSignal ?? new SignalEntity();
         }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Seq.Api.Model.Updates;
 
@@ -11,9 +12,9 @@ namespace Seq.Api.ResourceGroups
         {
         }
 
-        public async Task<List<AvailableUpdateEntity>> ListAsync()
+        public async Task<List<AvailableUpdateEntity>> ListAsync(CancellationToken cancellationToken = default)
         {
-            return await GroupListAsync<AvailableUpdateEntity>("Items").ConfigureAwait(false);
+            return await GroupListAsync<AvailableUpdateEntity>("Items", cancellationToken: cancellationToken).ConfigureAwait(false);
         }
     }
 }

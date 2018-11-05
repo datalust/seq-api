@@ -2,6 +2,5 @@
 {
     public class DeleteResultPart
     {
-        public long DeletedEventCount { get; set; }
     }
 }

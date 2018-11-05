@@ -4,5 +4,6 @@
     {
         public int ArrivalsPerMinute { get; set; }
         public int InfluxPerMinute { get; set; }
+        public long IngestedBytesPerMinute { get; set; }
     }
 }
