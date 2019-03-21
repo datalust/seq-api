@@ -24,11 +24,6 @@ namespace Seq.Api.ResourceGroups
             return await GroupGetAsync<SettingEntity>(name.ToString(), cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task<List<SettingEntity>> ListAsync(CancellationToken cancellationToken = default)
-        {
-            return await GroupListAsync<SettingEntity>("Items", cancellationToken: cancellationToken).ConfigureAwait(false);
-        }
-
         public async Task<SettingEntity> TemplateAsync(CancellationToken cancellationToken = default)
         {
             return await GroupGetAsync<SettingEntity>("Template", cancellationToken: cancellationToken).ConfigureAwait(false);

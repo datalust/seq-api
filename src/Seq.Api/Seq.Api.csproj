@@ -1,27 +1,24 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Description>Client library for the Seq HTTP API.</Description>
-    <VersionPrefix>5.0.1</VersionPrefix>
+    <VersionPrefix>5.1.0</VersionPrefix>
     <Authors>Datalust;Contributors</Authors>
-    <TargetFrameworks>netstandard1.3;net46;netstandard2.0</TargetFrameworks>
-    <NoWarn>$(NoWarn);CS1591;CS1573</NoWarn>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Seq.Api</AssemblyName>
     <PackageId>Seq.Api</PackageId>
     <PackageTags>seq</PackageTags>
-    <Copyright>Copyright © 2014-2018 Datalust Pty Ltd and Contributors</Copyright>
-    <PackageIconUrl>https://getseq.net/images/seq-nuget.png</PackageIconUrl>
+    <Copyright>Copyright © 2014-2019 Datalust Pty Ltd and Contributors</Copyright>
+    <PackageIconUrl>https://datalust.co/images/seq-nuget.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/datalust/seq-api</PackageProjectUrl>
     <PackageLicenseUrl>http://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
     <RootNamespace>Seq.Api</RootNamespace>
-    <LangVersion>7.1</LangVersion>
+    <LangVersion>7.3</LangVersion>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
-    <PackageReference Include="System.Net.WebSockets.Client" Version="4.3.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
     <PackageReference Include="Tavis.UriTemplates" Version="1.1.1" />
-    <PackageReference Include="System.Collections.Concurrent" Version="4.3.0" />
-    <PackageReference Include="System.Net.Http" Version="4.3.3" />
   </ItemGroup>
 </Project>

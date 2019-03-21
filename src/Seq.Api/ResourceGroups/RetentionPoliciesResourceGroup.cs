@@ -31,7 +31,7 @@ namespace Seq.Api.ResourceGroups
 
         public async Task<RetentionPolicyEntity> AddAsync(RetentionPolicyEntity entity, CancellationToken cancellationToken = default)
         {
-            return await Client.PostAsync<RetentionPolicyEntity, RetentionPolicyEntity>(entity, "Create", entity, cancellationToken: cancellationToken).ConfigureAwait(false);
+            return await GroupCreateAsync<RetentionPolicyEntity, RetentionPolicyEntity>(entity, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         public async Task RemoveAsync(RetentionPolicyEntity entity, CancellationToken cancellationToken = default)
