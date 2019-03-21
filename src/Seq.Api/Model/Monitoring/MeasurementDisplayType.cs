@@ -6,6 +6,7 @@
         Bar,
         Point,
         Value,
-        Pie
+        Pie,
+        Table
     }
 }

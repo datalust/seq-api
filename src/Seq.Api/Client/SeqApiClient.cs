@@ -26,7 +26,7 @@ namespace Seq.Api.Client
         // Future versions of Seq may not completely support v1 features, however
         // providing this as an Accept header will ensure what compatibility is available
         // can be utilised.
-        const string SeqApiV6MediaType = "application/vnd.datalust.seq.v6+json";
+        const string SeqApiV7MediaType = "application/vnd.datalust.seq.v7+json";
 
         readonly HttpClient _httpClient;
         readonly CookieContainer _cookies = new CookieContainer();
@@ -181,7 +181,7 @@ namespace Seq.Api.Client
             if (_apiKey != null)
                 request.Headers.Add("X-Seq-ApiKey", _apiKey);
 
-            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(SeqApiV6MediaType));
+            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(SeqApiV7MediaType));
 
             var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
             var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);

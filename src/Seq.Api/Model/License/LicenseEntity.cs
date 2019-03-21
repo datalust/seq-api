@@ -8,5 +8,6 @@
         public string StatusDescription { get; set; }
         public bool IsWarning { get; set; }
         public bool CanRenewOnlineNow { get; set; }
+        public int? LicensedUsers { get; set; }
     }
 }
