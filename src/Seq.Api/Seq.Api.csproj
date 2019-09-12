@@ -7,14 +7,11 @@
     <NoWarn>$(NoWarn);CS1591</NoWarn>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <AssemblyName>Seq.Api</AssemblyName>
-    <PackageId>Seq.Api</PackageId>
     <PackageTags>seq</PackageTags>
     <Copyright>Copyright © 2014-2019 Datalust Pty Ltd and Contributors</Copyright>
     <PackageIconUrl>https://datalust.co/images/seq-nuget.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/datalust/seq-api</PackageProjectUrl>
-    <PackageLicenseUrl>http://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
-    <RootNamespace>Seq.Api</RootNamespace>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <LangVersion>7.3</LangVersion>
   </PropertyGroup>
   <ItemGroup>
