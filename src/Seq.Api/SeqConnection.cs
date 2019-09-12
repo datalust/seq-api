@@ -60,9 +60,20 @@ namespace Seq.Api
 
         public WorkspacesResourceGroup Workspaces => new WorkspacesResourceGroup(this);
 
-        public async Task<ResourceGroup> LoadResourceGroupAsync(string name, CancellationToken cancellationToken = default)
+        public Task<ResourceGroup> LoadResourceGroupAsync(string name, CancellationToken cancellationToken = default)
         {
-            return await _resourceGroups.GetOrAdd(name, s => ResourceGroupFactory(s, cancellationToken)).ConfigureAwait(false);
+            // Initially, we want to put an incomplete task into the cache so that any concurrent attempts to load the
+            // same resource group will wait on the same pending call.
+            var cached = _resourceGroups.GetOrAdd(name, s => ResourceGroupFactory(s, cancellationToken));
+
+            if (!cached.IsFaulted && !cached.IsCanceled)
+                return cached;
+
+            // If the cached task failed (ideally a rare situation), clobber it and return a new task (less worried about
+            // overlapping/concurrent calls on this path).
+            return _resourceGroups.AddOrUpdate(name,
+                s => ResourceGroupFactory(s, cancellationToken),
+                (s, _) => ResourceGroupFactory(s, cancellationToken));
         }
 
         async Task<ResourceGroup> ResourceGroupFactory(string name, CancellationToken cancellationToken = default)
