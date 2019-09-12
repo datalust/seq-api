@@ -1,16 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26403.3
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29230.47
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{B36BE973-6D5B-4DAA-BF42-F1CF11D6F18E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "example", "example", "{1C66E116-DC21-4C8F-833E-A4C2DDF58487}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "asset", "asset", "{233C7E7D-26DE-452A-A415-44F99CBA18E7}"
-	ProjectSection(SolutionItems) = preProject
-		asset\getseq_net.ico = asset\getseq_net.ico
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "global", "global", "{7DCED657-7E83-4E6F-AB14-5753E044304D}"
 	ProjectSection(SolutionItems) = preProject
@@ -68,5 +63,8 @@ Global
 		{34BBD428-8297-484E-B771-0B72C172C264} = {1C66E116-DC21-4C8F-833E-A4C2DDF58487}
 		{42CEBFBA-208F-40F1-AC95-13F05F6D5412} = {1C66E116-DC21-4C8F-833E-A4C2DDF58487}
 		{E8CDDE17-8E29-4EB4-A4BB-38BCE346A752} = {1C66E116-DC21-4C8F-833E-A4C2DDF58487}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {20BAB483-FB94-4373-8E4C-0F846B6DBFFC}
 	EndGlobalSection
 EndGlobal
