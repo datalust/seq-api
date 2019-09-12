@@ -99,34 +99,36 @@ namespace Seq.Api
             throw new WebException($"Could not connect to the Seq API endpoint: {(int)statusCode}/{statusCode}.");
         }
 
-        public Task<ResourceGroup> LoadResourceGroupAsync(string name, CancellationToken cancellationToken = default)
+        public async Task<ResourceGroup> LoadResourceGroupAsync(string name, CancellationToken cancellationToken = default)
         {
-            lock (_sync)
-            {
-                if (_resourceGroups.TryGetValue(name, out var cached) && !cached.IsFaulted && !cached.IsCanceled)
-                    return cached;
-
-                var attempt = ResourceGroupFactory(name, cancellationToken);
-                _resourceGroups.Add(name, attempt);
-                return attempt;
-            }
-        }
-
-        async Task<ResourceGroup> ResourceGroupFactory(string name, CancellationToken cancellationToken = default)
-        {
-            Task<RootEntity> root;
-
-            // Reentrant, see above
+            Task<RootEntity> loadRoot;
             lock (_sync)
             {
                 if (_root == null || _root.IsFaulted || _root.IsCanceled)
                     _root = Client.GetRootAsync(cancellationToken);
 
-                root = _root;
+                loadRoot = _root;
             }
 
-            var rootEntity = await root.ConfigureAwait(false);
-            return await Client.GetAsync<ResourceGroup>(rootEntity, name + "Resources", cancellationToken: cancellationToken).ConfigureAwait(false);
+            var rootEntity = await loadRoot.ConfigureAwait(false);
+
+            Task<ResourceGroup> loadGroup;
+            lock (_sync)
+            {
+                // ReSharper disable once InvertIf
+                if (!_resourceGroups.TryGetValue(name, out loadGroup) || loadGroup.IsFaulted || loadGroup.IsCanceled)
+                {
+                    loadGroup = GetResourceGroup(rootEntity, name, cancellationToken);
+                    _resourceGroups.Add(name, loadGroup);
+                }
+            }
+
+            return await loadGroup.ConfigureAwait(false);
+        }
+
+        async Task<ResourceGroup> GetResourceGroup(RootEntity root, string name, CancellationToken cancellationToken = default)
+        {
+            return await Client.GetAsync<ResourceGroup>(root, name + "Resources", cancellationToken: cancellationToken).ConfigureAwait(false);
         }
     }
 }
