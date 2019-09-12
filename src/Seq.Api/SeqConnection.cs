@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Seq.Api.Client;
@@ -11,16 +12,17 @@ namespace Seq.Api
 {
     public class SeqConnection : ISeqConnection
     {
-        readonly ConcurrentDictionary<string, Task<ResourceGroup>> _resourceGroups = new ConcurrentDictionary<string, Task<ResourceGroup>>();
-        readonly Lazy<Task<RootEntity>> _root;
+        readonly object _sync = new object();
+        readonly Dictionary<string, Task<ResourceGroup>> _resourceGroups = new Dictionary<string, Task<ResourceGroup>>();
+        Task<RootEntity> _root;
 
         public SeqConnection(string serverUrl, string apiKey = null, bool useDefaultCredentials = true)
         {
             if (serverUrl == null) throw new ArgumentNullException(nameof(serverUrl));
             Client = new SeqApiClient(serverUrl, apiKey, useDefaultCredentials);
-
-            _root = new Lazy<Task<RootEntity>>(() => Client.GetRootAsync());
         }
+        
+        public SeqApiClient Client { get; }
 
         public ApiKeysResourceGroup ApiKeys => new ApiKeysResourceGroup(this);
 
@@ -60,27 +62,73 @@ namespace Seq.Api
 
         public WorkspacesResourceGroup Workspaces => new WorkspacesResourceGroup(this);
 
-        public Task<ResourceGroup> LoadResourceGroupAsync(string name, CancellationToken cancellationToken = default)
+        public async Task EnsureConnected(TimeSpan timeout)
         {
-            // Initially, we want to put an incomplete task into the cache so that any concurrent attempts to load the
-            // same resource group will wait on the same pending call.
-            var cached = _resourceGroups.GetOrAdd(name, s => ResourceGroupFactory(s, cancellationToken));
-
-            if (!cached.IsFaulted && !cached.IsCanceled)
-                return cached;
-
-            // If the cached task failed (ideally a rare situation), clobber it and return a new task (less worried about
-            // overlapping/concurrent calls on this path).
-            return _resourceGroups.AddOrUpdate(name,
-                s => ResourceGroupFactory(s, cancellationToken),
-                (s, _) => ResourceGroupFactory(s, cancellationToken));
+            var started = DateTime.UtcNow;
+            // Fractional milliseconds are lost here, but that's fine.
+            var wait = TimeSpan.FromMilliseconds(Math.Min(100, timeout.TotalMilliseconds));
+            var deadline = started.Add(timeout);
+            while (!await ConnectAsync(DateTime.UtcNow > deadline))
+            {
+                await Task.Delay(wait);
+            }
         }
 
-        async Task<ResourceGroup> ResourceGroupFactory(string name, CancellationToken cancellationToken = default)
+        async Task<bool> ConnectAsync(bool throwOnFailure)
         {
-            return await Client.GetAsync<ResourceGroup>(await _root.Value, name + "Resources", cancellationToken: cancellationToken).ConfigureAwait(false);
+            HttpStatusCode statusCode;
+
+            try
+            {
+                statusCode = (await Client.HttpClient.GetAsync("api")).StatusCode;
+            }
+            catch
+            {
+                if (throwOnFailure)
+                    throw;
+
+                return false;
+            }
+
+            if (statusCode == HttpStatusCode.OK)
+                return true;
+
+            if (!throwOnFailure)
+                return false;
+
+            throw new WebException($"Could not connect to the Seq API endpoint: {(int)statusCode}/{statusCode}.");
         }
 
-        public SeqApiClient Client { get; }
+        public async Task<ResourceGroup> LoadResourceGroupAsync(string name, CancellationToken cancellationToken = default)
+        {
+            Task<RootEntity> loadRoot;
+            lock (_sync)
+            {
+                if (_root == null || _root.IsFaulted || _root.IsCanceled)
+                    _root = Client.GetRootAsync(cancellationToken);
+
+                loadRoot = _root;
+            }
+
+            var rootEntity = await loadRoot.ConfigureAwait(false);
+
+            Task<ResourceGroup> loadGroup;
+            lock (_sync)
+            {
+                // ReSharper disable once InvertIf
+                if (!_resourceGroups.TryGetValue(name, out loadGroup) || loadGroup.IsFaulted || loadGroup.IsCanceled)
+                {
+                    loadGroup = GetResourceGroup(rootEntity, name, cancellationToken);
+                    _resourceGroups.Add(name, loadGroup);
+                }
+            }
+
+            return await loadGroup.ConfigureAwait(false);
+        }
+
+        async Task<ResourceGroup> GetResourceGroup(RootEntity root, string name, CancellationToken cancellationToken = default)
+        {
+            return await Client.GetAsync<ResourceGroup>(root, name + "Resources", cancellationToken: cancellationToken).ConfigureAwait(false);
+        }
     }
 }

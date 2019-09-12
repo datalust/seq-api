@@ -46,7 +46,7 @@ Options:
                 Console.WriteLine("Tailing, press Ctrl+C to exit.");
                 Console.CancelKeyPress += (s,a) => cancel.Cancel();
 
-                var run = Task.Run(() => Run(server, apiKey, filter, cancel));
+                var run = Task.Run(() => Run(server, apiKey, filter, cancel), cancel.Token);
 
                 run.GetAwaiter().GetResult();
             }
@@ -78,8 +78,8 @@ Options:
             using (var stream = await connection.Events.StreamAsync<JObject>(filter: strict))
             {
                 var subscription = stream
-                    .Select(jObject => LogEventReader.ReadFromJObject(jObject))
-                    .Subscribe(evt => Log.Write(evt), () => cancel.Cancel());
+                    .Select(LogEventReader.ReadFromJObject)
+                    .Subscribe(Log.Write, cancel.Cancel);
 
                 cancel.Token.WaitHandle.WaitOne();
                 subscription.Dispose();

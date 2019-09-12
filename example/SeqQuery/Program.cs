@@ -32,7 +32,7 @@ Options:
                     var server = arguments["<server>"].ToString();
                     var query = Normalize(arguments["<query>"]);
                     var apiKey = Normalize(arguments["--apikey"]);
-                    var @from = Normalize(arguments["--from"]);
+                    var from = Normalize(arguments["--from"]);
                     var to = Normalize(arguments["--to"]);
 
                     await Run(server, apiKey, query, from, to);
