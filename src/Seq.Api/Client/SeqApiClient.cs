@@ -25,10 +25,9 @@ namespace Seq.Api.Client
 
         // Future versions of Seq may not completely support v1 features, however
         // providing this as an Accept header will ensure what compatibility is available
-        // can be utilised.
+        // can be utilized.
         const string SeqApiV7MediaType = "application/vnd.datalust.seq.v7+json";
 
-        readonly HttpClient _httpClient;
         readonly CookieContainer _cookies = new CookieContainer();
         readonly JsonSerializer _serializer = JsonSerializer.Create(
             new JsonSerializerSettings
@@ -53,12 +52,12 @@ namespace Seq.Api.Client
             if (!baseAddress.EndsWith("/"))
                 baseAddress += "/";
 
-            _httpClient = new HttpClient(handler) { BaseAddress = new Uri(baseAddress) };
+            HttpClient = new HttpClient(handler) { BaseAddress = new Uri(baseAddress) };
         }
 
         public string ServerUrl { get; }
 
-        public HttpClient HttpClient => _httpClient;
+        public HttpClient HttpClient { get; }
 
         public Task<RootEntity> GetRootAsync(CancellationToken cancellationToken = default)
         {
@@ -183,7 +182,7 @@ namespace Seq.Api.Client
 
             request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(SeqApiV7MediaType));
 
-            var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
+            var response = await HttpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
             var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
             if (response.IsSuccessStatusCode)
@@ -239,7 +238,7 @@ namespace Seq.Api.Client
 
         public void Dispose()
         {
-            _httpClient.Dispose();
+            HttpClient.Dispose();
         }
     }
 }

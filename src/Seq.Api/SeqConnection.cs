@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Seq.Api.Client;
@@ -11,16 +12,17 @@ namespace Seq.Api
 {
     public class SeqConnection : ISeqConnection
     {
-        readonly ConcurrentDictionary<string, Task<ResourceGroup>> _resourceGroups = new ConcurrentDictionary<string, Task<ResourceGroup>>();
-        readonly Lazy<Task<RootEntity>> _root;
+        readonly object _sync = new object();
+        readonly Dictionary<string, Task<ResourceGroup>> _resourceGroups = new Dictionary<string, Task<ResourceGroup>>();
+        Task<RootEntity> _root;
 
         public SeqConnection(string serverUrl, string apiKey = null, bool useDefaultCredentials = true)
         {
             if (serverUrl == null) throw new ArgumentNullException(nameof(serverUrl));
             Client = new SeqApiClient(serverUrl, apiKey, useDefaultCredentials);
-
-            _root = new Lazy<Task<RootEntity>>(() => Client.GetRootAsync());
         }
+        
+        public SeqApiClient Client { get; }
 
         public ApiKeysResourceGroup ApiKeys => new ApiKeysResourceGroup(this);
 
@@ -60,27 +62,71 @@ namespace Seq.Api
 
         public WorkspacesResourceGroup Workspaces => new WorkspacesResourceGroup(this);
 
+        public async Task EnsureConnected(TimeSpan timeout)
+        {
+            var started = DateTime.UtcNow;
+            // Fractional milliseconds are lost here, but that's fine.
+            var wait = TimeSpan.FromMilliseconds(Math.Min(100, timeout.TotalMilliseconds));
+            var deadline = started.Add(timeout);
+            while (!await ConnectAsync(DateTime.UtcNow > deadline))
+            {
+                await Task.Delay(wait);
+            }
+        }
+
+        async Task<bool> ConnectAsync(bool throwOnFailure)
+        {
+            HttpStatusCode statusCode;
+
+            try
+            {
+                statusCode = (await Client.HttpClient.GetAsync("api")).StatusCode;
+            }
+            catch
+            {
+                if (throwOnFailure)
+                    throw;
+
+                return false;
+            }
+
+            if (statusCode == HttpStatusCode.OK)
+                return true;
+
+            if (!throwOnFailure)
+                return false;
+
+            throw new WebException($"Could not connect to the Seq API endpoint: {(int)statusCode}/{statusCode}.");
+        }
+
         public Task<ResourceGroup> LoadResourceGroupAsync(string name, CancellationToken cancellationToken = default)
         {
-            // Initially, we want to put an incomplete task into the cache so that any concurrent attempts to load the
-            // same resource group will wait on the same pending call.
-            var cached = _resourceGroups.GetOrAdd(name, s => ResourceGroupFactory(s, cancellationToken));
+            lock (_sync)
+            {
+                if (_resourceGroups.TryGetValue(name, out var cached) && !cached.IsFaulted && !cached.IsCanceled)
+                    return cached;
 
-            if (!cached.IsFaulted && !cached.IsCanceled)
-                return cached;
-
-            // If the cached task failed (ideally a rare situation), clobber it and return a new task (less worried about
-            // overlapping/concurrent calls on this path).
-            return _resourceGroups.AddOrUpdate(name,
-                s => ResourceGroupFactory(s, cancellationToken),
-                (s, _) => ResourceGroupFactory(s, cancellationToken));
+                var attempt = ResourceGroupFactory(name, cancellationToken);
+                _resourceGroups.Add(name, attempt);
+                return attempt;
+            }
         }
 
         async Task<ResourceGroup> ResourceGroupFactory(string name, CancellationToken cancellationToken = default)
         {
-            return await Client.GetAsync<ResourceGroup>(await _root.Value, name + "Resources", cancellationToken: cancellationToken).ConfigureAwait(false);
-        }
+            Task<RootEntity> root;
 
-        public SeqApiClient Client { get; }
+            // Reentrant, see above
+            lock (_sync)
+            {
+                if (_root == null || _root.IsFaulted || _root.IsCanceled)
+                    _root = Client.GetRootAsync(cancellationToken);
+
+                root = _root;
+            }
+
+            var rootEntity = await root.ConfigureAwait(false);
+            return await Client.GetAsync<ResourceGroup>(rootEntity, name + "Resources", cancellationToken: cancellationToken).ConfigureAwait(false);
+        }
     }
 }
