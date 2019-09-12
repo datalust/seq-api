@@ -35,7 +35,7 @@ namespace Seq.Api.Client
                 Converters = { new StringEnumConverter(), new LinkCollectionConverter() }
             });
 
-        public SeqApiClient(string serverUrl, string apiKey = null, bool useDefaultCredentials = true)
+        public SeqApiClient(string serverUrl, string apiKey = null, bool useDefaultCredentials = true, TimeSpan? requestTimeout = null)
         {
             ServerUrl = serverUrl ?? throw new ArgumentNullException(nameof(serverUrl));
 
@@ -53,6 +53,8 @@ namespace Seq.Api.Client
                 baseAddress += "/";
 
             HttpClient = new HttpClient(handler) { BaseAddress = new Uri(baseAddress) };
+            if (requestTimeout != null)
+                HttpClient.Timeout = requestTimeout.Value;
         }
 
         public string ServerUrl { get; }
@@ -199,7 +201,7 @@ namespace Seq.Api.Client
             if (payload != null && payload.TryGetValue("Error", out var error) && error != null)
                 throw new SeqApiException($"{(int)response.StatusCode} - {error}", response.StatusCode);
 
-            throw new SeqApiException($"The Seq request failed ({(int)response.StatusCode}).", response.StatusCode);
+            throw new SeqApiException($"The Seq request failed ({(int)response.StatusCode}/{response.StatusCode}).", response.StatusCode);
         }
 
         HttpContent MakeJsonContent(object content)
