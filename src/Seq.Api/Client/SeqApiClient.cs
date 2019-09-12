@@ -1,4 +1,18 @@
-﻿using System;
+﻿// Copyright 2014-2019 Datalust and contributors. 
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -359,25 +373,7 @@ namespace Seq.Api.Client
             if (!entity.Links.TryGetValue(link, out var linkItem))
                 throw new NotSupportedException($"The requested link `{link}` isn't available on entity `{entity}`.");
 
-            var expression = linkItem.GetUri();
-            var template = new UriTemplate(expression);
-            if (parameters != null)
-            {
-                var missing = parameters.Select(p => p.Key).Except(template.GetParameterNames()).ToArray();
-                if (missing.Any())
-                    throw new ArgumentException($"The URI template `{expression}` does not contain parameter: `{string.Join("`, `", missing)}`.");
-
-                foreach (var parameter in parameters)
-                {
-                    var value = parameter.Value is DateTime time
-                        ? time.ToString("O")
-                        : parameter.Value;
-
-                    template.SetParameter(parameter.Key, value);
-                }
-            }
-
-            return template.Resolve();
+            return linkItem.GetUri(parameters);
         }
 
         /// <inheritdoc/>>

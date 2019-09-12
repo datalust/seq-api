@@ -12,6 +12,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 using System;
 
 namespace Seq.Api.Streams
@@ -25,10 +26,8 @@ namespace Seq.Api.Streams
 
             public Unsubscriber(ObservableStream<T> sink, IObserver<T> observer)
             {
-                if (sink == null) throw new ArgumentNullException(nameof(sink));
-                if (observer == null) throw new ArgumentNullException(nameof(observer));
-                _stream = sink;
-                _observer = observer;
+                _stream = sink ?? throw new ArgumentNullException(nameof(sink));
+                _observer = observer ?? throw new ArgumentNullException(nameof(observer));
             }
 
             public void Dispose()
