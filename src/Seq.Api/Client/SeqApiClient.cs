@@ -15,7 +15,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -26,7 +25,6 @@ using Newtonsoft.Json.Converters;
 using Seq.Api.Model;
 using Seq.Api.Model.Root;
 using Seq.Api.Serialization;
-using Tavis.UriTemplates;
 using System.Threading;
 using Seq.Api.Streams;
 using System.Net.WebSockets;
@@ -58,9 +56,7 @@ namespace Seq.Api.Client
         /// <param name="serverUrl">The base URL of the Seq server.</param>
         /// <param name="apiKey">An API key to use when making requests to the server, if required.</param>
         /// <param name="useDefaultCredentials">Whether default credentials will be sent with HTTP requests; the default is <c>true</c>.</param>
-        /// <param name="requestTimeout">The time to wait before canceling long-running HTTP requests; the default (<c>null</c>) is to use the
-        /// system request timeout, normally 100 seconds. To disable timing out at the client, pass <see cref="Timeout.InfiniteTimeSpan"/>.</param>
-        public SeqApiClient(string serverUrl, string apiKey = null, bool useDefaultCredentials = true, TimeSpan? requestTimeout = null)
+        public SeqApiClient(string serverUrl, string apiKey = null, bool useDefaultCredentials = true)
         {
             ServerUrl = serverUrl ?? throw new ArgumentNullException(nameof(serverUrl));
 
@@ -82,9 +78,6 @@ namespace Seq.Api.Client
 
             if (_apiKey != null)
                 HttpClient.DefaultRequestHeaders.Add("X-Seq-ApiKey", _apiKey);
-
-            if (requestTimeout != null)
-                HttpClient.Timeout = requestTimeout.Value;
         }
 
         /// <summary>
