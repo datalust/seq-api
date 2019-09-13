@@ -39,12 +39,10 @@ namespace Seq.Api
         /// <param name="serverUrl">The base URL of the Seq server.</param>
         /// <param name="apiKey">An API key to use when making requests to the server, if required.</param>
         /// <param name="useDefaultCredentials">Whether default credentials will be sent with HTTP requests; the default is <c>true</c>.</param>
-        /// <param name="requestTimeout">The time to wait before canceling long-running HTTP requests; the default (<c>null</c>) is to use the
-        /// system request timeout, normally 100 seconds. To disable timing out at the client, pass <see cref="Timeout.InfiniteTimeSpan"/>.</param>
-        public SeqConnection(string serverUrl, string apiKey = null, bool useDefaultCredentials = true, TimeSpan? requestTimeout = null)
+        public SeqConnection(string serverUrl, string apiKey = null, bool useDefaultCredentials = true)
         {
             if (serverUrl == null) throw new ArgumentNullException(nameof(serverUrl));
-            Client = new SeqApiClient(serverUrl, apiKey, useDefaultCredentials, requestTimeout);
+            Client = new SeqApiClient(serverUrl, apiKey, useDefaultCredentials);
         }
         
         /// <summary>
