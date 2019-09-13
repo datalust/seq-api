@@ -24,8 +24,10 @@ using System.Linq;
 
 namespace Seq.Api.Streams
 {
-    // Some questionable synchronization in this one; probably better to take the Rx dependency
-    // and use the Rx support classes here.
+    /// <summary>
+    /// A stream of values read from a <see cref="WebSocket"/>.
+    /// </summary>
+    /// <typeparam name="T">The type of the values.</typeparam>
     public sealed partial class ObservableStream<T> : IObservable<T>, IDisposable
     {
         readonly object _syncRoot = new object();
@@ -42,6 +44,7 @@ namespace Seq.Api.Streams
             _socket = socket ?? throw new ArgumentNullException(nameof(socket));
         }
 
+        /// <inheritdoc/>
         public IDisposable Subscribe(IObserver<T> observer)
         {
             if (observer == null) throw new ArgumentNullException(nameof(observer));
@@ -182,6 +185,7 @@ namespace Seq.Api.Streams
             throw new AggregateException("At least one observer failed to accept the event", exceptions);            
         }
 
+        /// <inheritdoc/>
         public void Dispose()
         {
             lock (_syncRoot)

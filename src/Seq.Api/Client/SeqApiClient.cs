@@ -1,4 +1,18 @@
-﻿using System;
+﻿// Copyright 2014-2019 Datalust and contributors. 
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -19,6 +33,9 @@ using System.Net.WebSockets;
 
 namespace Seq.Api.Client
 {
+    /// <summary>
+    /// A low-level client that provides navigation over the linked resource structure of the Seq HTTP API.
+    /// </summary>
     public class SeqApiClient : IDisposable
     {
         readonly string _apiKey;
@@ -35,6 +52,14 @@ namespace Seq.Api.Client
                 Converters = { new StringEnumConverter(), new LinkCollectionConverter() }
             });
 
+        /// <summary>
+        /// Construct a <see cref="SeqApiClient"/>.
+        /// </summary>
+        /// <param name="serverUrl">The base URL of the Seq server.</param>
+        /// <param name="apiKey">An API key to use when making requests to the server, if required.</param>
+        /// <param name="useDefaultCredentials">Whether default credentials will be sent with HTTP requests; the default is <c>true</c>.</param>
+        /// <param name="requestTimeout">The time to wait before canceling long-running HTTP requests; the default (<c>null</c>) is to use the
+        /// system request timeout, normally 100 seconds. To disable timing out at the client, pass <see cref="Timeout.InfiniteTimeSpan"/>.</param>
         public SeqApiClient(string serverUrl, string apiKey = null, bool useDefaultCredentials = true, TimeSpan? requestTimeout = null)
         {
             ServerUrl = serverUrl ?? throw new ArgumentNullException(nameof(serverUrl));
@@ -53,45 +78,110 @@ namespace Seq.Api.Client
                 baseAddress += "/";
 
             HttpClient = new HttpClient(handler) { BaseAddress = new Uri(baseAddress) };
+            HttpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(SeqApiV7MediaType));
+
+            if (_apiKey != null)
+                HttpClient.DefaultRequestHeaders.Add("X-Seq-ApiKey", _apiKey);
+
             if (requestTimeout != null)
                 HttpClient.Timeout = requestTimeout.Value;
         }
 
+        /// <summary>
+        /// The base URL of the Seq server.
+        /// </summary>
         public string ServerUrl { get; }
 
+        /// <summary>
+        /// The HTTP client used when making requests to the Seq server. The HTTP client is configured with the server's base address, collects any cookies
+        /// sent with responses from the API, and will send the appropriate <c>Accept</c> and <c>X-Seq-ApiKey</c> headers by default.
+        /// </summary>
         public HttpClient HttpClient { get; }
 
+        /// <summary>
+        /// Get the root entity describing the server and providing links to other resources available from the API.
+        /// </summary>
+        /// <param name="cancellationToken">A <see cref="CancellationToken"/> supporting cancellation.</param>
+        /// <returns>The root entity.</returns>
         public Task<RootEntity> GetRootAsync(CancellationToken cancellationToken = default)
         {
             return HttpGetAsync<RootEntity>("api", cancellationToken);
         }
 
+        /// <summary>
+        /// Issue a <c>GET</c> request returning a <typeparamref name="TEntity"/> by following the <paramref name="link"/> from <paramref name="entity"/>.
+        /// </summary>
+        /// <typeparam name="TEntity">The entity type into which the response should be deserialized.</typeparam>
+        /// <param name="entity">An entity previously retrieved from the API.</param>
+        /// <param name="link">The name of the outbound link template present in <paramref name="entity"/>'s <see cref="ILinked.Links"/> collection.</param>
+        /// <param name="parameters">Named parameters to substitute into the link template, if required.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken"/> supporting cancellation.</param>
+        /// <returns>The response entity.</returns>
         public Task<TEntity> GetAsync<TEntity>(ILinked entity, string link, IDictionary<string, object> parameters = null, CancellationToken cancellationToken = default)
         {
             var linkUri = ResolveLink(entity, link, parameters);
             return HttpGetAsync<TEntity>(linkUri, cancellationToken);
         }
 
+        /// <summary>
+        /// Issue a <c>GET</c> request returning a string by following the <paramref name="link"/> from <paramref name="entity"/>.
+        /// </summary>
+        /// <param name="entity">An entity previously retrieved from the API.</param>
+        /// <param name="link">The name of the outbound link template present in <paramref name="entity"/>'s <see cref="ILinked.Links"/> collection.</param>
+        /// <param name="parameters">Named parameters to substitute into the link template, if required.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken"/> supporting cancellation.</param>
+        /// <returns>The response as a string.</returns>
         public Task<string> GetStringAsync(ILinked entity, string link, IDictionary<string, object> parameters = null, CancellationToken cancellationToken = default)
         {
             var linkUri = ResolveLink(entity, link, parameters);
             return HttpGetStringAsync(linkUri, cancellationToken);
         }
 
+        /// <summary>
+        /// Issue a <c>GET</c> request returning a list of <typeparamref name="TEntity"/> by following the <paramref name="link"/> from <paramref name="entity"/>.
+        /// </summary>
+        /// <typeparam name="TEntity">The entity type into which the response items should be deserialized.</typeparam>
+        /// <param name="entity">An entity previously retrieved from the API.</param>
+        /// <param name="link">The name of the outbound link template present in <paramref name="entity"/>'s <see cref="ILinked.Links"/> collection.</param>
+        /// <param name="parameters">Named parameters to substitute into the link template, if required.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken"/> supporting cancellation.</param>
+        /// <returns>The response entities.</returns>
         public Task<List<TEntity>> ListAsync<TEntity>(ILinked entity, string link, IDictionary<string, object> parameters = null, CancellationToken cancellationToken = default)
         {
             var linkUri = ResolveLink(entity, link, parameters);
             return HttpGetAsync<List<TEntity>>(linkUri, cancellationToken);
         }
 
+        /// <summary>
+        /// Issue a <c>POST</c> request accepting a serialized <typeparamref name="TEntity"/> to a <paramref name="link"/> from <paramref name="entity"/>.
+        /// </summary>
+        /// <typeparam name="TEntity">The entity type that will be serialized into the request payload.</typeparam>
+        /// <param name="entity">An entity previously retrieved from the API.</param>
+        /// <param name="link">The name of the outbound link template present in <paramref name="entity"/>'s <see cref="ILinked.Links"/> collection.</param>
+        /// <param name="parameters">Named parameters to substitute into the link template, if required.</param>
+        /// <param name="content">The request content.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken"/> supporting cancellation.</param>
+        /// <returns>A task that signals request completion.</returns>
         public async Task PostAsync<TEntity>(ILinked entity, string link, TEntity content, IDictionary<string, object> parameters = null, CancellationToken cancellationToken = default)
         {
             var linkUri = ResolveLink(entity, link, parameters);
             var request = new HttpRequestMessage(HttpMethod.Post, linkUri) { Content = MakeJsonContent(content) };
             var stream = await HttpSendAsync(request, cancellationToken).ConfigureAwait(false);
-            new StreamReader(stream).ReadToEnd();
+            using (var reader = new StreamReader(stream))
+                reader.ReadToEnd();
         }
 
+        /// <summary>
+        /// Issue a <c>POST</c> request accepting a serialized <typeparamref name="TEntity"/> and returning a <typeparamref name="TResponse"/> by following <paramref name="link"/> from <paramref name="entity"/>.
+        /// </summary>
+        /// <typeparam name="TEntity">The entity type that will be serialized into the request payload.</typeparam>
+        /// <typeparam name="TResponse">The entity type into which the response should be deserialized.</typeparam>
+        /// <param name="entity">An entity previously retrieved from the API.</param>
+        /// <param name="link">The name of the outbound link template present in <paramref name="entity"/>'s <see cref="ILinked.Links"/> collection.</param>
+        /// <param name="parameters">Named parameters to substitute into the link template, if required.</param>
+        /// <param name="content">The request content.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken"/> supporting cancellation.</param>
+        /// <returns>The response entity.</returns>
         public async Task<TResponse> PostAsync<TEntity, TResponse>(ILinked entity, string link, TEntity content, IDictionary<string, object> parameters = null, CancellationToken cancellationToken = default)
         {
             var linkUri = ResolveLink(entity, link, parameters);
@@ -100,14 +190,35 @@ namespace Seq.Api.Client
             return _serializer.Deserialize<TResponse>(new JsonTextReader(new StreamReader(stream)));
         }
 
+        /// <summary>
+        /// Issue a <c>POST</c> request accepting a serialized <typeparamref name="TEntity"/> and returning a string by following <paramref name="link"/> from <paramref name="entity"/>.
+        /// </summary>
+        /// <typeparam name="TEntity">The entity type that will be serialized into the request payload.</typeparam>
+        /// <param name="entity">An entity previously retrieved from the API.</param>
+        /// <param name="link">The name of the outbound link template present in <paramref name="entity"/>'s <see cref="ILinked.Links"/> collection.</param>
+        /// <param name="parameters">Named parameters to substitute into the link template, if required.</param>
+        /// <param name="content">The request content.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken"/> supporting cancellation.</param>
+        /// <returns>The response string.</returns>
         public async Task<string> PostReadStringAsync<TEntity>(ILinked entity, string link, TEntity content, IDictionary<string, object> parameters = null, CancellationToken cancellationToken = default)
         {
             var linkUri = ResolveLink(entity, link, parameters);
             var request = new HttpRequestMessage(HttpMethod.Post, linkUri) { Content = MakeJsonContent(content) };
             var stream = await HttpSendAsync(request, cancellationToken).ConfigureAwait(false);
-            return await new StreamReader(stream).ReadToEndAsync();
+            using (var reader = new StreamReader(stream))
+                return await reader.ReadToEndAsync();
         }
 
+        /// <summary>
+        /// Issue a <c>POST</c> request accepting a serialized <typeparamref name="TEntity"/> and returning a stream by following <paramref name="link"/> from <paramref name="entity"/>.
+        /// </summary>
+        /// <typeparam name="TEntity">The entity type that will be serialized into the request payload.</typeparam>
+        /// <param name="entity">An entity previously retrieved from the API.</param>
+        /// <param name="link">The name of the outbound link template present in <paramref name="entity"/>'s <see cref="ILinked.Links"/> collection.</param>
+        /// <param name="parameters">Named parameters to substitute into the link template, if required.</param>
+        /// <param name="content">The request content.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken"/> supporting cancellation.</param>
+        /// <returns>The response stream.</returns>
         public async Task<Stream> PostReadStreamAsync<TEntity>(ILinked entity, string link, TEntity content, IDictionary<string, object> parameters = null, CancellationToken cancellationToken = default)
         {
             var linkUri = ResolveLink(entity, link, parameters);
@@ -115,22 +226,55 @@ namespace Seq.Api.Client
             return await HttpSendAsync(request, cancellationToken).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Issue a <c>PUT</c> request accepting a serialized <typeparamref name="TEntity"/> to a <paramref name="link"/> from <paramref name="entity"/>.
+        /// </summary>
+        /// <typeparam name="TEntity">The entity type that will be serialized into the request payload.</typeparam>
+        /// <param name="entity">An entity previously retrieved from the API.</param>
+        /// <param name="link">The name of the outbound link template present in <paramref name="entity"/>'s <see cref="ILinked.Links"/> collection.</param>
+        /// <param name="parameters">Named parameters to substitute into the link template, if required.</param>
+        /// <param name="content">The request content.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken"/> supporting cancellation.</param>
+        /// <returns>A task that signals request completion.</returns>
         public async Task PutAsync<TEntity>(ILinked entity, string link, TEntity content, IDictionary<string, object> parameters = null, CancellationToken cancellationToken = default)
         {
             var linkUri = ResolveLink(entity, link, parameters);
             var request = new HttpRequestMessage(HttpMethod.Put, linkUri) { Content = MakeJsonContent(content) };
             var stream = await HttpSendAsync(request, cancellationToken).ConfigureAwait(false);
-            new StreamReader(stream).ReadToEnd();
+            using (var reader = new StreamReader(stream))
+                reader.ReadToEnd();
         }
 
+        /// <summary>
+        /// Issue a <c>DELETE</c> request accepting a serialized <typeparamref name="TEntity"/> to a <paramref name="link"/> from <paramref name="entity"/>.
+        /// </summary>
+        /// <typeparam name="TEntity">The entity type that will be serialized into the request payload.</typeparam>
+        /// <param name="entity">An entity previously retrieved from the API.</param>
+        /// <param name="link">The name of the outbound link template present in <paramref name="entity"/>'s <see cref="ILinked.Links"/> collection.</param>
+        /// <param name="parameters">Named parameters to substitute into the link template, if required.</param>
+        /// <param name="content">The request content.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken"/> supporting cancellation.</param>
+        /// <returns>A task that signals request completion.</returns>
         public async Task DeleteAsync<TEntity>(ILinked entity, string link, TEntity content, IDictionary<string, object> parameters = null, CancellationToken cancellationToken = default)
         {
             var linkUri = ResolveLink(entity, link, parameters);
             var request = new HttpRequestMessage(HttpMethod.Delete, linkUri) { Content = MakeJsonContent(content) };
             var stream = await HttpSendAsync(request, cancellationToken).ConfigureAwait(false);
-            new StreamReader(stream).ReadToEnd();
+            using (var reader = new StreamReader(stream))
+                reader.ReadToEnd();
         }
 
+        /// <summary>
+        /// Issue a <c>DELETE</c> request accepting a serialized <typeparamref name="TEntity"/> to a <paramref name="link"/> from <paramref name="entity"/>.
+        /// </summary>
+        /// <typeparam name="TEntity">The entity type that will be serialized into the request payload.</typeparam>
+        /// <typeparam name="TResponse">The entity type into which the response should be deserialized.</typeparam>
+        /// <param name="entity">An entity previously retrieved from the API.</param>
+        /// <param name="link">The name of the outbound link template present in <paramref name="entity"/>'s <see cref="ILinked.Links"/> collection.</param>
+        /// <param name="parameters">Named parameters to substitute into the link template, if required.</param>
+        /// <param name="content">The request content.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken"/> supporting cancellation.</param>
+        /// <returns>The response entity.</returns>
         public async Task<TResponse> DeleteAsync<TEntity, TResponse>(ILinked entity, string link, TEntity content, IDictionary<string, object> parameters = null, CancellationToken cancellationToken = default)
         {
             var linkUri = ResolveLink(entity, link, parameters);
@@ -139,11 +283,28 @@ namespace Seq.Api.Client
             return _serializer.Deserialize<TResponse>(new JsonTextReader(new StreamReader(stream)));
         }
 
+        /// <summary>
+        /// Connect to a websocket at the address specified by following <paramref name="link"/> from <paramref name="entity"/>.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the values received over the websocket.</typeparam>
+        /// <param name="entity">An entity previously retrieved from the API.</param>
+        /// <param name="link">The name of the outbound link template present in <paramref name="entity"/>'s <see cref="ILinked.Links"/> collection.</param>
+        /// <param name="parameters">Named parameters to substitute into the link template, if required.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken"/> supporting cancellation.</param>
+        /// <returns>A stream of values from the websocket.</returns>
         public async Task<ObservableStream<TEntity>> StreamAsync<TEntity>(ILinked entity, string link, IDictionary<string, object> parameters = null, CancellationToken cancellationToken = default)
         {
             return await WebSocketStreamAsync(entity, link, parameters, reader => _serializer.Deserialize<TEntity>(new JsonTextReader(reader)), cancellationToken);
         }
 
+        /// <summary>
+        /// Connect to a websocket at the address specified by following <paramref name="link"/> from <paramref name="entity"/>.
+        /// </summary>
+        /// <param name="entity">An entity previously retrieved from the API.</param>
+        /// <param name="link">The name of the outbound link template present in <paramref name="entity"/>'s <see cref="ILinked.Links"/> collection.</param>
+        /// <param name="parameters">Named parameters to substitute into the link template, if required.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken"/> supporting cancellation.</param>
+        /// <returns>A stream of raw messages from the websocket.</returns>
         public async Task<ObservableStream<string>> StreamTextAsync(ILinked entity, string link, IDictionary<string, object> parameters = null, CancellationToken cancellationToken = default)
         {
             return await WebSocketStreamAsync(entity, link, parameters, reader => reader.ReadToEnd(), cancellationToken);
@@ -174,16 +335,12 @@ namespace Seq.Api.Client
         {
             var request = new HttpRequestMessage(HttpMethod.Get, url);
             var stream = await HttpSendAsync(request, cancellationToken).ConfigureAwait(false);
-            return await new StreamReader(stream).ReadToEndAsync();
+            using (var reader = new StreamReader(stream))
+                return await reader.ReadToEndAsync();
         }
 
         async Task<Stream> HttpSendAsync(HttpRequestMessage request, CancellationToken cancellationToken = default)
         {
-            if (_apiKey != null)
-                request.Headers.Add("X-Seq-ApiKey", _apiKey);
-
-            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(SeqApiV7MediaType));
-
             var response = await HttpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
             var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
@@ -213,31 +370,13 @@ namespace Seq.Api.Client
 
         static string ResolveLink(ILinked entity, string link, IDictionary<string, object> parameters = null)
         {
-            Link linkItem;
-            if (!entity.Links.TryGetValue(link, out linkItem))
+            if (!entity.Links.TryGetValue(link, out var linkItem))
                 throw new NotSupportedException($"The requested link `{link}` isn't available on entity `{entity}`.");
 
-            var expression = linkItem.GetUri();
-            var template = new UriTemplate(expression);
-            if (parameters != null)
-            {
-                var missing = parameters.Select(p => p.Key).Except(template.GetParameterNames()).ToArray();
-                if (missing.Any())
-                    throw new ArgumentException($"The URI template `{expression}` does not contain parameter: `{string.Join("`, `", missing)}`.");
-
-                foreach (var parameter in parameters)
-                {
-                    var value = parameter.Value is DateTime time
-                        ? time.ToString("O")
-                        : parameter.Value;
-
-                    template.SetParameter(parameter.Key, value);
-                }
-            }
-
-            return template.Resolve();
+            return linkItem.GetUri(parameters);
         }
 
+        /// <inheritdoc/>>
         public void Dispose()
         {
             HttpClient.Dispose();
