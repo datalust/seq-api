@@ -34,6 +34,8 @@ namespace Seq.Api.ResourceGroups
             if (id == null) throw new ArgumentNullException(nameof(id));
 
             var parameters = new Dictionary<string, object> {{"id", id}};
+            if (render) parameters.Add("render", true);
+            if (permalinkId != null) parameters.Add("permalinkId", permalinkId);
 
             return await GroupGetAsync<EventEntity>("Item", parameters, cancellationToken).ConfigureAwait(false);
         }
