@@ -142,6 +142,11 @@ namespace Seq.Api
         public UsersResourceGroup Users => new UsersResourceGroup(this);
 
         /// <summary>
+        /// Perform operations on user roles.
+        /// </summary>
+        public RolesResourceGroup Roles => new RolesResourceGroup(this);
+
+        /// <summary>
         /// Perform operations on workspaces.
         /// </summary>
         public WorkspacesResourceGroup Workspaces => new WorkspacesResourceGroup(this);
