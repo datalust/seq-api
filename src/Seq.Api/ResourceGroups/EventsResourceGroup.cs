@@ -247,7 +247,7 @@ namespace Seq.Api.ResourceGroups
         }
 
         /// <summary>
-        /// Connect to the live event stream. Dispose the resulting stream to disconnect.
+        /// Connect to the live event stream, read as strongly-typed objects. Dispose the resulting stream to disconnect.
         /// </summary>
         /// <typeparam name="T">The type into which events should be deserialized.</typeparam>
         /// <param name="signal">If provided, a signal expression describing the set of events that will be filtered for the result.</param>
@@ -256,6 +256,8 @@ namespace Seq.Api.ResourceGroups
         /// <param name="cancellationToken">Token through which the operation can be cancelled.</param>
         /// <returns>An observable that will stream events from the server to subscribers. Events will be buffered server-side until the first
         /// subscriber connects, ensure at least one subscription is made in order to avoid event loss.</returns>
+        /// <remarks>See <a href="https://docs.datalust.co/docs/posting-raw-events#section-compact-json-format">the Seq ingestion
+        /// docs</a> for event schema information.</remarks>
         public async Task<ObservableStream<T>> StreamAsync<T>(
             SignalExpressionPart signal = null,
             string filter = null,
@@ -270,8 +272,7 @@ namespace Seq.Api.ResourceGroups
         }
 
         /// <summary>
-        /// Retrieve a list of events that match a set of conditions. The complete result is buffered into memory,
-        /// so if a large result set is expected, use InSignalAsync() and lastReadEventId to page the results.
+        /// Connect to the live event stream, read as raw JSON documents. Dispose the resulting stream to disconnect.
         /// </summary>
         /// <param name="signal">If provided, a signal expression describing the set of events that will be filtered for the result.</param>
         /// <param name="filter">A strict Seq filter expression to match (text expressions must be in double quotes). To
@@ -279,6 +280,8 @@ namespace Seq.Api.ResourceGroups
         /// <param name="cancellationToken">Token through which the operation can be cancelled.</param>
         /// <returns>An observable that will stream events from the server to subscribers. Events will be buffered server-side until the first
         /// subscriber connects, ensure at least one subscription is made in order to avoid event loss.</returns>
+        /// <remarks>See <a href="https://docs.datalust.co/docs/posting-raw-events#section-compact-json-format">the Seq ingestion
+        /// docs</a> for event schema information.</remarks>
         public async Task<ObservableStream<string>> StreamDocumentsAsync(
             SignalExpressionPart signal = null,
             string filter = null,
