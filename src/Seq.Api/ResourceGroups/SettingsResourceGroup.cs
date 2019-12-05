@@ -1,4 +1,18 @@
-﻿using System;
+﻿// Copyright 2014-2019 Datalust and contributors. 
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -6,6 +20,9 @@ using Seq.Api.Model.Settings;
 
 namespace Seq.Api.ResourceGroups
 {
+    /// <summary>
+    /// Perform operations on system settings.
+    /// </summary>
     public class SettingsResourceGroup : ApiResourceGroup
     {
         internal SettingsResourceGroup(ISeqConnection connection)
@@ -13,42 +30,54 @@ namespace Seq.Api.ResourceGroups
         {
         }
 
+        /// <summary>
+        /// Retrieve the setting with the given id; throws if the entity does not exist.
+        /// </summary>
+        /// <param name="id">The id of the setting.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken"/> allowing the operation to be canceled.</param>
+        /// <returns>The setting.</returns>
         public async Task<SettingEntity> FindAsync(string id, CancellationToken cancellationToken = default)
         {
             if (id == null) throw new ArgumentNullException(nameof(id));
             return await GroupGetAsync<SettingEntity>("Item", new Dictionary<string, object> { { "id", id } }, cancellationToken).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Retrieve the setting with the given name; throws if the entity does not exist.
+        /// </summary>
+        /// <param name="name">The name of the setting to retrieve. See also <see cref="SettingName"/>.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken"/> allowing the operation to be canceled.</param>
+        /// <returns>The setting.</returns>
         public async Task<SettingEntity> FindNamedAsync(SettingName name, CancellationToken cancellationToken = default)
         {
             return await GroupGetAsync<SettingEntity>(name.ToString(), cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task<SettingEntity> TemplateAsync(CancellationToken cancellationToken = default)
-        {
-            return await GroupGetAsync<SettingEntity>("Template", cancellationToken: cancellationToken).ConfigureAwait(false);
-        }
-
-        public async Task<SettingEntity> AddAsync(SettingEntity entity, CancellationToken cancellationToken = default)
-        {
-            return await Client.PostAsync<SettingEntity, SettingEntity>(entity, "Create", entity, cancellationToken: cancellationToken).ConfigureAwait(false);
-        }
-
-        public async Task RemoveAsync(SettingEntity entity, CancellationToken cancellationToken = default)
-        {
-            await Client.DeleteAsync(entity, "Self", entity, cancellationToken: cancellationToken).ConfigureAwait(false);
-        }
-
+        /// <summary>
+        /// Update an existing setting.
+        /// </summary>
+        /// <param name="entity">The setting to update.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken"/> allowing the operation to be canceled.</param>
+        /// <returns>A task indicating completion.</returns>
         public async Task UpdateAsync(SettingEntity entity, CancellationToken cancellationToken = default)
         {
             await Client.PutAsync(entity, "Self", entity, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Get internal error reporting settings.
+        /// </summary>
+        /// <returns>Internal error reporting settings.</returns>
         public async Task<InternalErrorReportingSettingsPart> GetInternalErrorReportingAsync()
         {
             return await GroupGetAsync<InternalErrorReportingSettingsPart>("InternalErrorReporting").ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Update internal error reporting settings.
+        /// </summary>
+        /// <param name="internalErrorReporting">New internal error reporting settings.</param>
+        /// <returns>A task indicating completion.</returns>
         public async Task UpdateInternalErrorReportingAsync(InternalErrorReportingSettingsPart internalErrorReporting)
         {
             await GroupPutAsync("InternalErrorReporting", internalErrorReporting).ConfigureAwait(false);
