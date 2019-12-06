@@ -23,7 +23,7 @@ using Seq.Api.Model.Users;
 namespace Seq.Api.ResourceGroups
 {
     /// <summary>
-    /// Perform operations on signals.
+    /// Perform operations on signals. A signal is a collection of filters that identifies a subset of the event stream.
     /// </summary>
     public class SignalsResourceGroup : ApiResourceGroup
     {

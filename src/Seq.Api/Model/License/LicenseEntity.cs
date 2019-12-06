@@ -14,14 +14,47 @@
 
 namespace Seq.Api.Model.License
 {
+    /// <summary>
+    /// A Seq license certificate.
+    /// </summary>
     public class LicenseEntity : Entity
     {
+        /// <summary>
+        /// The cryptographically-signed certificate that describes the
+        /// license, or <c>null</c> if the server is using the default license.
+        /// </summary>
         public string LicenseText { get; set; }
+
+        /// <summary>
+        /// Whether or not the license is valid for the server.
+        /// </summary>
         public bool IsValid { get; set; }
+
+        /// <summary>
+        /// If <c>true</c>, the server is using the default license which allows
+        /// a single person to access the Seq server.
+        /// </summary>
         public bool IsSingleUser { get; set; }
+
+        /// <summary>
+        /// Information about the status of the license.
+        /// </summary>
         public string StatusDescription { get; set; }
+
+        /// <summary>
+        /// If <c>true</c>, see <see cref="StatusDescription"/> for important information.
+        /// </summary>
         public bool IsWarning { get; set; }
+
+        /// <summary>
+        /// If <c>true</c>, the license can be renewed online.
+        /// </summary>
         public bool CanRenewOnlineNow { get; set; }
+
+        /// <summary>
+        /// The number of users licensed to access the Seq server, or <c>null</c> if
+        /// the license has no user limit.
+        /// </summary>
         public int? LicensedUsers { get; set; }
     }
 }

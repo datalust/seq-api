@@ -75,7 +75,11 @@ namespace Seq.Api.ResourceGroups
         /// </summary>
         /// <param name="entity">The API key to add.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> allowing the operation to be canceled.</param>
-        /// <returns>The API key, with server-allocated properties such as <see cref="Entity.Id"/> initialized.</returns>
+        /// <returns>The API key, with server-allocated properties, such as <see cref="ApiKeyEntity.Token"/> (if server-allocated),
+        /// and <see cref="Entity.Id"/>, initialized.</returns>
+        /// <remarks>Leaving the token blank will cause the server to generate a cryptographically random API key token. After creation, the first
+        /// few characters of the token will be readable from <see cref="ApiKeyEntity.TokenPrefix"/>, but because only a cryptographically-secure
+        /// hash of the token is stored internally, the token itself cannot be retrieved.</remarks>
         public async Task<ApiKeyEntity> AddAsync(ApiKeyEntity entity, CancellationToken cancellationToken = default)
         {
             return await GroupCreateAsync<ApiKeyEntity, ApiKeyEntity>(entity, cancellationToken: cancellationToken).ConfigureAwait(false);
@@ -98,6 +102,7 @@ namespace Seq.Api.ResourceGroups
         /// <param name="entity">The API key to update.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> allowing the operation to be canceled.</param>
         /// <returns>A task indicating completion.</returns>
+        /// <remarks>The API key token itself cannot be updated using this method.</remarks>
         public async Task UpdateAsync(ApiKeyEntity entity, CancellationToken cancellationToken = default)
         {
             await Client.PutAsync(entity, "Self", entity, cancellationToken: cancellationToken).ConfigureAwait(false);

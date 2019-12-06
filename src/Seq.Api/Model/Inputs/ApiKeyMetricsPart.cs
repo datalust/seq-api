@@ -14,10 +14,27 @@
 
 namespace Seq.Api.Model.Inputs
 {
+    /// <summary>
+    /// Information about ingestion activity using an API key.
+    /// </summary>
     public class ApiKeyMetricsPart
     {
+        /// <summary>
+        /// The number of events that arrived at the server tagged with this
+        /// key in the past minute.
+        /// </summary>
         public int ArrivalsPerMinute { get; set; }
+
+        /// <summary>
+        /// The number of events that ingested by the server tagged with this
+        /// key in the past minute.
+        /// </summary>
         public int InfluxPerMinute { get; set; }
+        
+        /// <summary>
+        /// The raw JSON bytes (approximate) tagged with this API key that were ingested
+        /// by the server in the past minute.
+        /// </summary>
         public long IngestedBytesPerMinute { get; set; }
     }
 }

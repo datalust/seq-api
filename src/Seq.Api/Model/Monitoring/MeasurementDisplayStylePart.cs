@@ -14,13 +14,39 @@
 
 namespace Seq.Api.Model.Monitoring
 {
+    /// <summary>
+    /// How a measurement will be displayed within a chart.
+    /// </summary>
     public class MeasurementDisplayStylePart
     {
+        /// <summary>
+        /// The type of display used for the measurement.
+        /// </summary>
         public MeasurementDisplayType Type { get; set; } = MeasurementDisplayType.Line;
+
+        /// <summary>
+        /// For line chart measurement display types, whether the area under the line will be filled.
+        /// </summary>
         public bool LineFillToZeroY { get; set; }
+
+        /// <summary>
+        /// For line chart measurement display types, whether the points along the line will be visibly marked.
+        /// </summary>
         public bool LineShowMarkers { get; set; } = true;
+
+        /// <summary>
+        /// For bar chart measurement display types, whether the sum of all bars will be shown as an overlay.
+        /// </summary>
         public bool BarOverlaySum { get; set; }
+
+        /// <summary>
+        /// For measurement display types that include a legend, whether the legend will be shown.
+        /// </summary>
         public bool SuppressLegend { get; set; }
+
+        /// <summary>
+        /// The color palette used to display the chart.
+        /// </summary>
         public MeasurementDisplayPalette Palette { get; set; } = MeasurementDisplayPalette.Default;
     }
 }

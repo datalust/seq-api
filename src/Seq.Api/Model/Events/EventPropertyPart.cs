@@ -19,6 +19,7 @@ namespace Seq.Api.Model.Events
     /// <summary>
     /// A name/value property associated with an event.
     /// </summary>
+    //  Note, this duplicates InputAppliedPropertyPart.
     public class EventPropertyPart
     {
         /// <summary>
@@ -32,7 +33,14 @@ namespace Seq.Api.Model.Events
             Value = value;
         }
 
+        /// <summary>
+        /// The property name (required).
+        /// </summary>
         public string Name { get; }
+
+        /// <summary>
+        /// The property value, or <c>null</c>.
+        /// </summary>
         public object Value { get; }
     }
 }

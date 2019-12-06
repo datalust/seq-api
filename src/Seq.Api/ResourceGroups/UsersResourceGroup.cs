@@ -147,6 +147,18 @@ namespace Seq.Api.ResourceGroups
         }
 
         /// <summary>
+        /// Update a user's search history by adding, removing, or modifying <paramref name="item"/>.
+        /// </summary>
+        /// <param name="entity">The search history for the user.</param>
+        /// <param name="item">The item to modify.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken"/> allowing the operation to be canceled.</param>
+        /// <returns>A task signalling completion.</returns>
+        public async Task UpdateSearchHistoryAsync(SearchHistoryEntity entity, SearchHistoryItemPart item, CancellationToken cancellationToken = default)
+        { 
+            await Client.PostAsync(entity, "Update", item, cancellationToken: cancellationToken);
+        }
+
+        /// <summary>
         /// Log in, using integrated Windows authentication. Only available when Active Directory authentication is enabled.
         /// </summary>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> allowing the operation to be canceled.</param>

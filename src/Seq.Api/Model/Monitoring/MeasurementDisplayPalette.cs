@@ -14,12 +14,34 @@
 
 namespace Seq.Api.Model.Monitoring
 {
+    /// <summary>
+    /// The color palette used for displaying a measurement on a chart.
+    /// </summary>
     public enum MeasurementDisplayPalette
     {
+        /// <summary>
+        /// The default palette.
+        /// </summary>
         Default,
+
+        /// <summary>
+        /// A predominantly red palette.
+        /// </summary>
         Reds,
+
+        /// <summary>
+        /// A predominantly green palette.
+        /// </summary>
         Greens,
+
+        /// <summary>
+        /// A predominantly blue palette.
+        /// </summary>
         Blues,
+
+        /// <summary>
+        /// An orange/purple palette.
+        /// </summary>
         OrangePurple
     }
 }

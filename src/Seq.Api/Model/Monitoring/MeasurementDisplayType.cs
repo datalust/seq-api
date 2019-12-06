@@ -14,13 +14,39 @@
 
 namespace Seq.Api.Model.Monitoring
 {
+    /// <summary>
+    /// The method used to visually represent a measurement.
+    /// </summary>
     public enum MeasurementDisplayType
     {
+        /// <summary>
+        /// A line chart. Requires the measurement and query to include a time axis.
+        /// </summary>
         Line,
+
+        /// <summary>
+        /// A bar chart.
+        /// </summary>
         Bar,
+
+        /// <summary>
+        /// A point (scatter) chart.
+        /// </summary>
         Point,
+
+        /// <summary>
+        /// A single textual value. Requires that the measurement and query produce a single value.
+        /// </summary>
         Value,
+
+        /// <summary>
+        /// A (donut-styled) pie chart.
+        /// </summary>
         Pie,
+
+        /// <summary>
+        /// A table of raw data values.
+        /// </summary>
         Table
     }
 }

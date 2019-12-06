@@ -14,9 +14,19 @@
 
 namespace Seq.Api.Model.Monitoring
 {
+    /// <summary>
+    /// How a chart will be displayed on a dashboard.
+    /// </summary>
     public class ChartDisplayStylePart
     {
+        /// <summary>
+        /// The width of the chart, in 1/12th columns.
+        /// </summary>
         public int WidthColumns { get; set; } = 6;
+
+        /// <summary>
+        /// The height of the chart, in rows.
+        /// </summary>
         public int HeightRows { get; set; } = 1;
     }
 }

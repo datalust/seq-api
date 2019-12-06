@@ -17,12 +17,35 @@ using Seq.Api.Model.Signals;
 
 namespace Seq.Api.Model.Monitoring
 {
+    /// <summary>
+    /// A chart that appears on a dashboard.
+    /// </summary>
     public class ChartPart
     {
+        /// <summary>
+        /// The unique id assigned to the chart.
+        /// </summary>
         public string Id { get; set; }
+
+        /// <summary>
+        /// A human-friendly title for the chart.
+        /// </summary>
         public string Title { get; set; }
+
+        /// <summary>
+        /// An optional <see cref="SignalExpressionPart"/> that limits what data the chart will display.
+        /// </summary>
         public SignalExpressionPart SignalExpression { get; set; }
+
+        /// <summary>
+        /// The individual queries making up the chart. In most instances, only one query is currently supported
+        /// here.
+        /// </summary>
         public List<ChartQueryPart> Queries { get; set; } = new List<ChartQueryPart>();
+
+        /// <summary>
+        /// How the chart will appear on the dashboard.
+        /// </summary>
         public ChartDisplayStylePart DisplayStyle { get; set; } = new ChartDisplayStylePart();
     }
 }

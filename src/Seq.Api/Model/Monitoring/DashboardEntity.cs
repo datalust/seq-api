@@ -13,20 +13,39 @@
 // limitations under the License.
 
 using System.Collections.Generic;
+using Seq.Api.Model.Security;
 using Seq.Api.Model.Signals;
 
 namespace Seq.Api.Model.Monitoring
 {
+    /// <summary>
+    /// A dashboard.
+    /// </summary>
     public class DashboardEntity : Entity
     {
+        /// <summary>
+        /// The user who owns the dashboard. If <c>null</c>, the dashboard is shared.
+        /// </summary>
         public string OwnerId { get; set; }
 
+        /// <summary>
+        /// The friendly, human-readable title for the dashboard.
+        /// </summary>
         public string Title { get; set; }
 
+        /// <summary>
+        /// If <c>true</c>, only users with <see cref="Permission.Setup"/> can modify the dashboard.
+        /// </summary>
         public bool IsProtected { get; set; }
 
+        /// <summary>
+        /// An optional <see cref="SignalExpressionPart"/> that limits the data contributing to the dashboard.
+        /// </summary>
         public SignalExpressionPart SignalExpression { get; set; }
 
+        /// <summary>
+        /// The list of charts included in the dashboard.
+        /// </summary>
         public List<ChartPart> Charts { get; set; } = new List<ChartPart>();
     }
 }

@@ -14,9 +14,20 @@
 
 namespace Seq.Api.Model.Inputs
 {
+    /// <summary>
+    /// A name/value property attached to events ingested through an API key.
+    /// </summary>
+    //  Note, this duplicates EventPropertyPart.
     public class InputAppliedPropertyPart
     {
+        /// <summary>
+        /// The property name (required).
+        /// </summary>
         public string Name { get; set; }
+
+        /// <summary>
+        /// The property value, or <c>null</c>.
+        /// </summary>
         public object Value { get; set; }
     }
 }

@@ -25,6 +25,9 @@ namespace Seq.Api.Model
     [JsonConverter(typeof(LinkCollectionConverter))]
     public class LinkCollection : Dictionary<string, Link>
     {
+        /// <summary>
+        /// Construct a <see cref="LinkCollection"/>.
+        /// </summary>
         public LinkCollection() : base(StringComparer.OrdinalIgnoreCase) { }
     }
 }

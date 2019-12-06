@@ -17,6 +17,9 @@ namespace Seq.Api.Model
     /// <summary>
     /// A uniquely-identifiable resource available from the Seq HTTP API.
     /// </summary>
+    /// <remarks>Entities are the persistent top-level resources that have a stable
+    /// URI. The API client uses the contrasting suffix <c>*Part</c> to designate
+    /// resources that are transient or not directly addressable.</remarks>
     public abstract class Entity : ILinked
     {
         /// <summary>
