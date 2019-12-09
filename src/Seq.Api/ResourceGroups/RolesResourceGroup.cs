@@ -31,11 +31,11 @@ namespace Seq.Api.ResourceGroups
         }
 
         /// <summary>
-        /// Find a role given its id.
+        /// Retrieve the role with the given id; throws if the entity does not exist.
         /// </summary>
-        /// <param name="id">The id of a role to find.</param>
-        /// <param name="cancellationToken"><see cref="CancellationToken"/> allowing the operation to be canceled.</param>
-        /// <returns>The matching role.</returns>
+        /// <param name="id">The id of the role.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken"/> allowing the operation to be canceled.</param>
+        /// <returns>The role.</returns>
         public async Task<RoleEntity> FindAsync(string id, CancellationToken cancellationToken = default)
         {
             if (id == null) throw new ArgumentNullException(nameof(id));
@@ -43,7 +43,7 @@ namespace Seq.Api.ResourceGroups
         }
 
         /// <summary>
-        /// List all roles.
+        /// Retrieve roles.
         /// </summary>
         /// <param name="cancellationToken"><see cref="CancellationToken"/> allowing the operation to be canceled.</param>
         /// <returns>A list containing all roles available on the server.</returns>

@@ -115,6 +115,11 @@ namespace Seq.Api
         /// Perform operations on retention policies.
         /// </summary>
         public RetentionPoliciesResourceGroup RetentionPolicies => new RetentionPoliciesResourceGroup(this);
+        
+        /// <summary>
+        /// Perform operations on user roles.
+        /// </summary>
+        public RolesResourceGroup Roles => new RolesResourceGroup(this);
 
         /// <summary>
         /// Perform operations on system settings.
@@ -140,11 +145,6 @@ namespace Seq.Api
         /// Perform operations on users.
         /// </summary>
         public UsersResourceGroup Users => new UsersResourceGroup(this);
-
-        /// <summary>
-        /// Perform operations on user roles.
-        /// </summary>
-        public RolesResourceGroup Roles => new RolesResourceGroup(this);
 
         /// <summary>
         /// Perform operations on workspaces.
