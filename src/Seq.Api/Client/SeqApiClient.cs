@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Net;
 using System.Net.Http;
@@ -56,7 +57,20 @@ namespace Seq.Api.Client
         /// <param name="serverUrl">The base URL of the Seq server.</param>
         /// <param name="apiKey">An API key to use when making requests to the server, if required.</param>
         /// <param name="useDefaultCredentials">Whether default credentials will be sent with HTTP requests; the default is <c>true</c>.</param>
-        public SeqApiClient(string serverUrl, string apiKey = null, bool useDefaultCredentials = true)
+        [Obsolete("Prefer `SeqApiClient(serverUrl, apiKey, handler => handler.UseDefaultCredentials = true)` instead."), EditorBrowsable(EditorBrowsableState.Never)]
+        public SeqApiClient(string serverUrl, string apiKey, bool useDefaultCredentials)
+            : this(serverUrl, apiKey, handler => handler.UseDefaultCredentials = useDefaultCredentials)
+        {
+        }
+
+        /// <summary>
+        /// Construct a <see cref="SeqApiClient"/>.
+        /// </summary>
+        /// <param name="serverUrl">The base URL of the Seq server.</param>
+        /// <param name="apiKey">An API key to use when making requests to the server, if required.</param>
+        /// <param name="configureHttpClientHandler">An optional callback to configure the <see cref="HttpClientHandler"/> used when making HTTP requests
+        /// to the Seq API.</param>
+        public SeqApiClient(string serverUrl, string apiKey = null, Action<HttpClientHandler> configureHttpClientHandler = null)
         {
             ServerUrl = serverUrl ?? throw new ArgumentNullException(nameof(serverUrl));
 
@@ -65,9 +79,10 @@ namespace Seq.Api.Client
 
             var handler = new HttpClientHandler
             {
-                CookieContainer = _cookies,
-                UseDefaultCredentials = useDefaultCredentials
+                CookieContainer = _cookies
             };
+
+            configureHttpClientHandler?.Invoke(handler);
 
             var baseAddress = serverUrl;
             if (!baseAddress.EndsWith("/"))
