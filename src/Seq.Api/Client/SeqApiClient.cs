@@ -28,8 +28,6 @@ using Seq.Api.Serialization;
 using System.Threading;
 using Seq.Api.Streams;
 using System.Net.WebSockets;
-using System.Security.Cryptography.X509Certificates;
-using System.Net.Security;
 
 namespace Seq.Api.Client
 {
@@ -58,8 +56,7 @@ namespace Seq.Api.Client
         /// <param name="serverUrl">The base URL of the Seq server.</param>
         /// <param name="apiKey">An API key to use when making requests to the server, if required.</param>
         /// <param name="useDefaultCredentials">Whether default credentials will be sent with HTTP requests; the default is <c>true</c>.</param>
-        /// <param name="serverCertificateCustomValidationCallback">Callback for custom certificate validation</param>
-        public SeqApiClient(string serverUrl, string apiKey = null, bool useDefaultCredentials = true, Func<HttpRequestMessage, X509Certificate2, X509Chain, SslPolicyErrors, bool> serverCertificateCustomValidationCallback = null)
+        public SeqApiClient(string serverUrl, string apiKey = null, bool useDefaultCredentials = true)
         {
             ServerUrl = serverUrl ?? throw new ArgumentNullException(nameof(serverUrl));
 
@@ -71,11 +68,6 @@ namespace Seq.Api.Client
                 CookieContainer = _cookies,
                 UseDefaultCredentials = useDefaultCredentials
             };
-
-            if (serverCertificateCustomValidationCallback != null)
-            {
-                handler.ServerCertificateCustomValidationCallback = serverCertificateCustomValidationCallback;
-            }
 
             var baseAddress = serverUrl;
             if (!baseAddress.EndsWith("/"))

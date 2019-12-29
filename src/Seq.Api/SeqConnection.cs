@@ -15,9 +15,6 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
-using System.Net.Http;
-using System.Net.Security;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
 using Seq.Api.Client;
@@ -42,11 +39,10 @@ namespace Seq.Api
         /// <param name="serverUrl">The base URL of the Seq server.</param>
         /// <param name="apiKey">An API key to use when making requests to the server, if required.</param>
         /// <param name="useDefaultCredentials">Whether default credentials will be sent with HTTP requests; the default is <c>true</c>.</param>
-        /// <param name="serverCertificateCustomValidationCallback">Callback for custom certificate validation</param>
-        public SeqConnection(string serverUrl, string apiKey = null, bool useDefaultCredentials = true, Func<HttpRequestMessage, X509Certificate2, X509Chain, SslPolicyErrors, bool> serverCertificateCustomValidationCallback = null)
+        public SeqConnection(string serverUrl, string apiKey = null, bool useDefaultCredentials = true)
         {
             if (serverUrl == null) throw new ArgumentNullException(nameof(serverUrl));
-            Client = new SeqApiClient(serverUrl, apiKey, useDefaultCredentials, serverCertificateCustomValidationCallback);
+            Client = new SeqApiClient(serverUrl, apiKey, useDefaultCredentials);
         }
         
         /// <summary>
