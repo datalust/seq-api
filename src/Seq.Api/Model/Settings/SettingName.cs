@@ -1,4 +1,4 @@
-﻿// Copyright 2014-2019 Datalust and contributors. 
+﻿// Copyright © Datalust and contributors. 
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -109,6 +109,11 @@ namespace Seq.Api.Model.Settings
         /// Seq will stop accepting new events.
         /// </summary>
         MinimumFreeStorageSpace,
+
+        /// <summary>
+        /// A comma-separated list of role ids that will be assigned to new users by default.
+        /// </summary>
+        NewUserRoleIds,
 
         /// <summary>
         /// A comma-separated list of (shared) signal ids that will be included in any new user's

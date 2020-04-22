@@ -1,4 +1,4 @@
-﻿// Copyright 2014-2019 Datalust and contributors. 
+﻿// Copyright © Datalust and contributors. 
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,14 +15,14 @@
 namespace Seq.Api.Model.Signals
 {
     /// <summary>
-    /// A property that will be displayed as a column when a signal
+    /// An expression that will be displayed as a column when a signal
     /// including it is selected.
     /// </summary>
-    public class TaggedPropertyPart
+    public class SignalColumnPart
     {
         /// <summary>
-        /// The property name.
+        /// The expression to show as a column.
         /// </summary>
-        public string PropertyName { get; set; }
+        public string Expression { get; set; }
     }
 }

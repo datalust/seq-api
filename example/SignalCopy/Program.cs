@@ -94,7 +94,7 @@ Options:
 
                 target.Title = signal.Title;
                 target.Filters = signal.Filters;
-                target.TaggedProperties = signal.TaggedProperties;
+                target.Columns = signal.Columns;
                 target.Description = signal.Description + " (copy)";
 
                 await (target.Id != null ? dstConnection.Signals.UpdateAsync(target) : dstConnection.Signals.AddAsync(target));
