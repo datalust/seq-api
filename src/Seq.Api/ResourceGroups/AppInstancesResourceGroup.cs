@@ -78,7 +78,7 @@ namespace Seq.Api.ResourceGroups
         public async Task<AppInstanceEntity> AddAsync(AppInstanceEntity entity, bool runOnExisting = false, CancellationToken cancellationToken = default)
         {
             if (entity == null) throw new ArgumentNullException(nameof(entity));
-            return await Client.PostAsync<AppInstanceEntity, AppInstanceEntity>(entity, "Create", entity, new Dictionary<string, object> { { "runOnExisting", runOnExisting } }, cancellationToken)
+            return await GroupCreateAsync<AppInstanceEntity, AppInstanceEntity>(entity, new Dictionary<string, object> { { "runOnExisting", runOnExisting } }, cancellationToken)
                 .ConfigureAwait(false);
         }
 
