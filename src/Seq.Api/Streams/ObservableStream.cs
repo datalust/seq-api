@@ -1,4 +1,4 @@
-﻿// Copyright 2016 Datalust; based on code from 
+﻿// Copyright © Datalust; based on code from 
 // Serilog.Sinks.Observable, Copyright 2013-2016 Serilog Contributors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -52,7 +52,7 @@ namespace Seq.Api.Streams
             lock (_syncRoot)
             {
                 if (_disposed)
-                    throw new ObjectDisposedException(message: "The observable stream is disposed.", innerException: null);
+                    throw new ObjectDisposedException("The observable stream is disposed.");
 
                 if (_ended)
                 {
@@ -76,7 +76,7 @@ namespace Seq.Api.Streams
             lock (_syncRoot)
             {
                 if (_disposed)
-                    throw new ObjectDisposedException(message: "The observable stream is disposed.", innerException: null);
+                    throw new ObjectDisposedException("The observable stream is disposed.");
 
                 _observers = _observers.Except(new[] { observer }).ToList();
             }
@@ -93,7 +93,11 @@ namespace Seq.Api.Streams
                 var received = await _socket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
                 if (received.MessageType == WebSocketMessageType.Close)
                 {
-                    await _socket.CloseAsync(WebSocketCloseStatus.NormalClosure, "", CancellationToken.None);
+                    // Managed web sockets are self-closing
+                    if (_socket.State != WebSocketState.Closed)
+                    {
+                        await _socket.CloseAsync(WebSocketCloseStatus.NormalClosure, "", CancellationToken.None);
+                    }
                 }
                 else
                 {
@@ -198,12 +202,10 @@ namespace Seq.Api.Streams
             {
                 if (_socket.State == WebSocketState.Open)
                 {
-                    using (var timeout = new CancellationTokenSource())
-                    {
-                        timeout.CancelAfter(30000);
-                        _socket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Close requested", timeout.Token)
-                            .ConfigureAwait(false).GetAwaiter().GetResult();
-                    }
+                    using var timeout = new CancellationTokenSource();
+                    timeout.CancelAfter(30000);
+                    _socket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Close requested", timeout.Token)
+                        .ConfigureAwait(false).GetAwaiter().GetResult();
                 }
             }
             catch

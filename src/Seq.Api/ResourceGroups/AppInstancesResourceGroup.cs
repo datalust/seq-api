@@ -1,4 +1,4 @@
-﻿// Copyright 2014-2019 Datalust and contributors. 
+﻿// Copyright © Datalust and contributors. 
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -78,7 +78,7 @@ namespace Seq.Api.ResourceGroups
         public async Task<AppInstanceEntity> AddAsync(AppInstanceEntity entity, bool runOnExisting = false, CancellationToken cancellationToken = default)
         {
             if (entity == null) throw new ArgumentNullException(nameof(entity));
-            return await Client.PostAsync<AppInstanceEntity, AppInstanceEntity>(entity, "Create", entity, new Dictionary<string, object> { { "runOnExisting", runOnExisting } }, cancellationToken)
+            return await GroupCreateAsync<AppInstanceEntity, AppInstanceEntity>(entity, new Dictionary<string, object> { { "runOnExisting", runOnExisting } }, cancellationToken)
                 .ConfigureAwait(false);
         }
 

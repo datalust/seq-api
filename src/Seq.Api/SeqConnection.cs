@@ -1,4 +1,4 @@
-﻿// Copyright 2014-2019 Datalust and contributors. 
+﻿// Copyright © Datalust and contributors. 
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -75,6 +75,12 @@ namespace Seq.Api
         /// </summary>
         public SeqApiClient Client { get; }
 
+        /// <summary>
+        /// List and administratively remove active alerts. To create/edit/remove alerts in normal
+        /// circumstances, use <see cref="Dashboards"/>.
+        /// </summary>
+        public AlertStateResourceGroup AlertState => new AlertStateResourceGroup(this);
+ 
         /// <summary>
         /// Perform operations on API keys.
         /// </summary>
@@ -181,7 +187,7 @@ namespace Seq.Api
         /// </summary>
         /// <param name="timeout">The maximum amount of time to retry until giving up.</param>
         /// <returns>A task that will complete if the API could be reached, or fault otherwise.</returns>
-        public async Task EnsureConnected(TimeSpan timeout)
+        public async Task EnsureConnectedAsync(TimeSpan timeout)
         {
             var started = DateTime.UtcNow;
             // Fractional milliseconds are lost here, but that's fine.

@@ -1,4 +1,4 @@
-// Copyright 2014-2019 Datalust and contributors. 
+// Copyright © Datalust and contributors. 
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,12 +23,12 @@ namespace Seq.Api.Model.Data
         /// The number of events inspected in the course of computing the query result. This will
         /// not include events that could be skipped based on index information or text pre-filtering.
         /// </summary>
-        public long ScannedEventCount { get; set; }
+        public ulong ScannedEventCount { get; set; }
 
         /// <summary>
         /// The number of events that contributed to the query result.
         /// </summary>
-        public long MatchingEventCount { get; set; }
+        public ulong MatchingEventCount { get; set; }
 
         /// <summary>
         /// Whether the query needed to search disk-backed storage.

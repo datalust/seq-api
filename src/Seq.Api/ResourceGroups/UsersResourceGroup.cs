@@ -1,4 +1,4 @@
-﻿// Copyright 2014-2019 Datalust and contributors. 
+﻿// Copyright © Datalust and contributors. 
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -83,7 +83,7 @@ namespace Seq.Api.ResourceGroups
         /// <returns>The user, with server-allocated properties such as <see cref="Entity.Id"/> initialized.</returns>
         public async Task<UserEntity> AddAsync(UserEntity entity, CancellationToken cancellationToken = default)
         {
-            return await Client.PostAsync<UserEntity, UserEntity>(entity, "Create", entity, cancellationToken: cancellationToken).ConfigureAwait(false);
+            return await GroupCreateAsync<UserEntity, UserEntity>(entity, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>

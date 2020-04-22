@@ -1,4 +1,4 @@
-﻿// Copyright 2014-2019 Datalust and contributors. 
+﻿// Copyright © Datalust and contributors. 
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ namespace Seq.Api.Model.Shared
         /// The number of events that were scanned in the search (and were not
         /// able to be excluded based on index information or pre-filtering).
         /// </summary>
-        public long ScannedEventCount { get; set; }
+        public ulong ScannedEventCount { get; set; }
 
         /// <summary>
         /// The id of the last event inspected in the search.
