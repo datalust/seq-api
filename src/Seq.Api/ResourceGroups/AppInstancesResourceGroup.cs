@@ -19,6 +19,7 @@ using System.Threading.Tasks;
 using Seq.Api.Model;
 using Seq.Api.Model.AppInstances;
 using Seq.Api.Model.Apps;
+using Seq.Api.Model.Diagnostics;
 
 namespace Seq.Api.ResourceGroups
 {
@@ -121,6 +122,19 @@ namespace Seq.Api.ResourceGroups
 
             var postedSettings = settingOverrides ?? new Dictionary<string, string>();
             await Client.PostAsync(entity, "Invoke", postedSettings, new Dictionary<string, object>{{"eventId", eventId}}, cancellationToken);
+        }
+        
+        /// <summary>
+        /// Retrieve a detailed metric for the app instance.
+        /// </summary>
+        /// <param name="entity">The app instance to retrieve metrics for.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken"/> allowing the operation to be canceled.</param>
+        /// <param name="measurement">The measurement to get.</param>
+        /// <returns></returns>
+        public async Task<MeasurementTimeseriesPart> GetMeasurementTimeseriesAsync(AppInstanceEntity entity, string measurement, CancellationToken cancellationToken = default)
+        {
+            var parameters = new Dictionary<string, object>{ ["id"] = entity.Id, ["measurement"] = measurement };
+            return await GroupGetAsync<MeasurementTimeseriesPart>("Metric", parameters, cancellationToken);
         }
     }
 }

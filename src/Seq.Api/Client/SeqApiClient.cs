@@ -42,7 +42,7 @@ namespace Seq.Api.Client
         // Future versions of Seq may not completely support v1 features, however
         // providing this as an Accept header will ensure what compatibility is available
         // can be utilized.
-        const string SeqApiV7MediaType = "application/vnd.datalust.seq.v7+json";
+        const string SeqApiV8MediaType = "application/vnd.datalust.seq.v8+json";
 
         readonly CookieContainer _cookies = new CookieContainer();
         readonly JsonSerializer _serializer = JsonSerializer.Create(
@@ -89,7 +89,7 @@ namespace Seq.Api.Client
                 baseAddress += "/";
 
             HttpClient = new HttpClient(handler) { BaseAddress = new Uri(baseAddress) };
-            HttpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(SeqApiV7MediaType));
+            HttpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(SeqApiV8MediaType));
 
             if (_apiKey != null)
                 HttpClient.DefaultRequestHeaders.Add("X-Seq-ApiKey", _apiKey);

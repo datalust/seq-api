@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Seq.Api.Model;
+using Seq.Api.Model.Diagnostics;
 using Seq.Api.Model.Inputs;
 using Seq.Api.Model.Users;
 
@@ -106,6 +107,19 @@ namespace Seq.Api.ResourceGroups
         public async Task UpdateAsync(ApiKeyEntity entity, CancellationToken cancellationToken = default)
         {
             await Client.PutAsync(entity, "Self", entity, cancellationToken: cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Retrieve a detailed metric for the API key.
+        /// </summary>
+        /// <param name="entity">The API key to retrieve metrics for.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken"/> allowing the operation to be canceled.</param>
+        /// <param name="measurement">The measurement to get.</param>
+        /// <returns></returns>
+        public async Task<MeasurementTimeseriesPart> GetMeasurementTimeseriesAsync(ApiKeyEntity entity, string measurement, CancellationToken cancellationToken = default)
+        {
+            var parameters = new Dictionary<string, object>{ ["id"] = entity.Id, ["measurement"] = measurement };
+            return await GroupGetAsync<MeasurementTimeseriesPart>("Metric", parameters, cancellationToken);
         }
     }
 }

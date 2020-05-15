@@ -152,6 +152,11 @@ namespace Seq.Api
         public RolesResourceGroup Roles => new RolesResourceGroup(this);
 
         /// <summary>
+        /// Perform operations on tasks running in the Seq server.
+        /// </summary>
+        public RunningTasksResourceGroup RunningTasks => new RunningTasksResourceGroup(this);
+
+        /// <summary>
         /// Perform operations on system settings.
         /// </summary>
         public SettingsResourceGroup Settings => new SettingsResourceGroup(this);

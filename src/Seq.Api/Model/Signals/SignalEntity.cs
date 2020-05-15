@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Seq.Api.Model.Security;
+using Seq.Api.Model.Shared;
 
 namespace Seq.Api.Model.Signals
 {
@@ -30,7 +31,7 @@ namespace Seq.Api.Model.Signals
         public SignalEntity()
         {
             Title = "New Signal";
-            Filters = new List<SignalFilterPart>();
+            Filters = new List<DescriptiveFilterPart>();
             Columns = new List<SignalColumnPart>();
         }
 
@@ -47,7 +48,7 @@ namespace Seq.Api.Model.Signals
         /// <summary>
         /// Filters that are combined (using the <c>and</c> operator) to identify events matching the filter.
         /// </summary>
-        public List<SignalFilterPart> Filters { get; set; }
+        public List<DescriptiveFilterPart> Filters { get; set; }
 
         /// <summary>
         /// Expressions that show as columns when the signal is selected in the events screen.

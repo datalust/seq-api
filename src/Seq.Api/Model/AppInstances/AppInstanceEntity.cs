@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Seq.Api.Model.Apps;
+using Seq.Api.Model.Inputs;
 using Seq.Api.Model.Signals;
 using Seq.Api.ResourceGroups;
 
@@ -38,7 +39,11 @@ namespace Seq.Api.Model.AppInstances
             InvocationOverridableSettings = new List<string>();
             InvocationOverridableSettingDefinitions = new List<AppSettingPart>();
             EventsPerSuppressionWindow = 1;
-            Metrics = new AppInstanceMetricsPart();
+            ProcessMetrics = new AppInstanceProcessMetricsPart();
+            InputSettings = new InputSettingsPart();
+            InputMetrics = new InputMetricsPart();
+            DiagnosticInputMetrics = new InputMetricsPart();
+            OutputMetrics = new AppInstanceOutputMetricsPart();
         }
 
         /// <summary>
@@ -90,7 +95,7 @@ namespace Seq.Api.Model.AppInstances
         /// The signal expression describing which events will be sent to the app; if <c>null</c>,
         /// all events will reach the app.
         /// </summary>
-        public SignalExpressionPart InputSignalExpression { get; set; }
+        public SignalExpressionPart StreamedSignalExpression { get; set; }
 
         /// <summary>
         /// If a value is specified, events will be buffered to disk and sorted by timestamp-order
@@ -113,22 +118,46 @@ namespace Seq.Api.Model.AppInstances
         public int EventsPerSuppressionWindow { get; set; }
 
         /// <summary>
-        /// Metrics describing the state and activity of the app.
+        /// Settings that control how events are ingested through the app.
         /// </summary>
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public AppInstanceMetricsPart Metrics { get; set; }
+        public InputSettingsPart InputSettings { get; set; }
 
+        /// <summary>
+        /// Metrics describing the state and activity of the app process.
+        /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public AppInstanceProcessMetricsPart ProcessMetrics { get; set; }
+        
+        /// <summary>
+        /// Information about ingestion activity through this app.
+        /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public InputMetricsPart InputMetrics { get; set; }
+
+        /// <summary>
+        /// Information about the app's diagnostic input.
+        /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public InputMetricsPart DiagnosticInputMetrics { get; set; }
+
+        /// <summary>
+        /// Information about events output through the app.
+        /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public AppInstanceOutputMetricsPart OutputMetrics { get; set; }
+        
         /// <summary>
         /// Obsolete.
         /// </summary>
-        [Obsolete("Use !AcceptStreamedEvents instead. This field will be removed in Seq 6.0.")]
+        [Obsolete("Use !AcceptStreamedEvents instead.")]
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public bool? IsManualInputOnly { get; set; }
 
         /// <summary>
         /// Obsolete.
         /// </summary>
-        [Obsolete("Use !AcceptDirectInvocation instead. This field will be removed in Seq 6.0.")]
+        [Obsolete("Use !AcceptDirectInvocation instead.")]
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public bool? DisallowManualInput { get; set; }
     }
