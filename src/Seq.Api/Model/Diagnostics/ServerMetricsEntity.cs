@@ -27,7 +27,6 @@ namespace Seq.Api.Model.Diagnostics
         /// </summary>
         public ServerMetricsEntity()
         {
-            RunningTasks = new List<RunningTaskPart>();
         }
 
         /// <summary>
@@ -41,16 +40,6 @@ namespace Seq.Api.Model.Diagnostics
         public int EventStoreEventsCached { get; set; }
 
         /// <summary>
-        /// The oldest on-disk extent currently stored.
-        /// </summary>
-        public DateTime? EventStoreFirstExtentRangeStartUtc { get; set; }
-
-        /// <summary>
-        /// The most recent on-disk extent currently stored.
-        /// </summary>
-        public DateTime? EventStoreLastExtentRangeEndUtc { get; set; }
-
-        /// <summary>
         /// Bytes of free space remaining on the disk used for event storage.
         /// </summary>
         public long EventStoreDiskRemainingBytes { get; set; }
@@ -58,27 +47,27 @@ namespace Seq.Api.Model.Diagnostics
         /// <summary>
         /// The number of events that arrived at the ingestion endpoint in the past minute.
         /// </summary>
-        public int EndpointArrivalsPerMinute { get; set; }
+        public int InputArrivedEventsPerMinute { get; set; }
 
         /// <summary>
         /// The number of events ingested in the past minute.
         /// </summary>
-        public int EndpointInfluxPerMinute { get; set; }
+        public int InputIngestedEventsPerMinute { get; set; }
 
         /// <summary>
         /// The number of bytes of raw JSON event data ingested in the past minute (approximate).
         /// </summary>
-        public long EndpointIngestedBytesPerMinute { get; set; }
+        public long InputIngestedBytesPerMinute { get; set; }
 
         /// <summary>
         /// The number of invalid event payloads seen in the past minute.
         /// </summary>
-        public int EndpointInvalidPayloadsPerMinute { get; set; }
+        public int InvalidPayloadsPerMinute { get; set; }
 
         /// <summary>
         /// The number of unauthorized event payloads seen in the past minute.
         /// </summary>
-        public int EndpointUnauthorizedPayloadsPerMinute { get; set; }
+        public int HttpUnauthorizedPayloadsPerMinute { get; set; }
 
         /// <summary>
         /// The length of time for which the Seq server process has been running.
@@ -96,24 +85,9 @@ namespace Seq.Api.Model.Diagnostics
         public int ProcessThreads { get; set; }
 
         /// <summary>
-        /// The number of thread pool user threads available.
-        /// </summary>
-        public int ProcessThreadPoolUserThreadsAvailable { get; set; }
-
-        /// <summary>
-        /// The number of async I/O thread pool threads available.
-        /// </summary>
-        public int ProcessThreadPoolIocpThreadsAvailable { get; set; }
-
-        /// <summary>
         /// The proportion of system physical memory that is currently allocated.
         /// </summary>
         public double SystemMemoryUtilization { get; set; }
-
-        /// <summary>
-        /// Tasks running in the Seq server.
-        /// </summary>
-        public List<RunningTaskPart> RunningTasks { get; set; }
 
         /// <summary>
         /// The number of SQL-style queries executed in the past minute.
@@ -129,10 +103,5 @@ namespace Seq.Api.Model.Diagnostics
         /// The number of cached SQL query time slices invalidated in the past minute.
         /// </summary>
         public int QueryCacheInvalidationsPerMinute { get; set; }
-
-        /// <summary>
-        /// The number of active sessions reading from or writing to Seq's internal metadata store.
-        /// </summary>
-        public int DocumentStoreActiveSessions { get; set; }
     }
 }

@@ -21,7 +21,7 @@ using Seq.Api.Model.Monitoring;
 namespace Seq.Api.ResourceGroups
 {
     /// <summary>
-    /// Inspect the current states of alerts being monitored by the server..
+    /// Inspect the current states of alerts being monitored by the server.
     /// </summary>
     public class AlertStateResourceGroup : ApiResourceGroup
     {

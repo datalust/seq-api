@@ -15,25 +15,14 @@
 namespace Seq.Api.Model.AppInstances
 {
     /// <summary>
-    /// Metrics describing an <see cref="AppInstanceEntity"/>.
+    /// Metrics describing the running server-side process for an <see cref="AppInstanceEntity"/>.
     /// </summary>
-    public class AppInstanceMetricsPart
+    public class AppInstanceProcessMetricsPart
     {
-        /// <summary>
-        /// The number of events that reached the app in the past minute.
-        /// </summary>
-        public int ReceivedEventsPerMinute { get; set; }
-
-        /// <summary>
-        /// The number of diagnostic events raised by the app in the past minute.
-        /// </summary>
-        /// <remarks>This does not include the events received by an input app.</remarks>
-        public int EmittedEventsPerMinute { get; set; }
-
         /// <summary>
         /// The size, in bytes, of the app process working set.
         /// </summary>
-        public long ProcessWorkingSetBytes { get; set; }
+        public long WorkingSetBytes { get; set; }
 
         /// <summary>
         /// If the app process is running, <c>true</c>; otherwise, <c>false</c>.

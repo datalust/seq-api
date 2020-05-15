@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Seq.Api.Model.Signals
+namespace Seq.Api.Model.Shared
 {
     /// <summary>
-    /// An individual filter incorporated within a signal.
+    /// An expression-based filter that carries additional descriptive information.
     /// </summary>
-    public class SignalFilterPart
+    public class DescriptiveFilterPart
     {
         /// <summary>
         /// A friendly, human-readable description of the filter.

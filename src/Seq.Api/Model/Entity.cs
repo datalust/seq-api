@@ -12,6 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using System.Collections.Generic;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+
 namespace Seq.Api.Model
 {
     /// <summary>
@@ -41,5 +46,12 @@ namespace Seq.Api.Model
         /// was instantiated locally and not received from the API.
         /// </summary>
         public LinkCollection Links { get; set; }
+
+        /// <summary>
+        /// Facilitates backwards compatibility in the Seq server. Should not be used by consumers/clients.
+        /// </summary>
+        [JsonExtensionData, JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [Obsolete("Facilitates backwards compatibility in the Seq server. Should not be used by consumers/clients.")]
+        public Dictionary<string, JToken> ExtensionData { get; set; }
     }
 }

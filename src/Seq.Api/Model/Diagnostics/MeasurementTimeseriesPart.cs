@@ -1,4 +1,4 @@
-﻿// Copyright © Datalust and contributors. 
+// Copyright © Datalust and contributors. 
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,29 +12,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Seq.Api.Model.Inputs
+using System;
+
+namespace Seq.Api.Model.Diagnostics
 {
     /// <summary>
-    /// Information about ingestion activity using an API key.
+    /// A histogram presenting a measurement taken at equal intervals.
     /// </summary>
-    public class ApiKeyMetricsPart
+    public class MeasurementTimeseriesPart
     {
         /// <summary>
-        /// The number of events that arrived at the server tagged with this
-        /// key in the past minute.
+        /// The point in time from which measurement begins.
         /// </summary>
-        public int ArrivalsPerMinute { get; set; }
-
-        /// <summary>
-        /// The number of events that ingested by the server tagged with this
-        /// key in the past minute.
-        /// </summary>
-        public int InfluxPerMinute { get; set; }
+        public DateTime MeasuredFrom { get; set; }
         
         /// <summary>
-        /// The raw JSON bytes (approximate) tagged with this API key that were ingested
-        /// by the server in the past minute.
+        /// The interval at which the measurement is taken.
         /// </summary>
-        public long IngestedBytesPerMinute { get; set; }
+        public ulong MeasurementIntervalMilliseconds { get; set; }
+        
+        /// <summary>
+        /// The measurements at each interval, beginning with <see cref="MeasuredFrom"/>.
+        /// </summary>
+        public long[] Measurements { get; set; }
     }
 }

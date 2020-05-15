@@ -14,18 +14,13 @@
 
 using System;
 
-namespace Seq.Api.Model.Diagnostics
+namespace Seq.Api.Model.Tasks
 {
     /// <summary>
     /// Describes a task being actively performed by the Seq server.
     /// </summary>
-    public class RunningTaskPart
+    public class RunningTaskEntity: Entity
     {
-        /// <summary>
-        /// A unique identifier for the task.
-        /// </summary>
-        public Guid Id { get; set; }
-
         /// <summary>
         /// A description of the task.
         /// </summary>
@@ -35,5 +30,10 @@ namespace Seq.Api.Model.Diagnostics
         /// When the task started.
         /// </summary>
         public DateTime StartedAtUtc { get; set; }
+
+        /// <summary>
+        /// Whether or not the task can be cancelled.
+        /// </summary>
+        public bool CanCancel { get; set; }
     }
 }
