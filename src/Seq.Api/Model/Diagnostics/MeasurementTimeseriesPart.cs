@@ -1,4 +1,4 @@
-﻿// Copyright 2014-2019 Datalust and contributors. 
+// Copyright © Datalust and contributors. 
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,23 +17,23 @@ using System;
 namespace Seq.Api.Model.Diagnostics
 {
     /// <summary>
-    /// Describes a task being actively performed by the Seq server.
+    /// A histogram presenting a measurement taken at equal intervals.
     /// </summary>
-    public class RunningTaskPart
+    public class MeasurementTimeseriesPart
     {
         /// <summary>
-        /// A unique identifier for the task.
+        /// The point in time from which measurement begins.
         /// </summary>
-        public Guid Id { get; set; }
-
+        public DateTime MeasuredFrom { get; set; }
+        
         /// <summary>
-        /// A description of the task.
+        /// The interval at which the measurement is taken.
         /// </summary>
-        public string Description { get; set; }
-
+        public ulong MeasurementIntervalMilliseconds { get; set; }
+        
         /// <summary>
-        /// When the task started.
+        /// The measurements at each interval, beginning with <see cref="MeasuredFrom"/>.
         /// </summary>
-        public DateTime StartedAtUtc { get; set; }
+        public long[] Measurements { get; set; }
     }
 }

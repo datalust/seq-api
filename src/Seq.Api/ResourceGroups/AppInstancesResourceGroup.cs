@@ -1,4 +1,4 @@
-﻿// Copyright 2014-2019 Datalust and contributors. 
+﻿// Copyright © Datalust and contributors. 
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ using System.Threading.Tasks;
 using Seq.Api.Model;
 using Seq.Api.Model.AppInstances;
 using Seq.Api.Model.Apps;
+using Seq.Api.Model.Diagnostics;
 
 namespace Seq.Api.ResourceGroups
 {
@@ -78,7 +79,7 @@ namespace Seq.Api.ResourceGroups
         public async Task<AppInstanceEntity> AddAsync(AppInstanceEntity entity, bool runOnExisting = false, CancellationToken cancellationToken = default)
         {
             if (entity == null) throw new ArgumentNullException(nameof(entity));
-            return await Client.PostAsync<AppInstanceEntity, AppInstanceEntity>(entity, "Create", entity, new Dictionary<string, object> { { "runOnExisting", runOnExisting } }, cancellationToken)
+            return await GroupCreateAsync<AppInstanceEntity, AppInstanceEntity>(entity, new Dictionary<string, object> { { "runOnExisting", runOnExisting } }, cancellationToken)
                 .ConfigureAwait(false);
         }
 
@@ -121,6 +122,19 @@ namespace Seq.Api.ResourceGroups
 
             var postedSettings = settingOverrides ?? new Dictionary<string, string>();
             await Client.PostAsync(entity, "Invoke", postedSettings, new Dictionary<string, object>{{"eventId", eventId}}, cancellationToken);
+        }
+        
+        /// <summary>
+        /// Retrieve a detailed metric for the app instance.
+        /// </summary>
+        /// <param name="entity">The app instance to retrieve metrics for.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken"/> allowing the operation to be canceled.</param>
+        /// <param name="measurement">The measurement to get.</param>
+        /// <returns></returns>
+        public async Task<MeasurementTimeseriesPart> GetMeasurementTimeseriesAsync(AppInstanceEntity entity, string measurement, CancellationToken cancellationToken = default)
+        {
+            var parameters = new Dictionary<string, object>{ ["id"] = entity.Id, ["measurement"] = measurement };
+            return await GroupGetAsync<MeasurementTimeseriesPart>("Metric", parameters, cancellationToken);
         }
     }
 }

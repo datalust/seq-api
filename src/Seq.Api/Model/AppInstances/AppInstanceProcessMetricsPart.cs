@@ -1,4 +1,4 @@
-﻿// Copyright 2014-2019 Datalust and contributors. 
+﻿// Copyright © Datalust and contributors. 
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,17 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Seq.Api.Model.Signals
+namespace Seq.Api.Model.AppInstances
 {
     /// <summary>
-    /// A property that will be displayed as a column when a signal
-    /// including it is selected.
+    /// Metrics describing the running server-side process for an <see cref="AppInstanceEntity"/>.
     /// </summary>
-    public class TaggedPropertyPart
+    public class AppInstanceProcessMetricsPart
     {
         /// <summary>
-        /// The property name.
+        /// The size, in bytes, of the app process working set.
         /// </summary>
-        public string PropertyName { get; set; }
+        public long WorkingSetBytes { get; set; }
+
+        /// <summary>
+        /// If the app process is running, <c>true</c>; otherwise, <c>false</c>.
+        /// </summary>
+        public bool IsRunning { get; set; }
     }
 }

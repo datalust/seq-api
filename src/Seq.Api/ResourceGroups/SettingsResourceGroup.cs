@@ -1,4 +1,4 @@
-﻿// Copyright 2014-2019 Datalust and contributors. 
+﻿// Copyright © Datalust and contributors. 
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -67,20 +67,22 @@ namespace Seq.Api.ResourceGroups
         /// <summary>
         /// Get internal error reporting settings.
         /// </summary>
+        /// <param name="cancellationToken">A <see cref="CancellationToken"/> allowing the operation to be canceled.</param>
         /// <returns>Internal error reporting settings.</returns>
-        public async Task<InternalErrorReportingSettingsPart> GetInternalErrorReportingAsync()
+        public async Task<InternalErrorReportingSettingsPart> GetInternalErrorReportingAsync(CancellationToken cancellationToken = default)
         {
-            return await GroupGetAsync<InternalErrorReportingSettingsPart>("InternalErrorReporting").ConfigureAwait(false);
+            return await GroupGetAsync<InternalErrorReportingSettingsPart>("InternalErrorReporting", cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
         /// Update internal error reporting settings.
         /// </summary>
         /// <param name="internalErrorReporting">New internal error reporting settings.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken"/> allowing the operation to be canceled.</param>
         /// <returns>A task indicating completion.</returns>
-        public async Task UpdateInternalErrorReportingAsync(InternalErrorReportingSettingsPart internalErrorReporting)
+        public async Task UpdateInternalErrorReportingAsync(InternalErrorReportingSettingsPart internalErrorReporting, CancellationToken cancellationToken = default)
         {
-            await GroupPutAsync("InternalErrorReporting", internalErrorReporting).ConfigureAwait(false);
+            await GroupPutAsync("InternalErrorReporting", internalErrorReporting, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
     }
 }

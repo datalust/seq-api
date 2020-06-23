@@ -1,8 +1,6 @@
 version: '{build}'
 skip_tags: true
-image: Visual Studio 2017
-configuration: Release
-install:
+image: Visual Studio 2019
 build_script:
 - ps: ./Build.ps1
 test: off
@@ -11,7 +9,7 @@ artifacts:
 deploy:
 - provider: NuGet
   api_key:
-    secure: jFkBflAkupwH+6ebPfcScQzBwCJGArjzcE6716DMgVG5SSktBSXIgAtPE2URki8r
+    secure: sMicBLl7Z83H/mhX10DL7Yqwa80ZHUbb9fRHKmxd5m2MN2DWAE1kbYH/GPQPFajZ
   skip_symbols: true
   on:
     branch: /^(master|dev)$/

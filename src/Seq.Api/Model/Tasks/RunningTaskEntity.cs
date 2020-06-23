@@ -12,32 +12,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Seq.Api.Model.Feeds
+using System;
+
+namespace Seq.Api.Model.Tasks
 {
     /// <summary>
-    /// A NuGet feed.
+    /// Describes a task being actively performed by the Seq server.
     /// </summary>
-    public class NuGetFeedEntity : Entity
+    public class RunningTaskEntity: Entity
     {
         /// <summary>
-        /// The feed name.
+        /// A description of the task.
         /// </summary>
-        public string Name { get; set; }
+        public string Description { get; set; }
 
         /// <summary>
-        /// A URI or folder path at which the feed is located.
+        /// When the task started.
         /// </summary>
-        public string Location { get; set; }
+        public DateTime StartedAtUtc { get; set; }
 
         /// <summary>
-        /// If required, a username that will be sent when accessing the feed.
+        /// Whether or not the task can be cancelled.
         /// </summary>
-        public string Username { get; set; }
-
-        /// <summary>
-        /// When <see cref="Username"/> is non-empty, can be used to set an associated
-        /// password.
-        /// </summary>
-        public string NewPassword { get; set; }
+        public bool CanCancel { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-﻿// Copyright 2014-2019 Datalust and contributors. 
+﻿// Copyright © Datalust and contributors. 
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,9 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Seq.Api.Model.Diagnostics;
+using Seq.Api.Model.Inputs;
 
 namespace Seq.Api.ResourceGroups
 {
@@ -56,6 +58,18 @@ namespace Seq.Api.ResourceGroups
         public async Task<string> GetIngestionLogAsync(CancellationToken cancellationToken = default)
         {
             return await GroupGetStringAsync("IngestionLog", cancellationToken: cancellationToken).ConfigureAwait(false);
+        }
+        
+        /// <summary>
+        /// Retrieve a detailed system metric.
+        /// </summary>
+        /// <param name="cancellationToken">A <see cref="CancellationToken"/> allowing the operation to be canceled.</param>
+        /// <param name="measurement">The measurement to get.</param>
+        /// <returns></returns>
+        public async Task<MeasurementTimeseriesPart> GetMeasurementTimeseriesAsync(string measurement, CancellationToken cancellationToken = default)
+        {
+            var parameters = new Dictionary<string, object>{ ["measurement"] = measurement };
+            return await GroupGetAsync<MeasurementTimeseriesPart>("Metric", parameters, cancellationToken);
         }
     }
 }

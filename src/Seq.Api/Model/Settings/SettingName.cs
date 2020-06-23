@@ -1,4 +1,4 @@
-﻿// Copyright 2014-2019 Datalust and contributors. 
+﻿// Copyright © Datalust and contributors. 
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using Seq.Api.Model.Apps;
 using Seq.Api.Model.Updates;
 using Seq.Api.ResourceGroups;
@@ -25,6 +26,12 @@ namespace Seq.Api.Model.Settings
     public enum SettingName
     {
         /// <summary>
+        /// The authentication provider to use. Allowed values are <c>null</c> (local username/password),
+        /// <c>"Active Directory"</c>, <c>"Azure Active Directory"</c> and <c>"OpenID Connect"</c>.
+        /// </summary>
+        AuthenticationProvider,
+        
+        /// <summary>
         /// The name of an Active Directory group within which users will be automatically
         /// be granted user access to Seq.
         /// </summary>
@@ -34,8 +41,21 @@ namespace Seq.Api.Model.Settings
         /// If <c>true</c>, Azure Active Directory accounts in the configured tenant will
         /// be automatically granted user access to Seq.
         /// </summary>
+        [Obsolete("Use `AutomaticallyProvisionAuthenticatedUsers`.", error: true)]
         AutomaticallyGrantUserAccessToADAccounts,
+        
+        /// <summary>
+        /// If <c>true</c>, users authenticated with the configured authentication provider
+        /// be automatically granted default user access to Seq.
+        /// </summary>
+        AutomaticallyProvisionAuthenticatedUsers,
 
+        /// <summary>
+        /// The AAD authority. The default is <c>login.windows.net</c>; government cloud users may
+        /// require <c>login.microsoftonline.us</c> or similar.
+        /// </summary>
+        AzureADAuthority,
+        
         /// <summary>
         /// The Azure Active Directory client id.
         /// </summary>
@@ -87,17 +107,13 @@ namespace Seq.Api.Model.Settings
         /// <summary>
         /// If <c>true</c>, the server supports Active Directory authentication.
         /// </summary>
+        [Obsolete("Set `AuthenticationProvider` to \"Active Directory\" to enable.", error: true)]
         IsActiveDirectoryAuthentication,
 
         /// <summary>
         /// If <c>true</c>, the server has authentication enabled.
         /// </summary>
         IsAuthenticationEnabled,
-
-        /// <summary>
-        /// Obsolete.
-        /// </summary>
-        LazilyFlushEventWrites,
 
         /// <summary>
         /// Tracks whether an admin user has dismissed the master key backup warning.
@@ -109,6 +125,11 @@ namespace Seq.Api.Model.Settings
         /// Seq will stop accepting new events.
         /// </summary>
         MinimumFreeStorageSpace,
+
+        /// <summary>
+        /// A comma-separated list of role ids that will be assigned to new users by default.
+        /// </summary>
+        NewUserRoleIds,
 
         /// <summary>
         /// A comma-separated list of (shared) signal ids that will be included in any new user's
@@ -128,6 +149,28 @@ namespace Seq.Api.Model.Settings
         /// </summary>
         NewUserShowDashboardIds,
 
+        /// <summary>
+        /// If using OpenID Connect authentication, the URL of the authorization endpoint. For example,
+        /// <c>https://example.com</c>.
+        /// </summary>
+        OpenIdConnectAuthority,
+        
+        /// <summary>
+        /// If using OpenID Connect, the client id assigned to Seq in the provider.
+        /// </summary>
+        OpenIdConnectClientId,
+        
+        /// <summary>
+        /// If using OpenID Connect, the client secret assigned to Seq in the provider.
+        /// </summary>
+        OpenIdConnectClientSecret,
+
+        /// <summary>
+        /// If using OpenID Connect, the scopes Seq will request when authorizing the client, as a comma-separated
+        /// list. For example, <c>openid, profile, email</c>.
+        /// </summary>
+        OpenIdConnectScopes,
+    
         /// <summary>
         /// If <c>true</c>, ingestion requests incoming via HTTP must be authenticated using an API key or
         /// logged-in user session. Only effective when <see cref="IsAuthenticationEnabled"/> is <c>true</c>.

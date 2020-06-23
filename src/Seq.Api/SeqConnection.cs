@@ -1,4 +1,4 @@
-﻿// Copyright 2014-2019 Datalust and contributors. 
+﻿// Copyright © Datalust and contributors. 
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,7 +14,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Net;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Seq.Api.Client;
@@ -27,7 +29,7 @@ namespace Seq.Api
     /// <summary>
     /// Exposes high-level (typed) interactions with the Seq API through various resource groups.
     /// </summary>
-    public class SeqConnection : ISeqConnection
+    public class SeqConnection : ISeqConnection, IDisposable
     {
         readonly object _sync = new object();
         readonly Dictionary<string, Task<ResourceGroup>> _resourceGroups = new Dictionary<string, Task<ResourceGroup>>();
@@ -39,18 +41,46 @@ namespace Seq.Api
         /// <param name="serverUrl">The base URL of the Seq server.</param>
         /// <param name="apiKey">An API key to use when making requests to the server, if required.</param>
         /// <param name="useDefaultCredentials">Whether default credentials will be sent with HTTP requests; the default is <c>true</c>.</param>
-        public SeqConnection(string serverUrl, string apiKey = null, bool useDefaultCredentials = true)
+        [Obsolete("Prefer `SeqConnection(serverUrl, apiKey, handler => handler.UseDefaultCredentials = true)` instead."), EditorBrowsable(EditorBrowsableState.Never)]
+        public SeqConnection(string serverUrl, string apiKey, bool useDefaultCredentials)
         {
             if (serverUrl == null) throw new ArgumentNullException(nameof(serverUrl));
             Client = new SeqApiClient(serverUrl, apiKey, useDefaultCredentials);
         }
+
+        /// <summary>
+        /// Construct a <see cref="SeqConnection"/>.
+        /// </summary>
+        /// <param name="serverUrl">The base URL of the Seq server.</param>
+        /// <param name="apiKey">An API key to use when making requests to the server, if required.</param>
+        /// <param name="configureHttpClientHandler">An optional callback to configure the <see cref="HttpClientHandler"/> used when making HTTP requests
+        /// to the Seq API.</param>
+        public SeqConnection(string serverUrl, string apiKey = null, Action<HttpClientHandler> configureHttpClientHandler = null)
+        {
+            if (serverUrl == null) throw new ArgumentNullException(nameof(serverUrl));
+            Client = new SeqApiClient(serverUrl, apiKey, configureHttpClientHandler);
+        }
         
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        public void Dispose()
+        {
+            Client.Dispose();
+        }
+
         /// <summary>
         /// Access the lower-level <see cref="SeqApiClient"/> that can be used for resource-oriented navigation through
         /// the HTTP API.
         /// </summary>
         public SeqApiClient Client { get; }
 
+        /// <summary>
+        /// List and administratively remove active alerts. To create/edit/remove alerts in normal
+        /// circumstances, use <see cref="Dashboards"/>.
+        /// </summary>
+        public AlertStateResourceGroup AlertState => new AlertStateResourceGroup(this);
+ 
         /// <summary>
         /// Perform operations on API keys.
         /// </summary>
@@ -122,6 +152,11 @@ namespace Seq.Api
         public RolesResourceGroup Roles => new RolesResourceGroup(this);
 
         /// <summary>
+        /// Perform operations on tasks running in the Seq server.
+        /// </summary>
+        public RunningTasksResourceGroup RunningTasks => new RunningTasksResourceGroup(this);
+
+        /// <summary>
         /// Perform operations on system settings.
         /// </summary>
         public SettingsResourceGroup Settings => new SettingsResourceGroup(this);
@@ -157,7 +192,7 @@ namespace Seq.Api
         /// </summary>
         /// <param name="timeout">The maximum amount of time to retry until giving up.</param>
         /// <returns>A task that will complete if the API could be reached, or fault otherwise.</returns>
-        public async Task EnsureConnected(TimeSpan timeout)
+        public async Task EnsureConnectedAsync(TimeSpan timeout)
         {
             var started = DateTime.UtcNow;
             // Fractional milliseconds are lost here, but that's fine.

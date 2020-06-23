@@ -1,4 +1,4 @@
-﻿// Copyright 2014-2019 Datalust and contributors. 
+﻿// Copyright © Datalust and contributors. 
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,24 +17,28 @@ namespace Seq.Api.Model.Inputs
     /// <summary>
     /// Information about ingestion activity using an API key.
     /// </summary>
-    public class ApiKeyMetricsPart
+    public class InputMetricsPart
     {
         /// <summary>
-        /// The number of events that arrived at the server tagged with this
-        /// key in the past minute.
+        /// The number of events that arrived at the server from this input in the past minute.
         /// </summary>
-        public int ArrivalsPerMinute { get; set; }
+        public int ArrivedEventsPerMinute { get; set; }
 
         /// <summary>
-        /// The number of events that ingested by the server tagged with this
-        /// key in the past minute.
+        /// The number of events that ingested by the server from this input in the past minute.
         /// </summary>
-        public int InfluxPerMinute { get; set; }
+        public int IngestedEventsPerMinute { get; set; }
         
         /// <summary>
-        /// The raw JSON bytes (approximate) tagged with this API key that were ingested
+        /// The raw JSON bytes (approximate) from this input that were ingested
         /// by the server in the past minute.
         /// </summary>
         public long IngestedBytesPerMinute { get; set; }
+        
+        /// <summary>
+        /// The number of invalid payloads reaching this input in the past minute. Invalid payloads includes malformed
+        /// and oversized JSON event bodies, as well as malformed or oversized batches.
+        /// </summary>
+        public long InvalidPayloadsPerMinute { get; set; }
     }
 }

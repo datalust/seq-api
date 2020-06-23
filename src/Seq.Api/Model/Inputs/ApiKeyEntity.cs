@@ -1,4 +1,4 @@
-﻿// Copyright 2014-2019 Datalust and contributors. 
+﻿// Copyright © Datalust and contributors. 
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,9 +14,7 @@
 
 using System.Collections.Generic;
 using Newtonsoft.Json;
-using Seq.Api.Model.LogEvents;
 using Seq.Api.Model.Security;
-using Seq.Api.Model.Signals;
 
 namespace Seq.Api.Model.Inputs
 {
@@ -33,10 +31,10 @@ namespace Seq.Api.Model.Inputs
         public string Title { get; set; }
 
         /// <summary>
-        /// The API key token. API keys generated for versions of Seq prior to 5.0 will expose this value. From 5.0 onwards,
-        /// <see cref="Token"/> can be specified explicitly when creating an API key, but is not readable once the API key is created.
-        /// Leaving the token blank will cause the server to generate a cryptographically random API key token. After creation, the first
-        /// few characters of the token will be readable from <see cref="TokenPrefix"/>, but because only a cryptographically-secure
+        /// The API key token. <see cref="Token"/> can be specified explicitly when creating an API key, but is not
+        /// readable once the API key is created. Leaving the token blank will cause the server to generate a
+        /// cryptographically random API key token. After creation, the first few (additional, redundant) characters
+        /// of the token will be readable from <see cref="TokenPrefix"/>, but because only a cryptographically-secure
         /// hash of the token is stored internally, the token itself cannot be retrieved.
         /// </summary>
         public string Token { get; set; }
@@ -47,31 +45,12 @@ namespace Seq.Api.Model.Inputs
         public string TokenPrefix { get; set; }
 
         /// <summary>
-        /// Properties that will be automatically added to all events ingested using the key. These will override any properties with
-        /// the same names already present on the event.
+        /// Settings that control how events are ingested through the API key.
         /// </summary>
-        public List<InputAppliedPropertyPart> AppliedProperties { get; set; } = new List<InputAppliedPropertyPart>();
+        public InputSettingsPart InputSettings { get; set; } = new InputSettingsPart();
 
         /// <summary>
-        /// A filter that selects events to ingest. If <c>null</c>, all events received using the key will be ingested.
-        /// </summary>
-        public SignalFilterPart InputFilter { get; set; } = new SignalFilterPart();
-
-        /// <summary>
-        /// A minimum level at which events received using the key will be ingested. The level hierarchy understood by Seq is fuzzy
-        /// enough to handle most common leveling schemes. This value will be provided to callers so that they can dynamically
-        /// filter events client-side, if supported.
-        /// </summary>
-        public LogEventLevel? MinimumLevel { get; set; }
-
-        /// <summary>
-        /// If <c>true</c>, timestamps already present on the events will be ignored, and server timestamps used instead. This is not
-        /// recommended for most use cases.
-        /// </summary>
-        public bool UseServerTimestamps { get; set; }
-
-        /// <summary>
-        /// If <c>true</c>, the key is the built-in (tokenless) API key.
+        /// If <c>true</c>, the key is the built-in (tokenless) API key representing unauthenticated HTTP ingestion.
         /// </summary>
         public bool IsDefault { get; set; }
 
@@ -90,6 +69,6 @@ namespace Seq.Api.Model.Inputs
         /// Information about the ingestion activity using this API key.
         /// </summary>
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public ApiKeyMetricsPart Metrics { get; set; } = new ApiKeyMetricsPart();
+        public InputMetricsPart InputMetrics { get; set; } = new InputMetricsPart();
     }
 }

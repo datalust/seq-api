@@ -14,7 +14,7 @@ If you want to *write events* to Seq, use one of the logging framework clients, 
 Install from NuGet:
 
 ```powershell
-Install-Package Seq.Api
+dotnet add package Seq.Api
 ```
 
 Create a `SeqConnection` with your server URL:

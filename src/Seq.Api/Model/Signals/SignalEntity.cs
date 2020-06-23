@@ -1,4 +1,4 @@
-﻿// Copyright 2014-2019 Datalust and contributors. 
+﻿// Copyright © Datalust and contributors. 
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Seq.Api.Model.Security;
+using Seq.Api.Model.Shared;
 
 namespace Seq.Api.Model.Signals
 {
@@ -30,8 +31,8 @@ namespace Seq.Api.Model.Signals
         public SignalEntity()
         {
             Title = "New Signal";
-            Filters = new List<SignalFilterPart>();
-            TaggedProperties = new List<TaggedPropertyPart>();
+            Filters = new List<DescriptiveFilterPart>();
+            Columns = new List<SignalColumnPart>();
         }
 
         /// <summary>
@@ -47,12 +48,12 @@ namespace Seq.Api.Model.Signals
         /// <summary>
         /// Filters that are combined (using the <c>and</c> operator) to identify events matching the filter.
         /// </summary>
-        public List<SignalFilterPart> Filters { get; set; }
+        public List<DescriptiveFilterPart> Filters { get; set; }
 
         /// <summary>
-        /// Properties that show as columns when the signal is selected in the events screen.
+        /// Expressions that show as columns when the signal is selected in the events screen.
         /// </summary>
-        public List<TaggedPropertyPart> TaggedProperties { get; set; }
+        public List<SignalColumnPart> Columns { get; set; }
 
         /// <summary>
         /// Obsolete.

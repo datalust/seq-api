@@ -1,4 +1,4 @@
-﻿// Copyright 2014-2019 Datalust and contributors. 
+﻿// Copyright © Datalust and contributors. 
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,6 +13,8 @@
 // limitations under the License.
 
 using System.Collections.Generic;
+using Newtonsoft.Json;
+using Seq.Api.Model.Shared;
 using Seq.Api.Model.Signals;
 
 namespace Seq.Api.Model.Users
@@ -46,19 +48,22 @@ namespace Seq.Api.Model.Users
         /// <summary>
         /// If changing password, the new password for the user.
         /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string NewPassword { get; set; }
 
         /// <summary>
         /// A filter that is applied to searches and queries instigated by
         /// the user.
         /// </summary>
-        public SignalFilterPart ViewFilter { get; set; }
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public DescriptiveFilterPart ViewFilter { get; set; }
 
         /// <summary>
         /// If <c>true</c>, the user will be unable to log in without first
         /// changing their password. Recommended when administratively assigning
         /// a password for the user.
         /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public bool MustChangePassword { get; set; }
 
         /// <summary>
@@ -66,5 +71,21 @@ namespace Seq.Api.Model.Users
         /// the Seq UI currently only supports a single role when editing users.
         /// </summary>
         public HashSet<string> RoleIds { get; set; } = new HashSet<string>();
+
+        /// <summary>
+        /// The authentication provider associated with the user account. This will normally be
+        /// the system-configured authentication provider, but if the provider is changed, the
+        /// user may need to be unlinked from an existing provider so that login can proceed through
+        /// the new provider.
+        /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public string AuthenticationProvider { get; set; }
+
+        /// <summary>
+        /// The unique identifier that links the identity provided by the authentication provider
+        /// with the Seq user.
+        /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public string AuthenticationProviderUniqueIdentifier { get; set; }
     }
 }

@@ -12,32 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Seq.Api.Model.Feeds
+namespace Seq.Api.Model.Signals
 {
     /// <summary>
-    /// A NuGet feed.
+    /// An expression that will be displayed as a column when a signal
+    /// including it is selected.
     /// </summary>
-    public class NuGetFeedEntity : Entity
+    public class SignalColumnPart
     {
         /// <summary>
-        /// The feed name.
+        /// The expression to show as a column.
         /// </summary>
-        public string Name { get; set; }
-
-        /// <summary>
-        /// A URI or folder path at which the feed is located.
-        /// </summary>
-        public string Location { get; set; }
-
-        /// <summary>
-        /// If required, a username that will be sent when accessing the feed.
-        /// </summary>
-        public string Username { get; set; }
-
-        /// <summary>
-        /// When <see cref="Username"/> is non-empty, can be used to set an associated
-        /// password.
-        /// </summary>
-        public string NewPassword { get; set; }
+        public string Expression { get; set; }
     }
 }

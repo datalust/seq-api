@@ -1,4 +1,4 @@
-﻿// Copyright 2016 Datalust; based on code from 
+﻿// Copyright © Datalust; based on code from 
 // Serilog.Sinks.Observable, Copyright 2013-2016 Serilog Contributors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");

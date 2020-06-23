@@ -1,4 +1,4 @@
-﻿// Copyright 2014-2019 Datalust and contributors. 
+﻿// Copyright © Datalust and contributors. 
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -11,6 +11,11 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
+using System;
+using System.Collections.Generic;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Seq.Api.Model
 {
@@ -41,5 +46,12 @@ namespace Seq.Api.Model
         /// was instantiated locally and not received from the API.
         /// </summary>
         public LinkCollection Links { get; set; }
+
+        /// <summary>
+        /// Facilitates backwards compatibility in the Seq server. Should not be used by consumers/clients.
+        /// </summary>
+        [JsonExtensionData, JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [Obsolete("Facilitates backwards compatibility in the Seq server. Should not be used by consumers/clients.")]
+        public Dictionary<string, JToken> ExtensionData { get; set; }
     }
 }
