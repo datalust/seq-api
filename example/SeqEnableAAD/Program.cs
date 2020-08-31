@@ -11,7 +11,7 @@ namespace SeqEnableAAD
         const string Usage = @"seq-enable-aad: enable authentication on your Seq server (for initial setup of a new Seq server only).
 
 Usage:
-    seq-enable-aad.exe <server> [--uname=<un>] [--tenantid=<tid>] [--clientid=<cid>] [--clientkey=<ckey>] (--authority=<a>)
+    seq-enable-aad.exe <server> --uname=<un> --tenantid=<tid> --clientid=<cid> --clientkey=<ckey> [--authority=<a>]
     seq-enable-aad.exe (-h | --help)
 
 Options:
@@ -43,7 +43,7 @@ Options:
                 {
                     Console.ForegroundColor = ConsoleColor.White;
                     Console.BackgroundColor = ConsoleColor.Red;
-                    Console.WriteLine("seq-enable-auth: {0}", ex);
+                    Console.WriteLine("seq-enable-aad: {0}", ex);
                     Console.ResetColor();
                     Environment.Exit(-1);
                 }
