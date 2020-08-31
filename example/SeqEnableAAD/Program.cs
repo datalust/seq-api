@@ -62,12 +62,14 @@ Options:
             var connection = new SeqConnection(server);
 
             var user = await connection.Users.FindCurrentAsync();
+            var provider = await connection.Settings.FindNamedAsync(SettingName.AuthenticationProvider);
             var cid = await connection.Settings.FindNamedAsync(SettingName.AzureADClientId);
             var ckey = await connection.Settings.FindNamedAsync(SettingName.AzureADClientKey);
             var aut = await connection.Settings.FindNamedAsync(SettingName.AzureADAuthority);
             var tid = await connection.Settings.FindNamedAsync(SettingName.AzureADTenantId);
 
             user.Username = username;
+            provider.Value = "Azure Active Directory";
             cid.Value = clientId;
             ckey.Value = clientKey;
             tid.Value = tenantId;
@@ -78,7 +80,8 @@ Options:
             await connection.Settings.UpdateAsync(ckey);
             await connection.Settings.UpdateAsync(tid);
             await connection.Settings.UpdateAsync(aut);
-            
+
+            await connection.Settings.UpdateAsync(provider); // needs to go before IsAuthenticationEnabled but after the other settings
             
             var iae = await connection.Settings.FindNamedAsync(SettingName.IsAuthenticationEnabled);
             iae.Value = true;
