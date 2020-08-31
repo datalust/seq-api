@@ -27,7 +27,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SeqTail", "example\SeqTail\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SignalCopy", "example\SignalCopy\SignalCopy.csproj", "{E8CDDE17-8E29-4EB4-A4BB-38BCE346A752}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeqEnableAuth", "example\SeqEnableAuth\SeqEnableAuth.csproj", "{035B62FC-CAD7-4DF9-A2A3-FAAA64DF3B55}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeqEnableAAD", "example\SeqEnableAAD\SeqEnableAAD.csproj", "{035B62FC-CAD7-4DF9-A2A3-FAAA64DF3B55}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
