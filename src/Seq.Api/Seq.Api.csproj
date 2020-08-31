@@ -8,7 +8,7 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackageTags>seq</PackageTags>
     <Copyright>Copyright © Datalust Pty Ltd and Contributors</Copyright>
-    <PackageIconUrl>https://datalust.co/images/seq-nuget.png</PackageIconUrl>
+    <PackageIcon>seq-api-icon.png</PackageIcon>
     <PackageProjectUrl>https://github.com/datalust/seq-api</PackageProjectUrl>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <LangVersion>8</LangVersion>
@@ -16,5 +16,6 @@
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
     <PackageReference Include="Tavis.UriTemplates" Version="1.1.1" />
+    <None Include="seq-api-icon.png" Pack="true" PackagePath="\"/>
   </ItemGroup>
 </Project>
