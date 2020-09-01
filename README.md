@@ -31,7 +31,7 @@ var installedApps = await connection.Apps.ListAsync();
 
 **To authenticate**, the `SeqConnection` constructor accepts an `apiKey` parameter (make sure the API key permits _user-level access_) or, if you want to log in with personal credentials you can `await connection.Users.LoginAsync(username, password)`.
 
-For a more complete example, see the [seq-tail app included in the source](https://github.com/datalust/seq-api/blob/release/example/SeqTail/Program.cs).
+For a more complete example, see the [seq-tail app included in the source](https://github.com/datalust/seq-api/blob/main/example/SeqTail/Program.cs).
 
 #### Creating entities
 
@@ -43,7 +43,7 @@ signal.Title = "Signal 123";
 await connection.Signals.AddAsync(signal);
 ```
 
-See the [signal-copy app](https://github.com/datalust/seq-api/blob/release/example/SignalCopy/Program.cs) for an example of this pattern in action.
+See the [signal-copy app](https://github.com/datalust/seq-api/blob/main/example/SignalCopy/Program.cs) for an example of this pattern in action.
 
 ### Reading events
 
