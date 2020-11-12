@@ -1,20 +1,21 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Description>Client library for the Seq HTTP API.</Description>
-    <VersionPrefix>2020.1.0</VersionPrefix>
+    <VersionPrefix>2020.4.0</VersionPrefix>
     <Authors>Datalust;Contributors</Authors>
     <TargetFramework>netstandard2.0</TargetFramework>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackageTags>seq</PackageTags>
     <Copyright>Copyright © Datalust Pty Ltd and Contributors</Copyright>
-    <PackageIconUrl>https://datalust.co/images/seq-nuget.png</PackageIconUrl>
+    <PackageIcon>seq-api-icon.png</PackageIcon>
     <PackageProjectUrl>https://github.com/datalust/seq-api</PackageProjectUrl>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <LangVersion>8</LangVersion>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="Tavis.UriTemplates" Version="1.1.1" />
+    <None Include="seq-api-icon.png" Pack="true" PackagePath="\"/>
   </ItemGroup>
 </Project>
