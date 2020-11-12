@@ -12,11 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Seq.Api.Model.Diagnostics;
+using Seq.Api.Model.Diagnostics.Storage;
 using Seq.Api.Model.Inputs;
+
+// ReSharper disable UnusedMember.Global
 
 namespace Seq.Api.ResourceGroups
 {
@@ -65,11 +69,38 @@ namespace Seq.Api.ResourceGroups
         /// </summary>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> allowing the operation to be canceled.</param>
         /// <param name="measurement">The measurement to get.</param>
-        /// <returns></returns>
+        /// <returns>A timeseries showing the measurement over time.</returns>
         public async Task<MeasurementTimeseriesPart> GetMeasurementTimeseriesAsync(string measurement, CancellationToken cancellationToken = default)
         {
             var parameters = new Dictionary<string, object>{ ["measurement"] = measurement };
             return await GroupGetAsync<MeasurementTimeseriesPart>("Metric", parameters, cancellationToken);
+        }
+
+        /// <summary>
+        /// Report on storage space consumed by the event store across a range of timestamps. The returned range may be
+        /// extended to account for the resolution of the underlying data.
+        /// </summary>
+        /// <param name="rangeStart">The (inclusive) start of the range to report on. If omitted, the results will report from the
+        /// earliest stored data. The range start must land on a five-minute boundary.</param>
+        /// <param name="rangeEnd">The (exclusive) end of the range to report on. If omitted, the results will report from the
+        /// earliest stored data. The range must be a multiple of the interval size, or a whole number of days if
+        /// no interval is specified.</param>
+        /// <param name="intervalMinutes">The bucket size to use. Must be a multiple of 5 minutes. Defaults to 1440 (one day).</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken"/> allowing the operation to be canceled.</param>
+        /// <returns>Storage consumption information.</returns>
+        public async Task<StorageConsumptionPart> GetStorageConsumptionAsync(
+            DateTime? rangeStart,
+            DateTime? rangeEnd,
+            int? intervalMinutes,
+            CancellationToken cancellationToken = default)
+        {
+            var parameters = new Dictionary<string, object>
+            {
+                ["rangeStart"] = rangeStart,
+                ["rangeEnd"] = rangeEnd,
+                ["intervalMinutes"] = intervalMinutes
+            };
+            return await GroupGetAsync<StorageConsumptionPart>("Storage", parameters, cancellationToken);
         }
     }
 }
