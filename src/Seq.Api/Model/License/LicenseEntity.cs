@@ -37,6 +37,11 @@ namespace Seq.Api.Model.License
         public bool IsSingleUser { get; set; }
 
         /// <summary>
+        /// If the license is a subscription, the subscription id.
+        /// </summary>
+        public string SubscriptionId { get; set; }
+
+        /// <summary>
         /// Information about the status of the license.
         /// </summary>
         public string StatusDescription { get; set; }
@@ -56,5 +61,11 @@ namespace Seq.Api.Model.License
         /// the license has no user limit.
         /// </summary>
         public int? LicensedUsers { get; set; }
+        
+        /// <summary>
+        /// If the license is for a subscription, automatically check datalust.co and
+        /// update the license when the subscription is renewed or tier changed.
+        /// </summary>
+        public bool AutomaticallyRefresh { get; set; }
     }
 }

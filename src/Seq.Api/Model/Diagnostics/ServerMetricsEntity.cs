@@ -28,6 +28,16 @@ namespace Seq.Api.Model.Diagnostics
         public ServerMetricsEntity()
         {
         }
+                
+        /// <summary>
+        /// The start time in UTC of the events in the memory cache.
+        /// </summary>
+        public DateTime? EventStoreCacheStart { get; set; }
+        
+        /// <summary>
+        /// The end time in UTC of the events in the memory cache.
+        /// </summary>
+        public DateTime? EventStoreCacheEnd { get; set; }
 
         /// <summary>
         /// The number of days of events able to fit in the memory cache.
