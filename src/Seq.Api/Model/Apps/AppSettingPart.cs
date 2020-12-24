@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
+
 namespace Seq.Api.Model.Apps
 {
     /// <summary>
@@ -40,11 +42,17 @@ namespace Seq.Api.Model.Apps
         public string HelpText { get; set; }
 
         /// <summary>
-        /// The type of value accepted for the setting; valid values are <c>Text</c>,
+        /// The type of value accepted for the setting; valid values are <c>Text</c>, <c>Select</c>,
         /// <c>LongText</c>, <c>Checkbox</c>, <c>Integer</c>, <c>Decimal</c>, and <c>Password</c>.
         /// </summary>
         /// <remarks>An enum was historically not used here in order to improve
         /// forwards/backwards compatibility.</remarks>
         public string Type { get; set; }
+        
+        /// <summary>
+        /// For settings of <see cref="Type"/> <c>Select</c>, a description of the values that can be chosen
+        /// for the setting.
+        /// </summary>
+        public List<AppSettingValuePart> AllowedValues { get; set; } = new List<AppSettingValuePart>();
     }
 }

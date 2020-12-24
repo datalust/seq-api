@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using Seq.Api.Model.Security;
+using Seq.Api.Model.Signals;
 
 namespace Seq.Api.Model.Workspaces
 {
@@ -42,6 +43,12 @@ namespace Seq.Api.Model.Workspaces
         /// </summary>
         public bool IsProtected { get; set; }
 
+        /// <summary>
+        /// An optional <see cref="SignalExpressionPart"/> that will be activated when opening the <em>Events</em>
+        /// screen with the workspace selected.
+        /// </summary>
+        public SignalExpressionPart DefaultSignalExpression { get; set; }
+        
         /// <summary>
         /// Content included in the workspace.
         /// </summary>
