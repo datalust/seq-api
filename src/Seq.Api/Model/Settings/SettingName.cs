@@ -116,11 +116,6 @@ namespace Seq.Api.Model.Settings
         IsAuthenticationEnabled,
 
         /// <summary>
-        /// Tracks whether an admin user has dismissed the master key backup warning.
-        /// </summary>
-        MasterKeyIsBackedUp,
-
-        /// <summary>
         /// The minimum storage space, in bytes, on the disk containing log events, before
         /// Seq will stop accepting new events.
         /// </summary>
@@ -186,7 +181,12 @@ namespace Seq.Api.Model.Settings
         /// The maximum size, in HTTP request content bytes, beyond which ingestion requests will be rejected.
         /// </summary>
         RawPayloadMaximumContentLength,
-
+        
+        /// <summary>
+        /// Tracks whether an admin user has dismissed the secret key backup warning.
+        /// </summary>
+        SecretKeyIsBackedUp,
+        
         /// <summary>
         /// A snippet of CSS that will be included in the front-end's user interface styles.
         /// </summary>
