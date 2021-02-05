@@ -16,7 +16,7 @@ namespace Seq.Api.Model.Backups
 {
     /// <summary>
     /// Seq backups include metadata like users, signals, API keys and other configuration, but do not include
-    /// the event stream. Backups are fully encrypted with AES-256 and cannot be restored without the master key
+    /// the event stream. Backups are fully encrypted with AES-256 and cannot be restored without the secret key
     /// from the originating Seq instance.
     /// </summary>
     public class BackupEntity : Entity
