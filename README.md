@@ -64,7 +64,7 @@ while(true)
   foreach (var evt in resultSet.Events)
     Console.WriteLine(evt.RenderedMessage);
 
-  if (resultSet.Statistics.Status != ResultSetStatus.Partial)
+  if (resultSet.Statistics.Status == ResultSetStatus.Complete)
     break;
     
   lastReadEventId = resultSet.Statistics.LastReadEventId;
