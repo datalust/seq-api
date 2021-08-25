@@ -25,7 +25,7 @@ namespace Seq.Api.ResourceGroups
     /// </summary>
     public class LicensesResourceGroup : ApiResourceGroup
     {
-        internal LicensesResourceGroup(ISeqConnection connection)
+        internal LicensesResourceGroup(ILoadResourceGroup connection)
             : base("Licenses", connection)
         {
         }

@@ -1,4 +1,4 @@
-﻿// Copyright © Datalust and contributors. 
+// Copyright Datalust and contributors. 
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,18 +17,18 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Seq.Api.Model;
-using Seq.Api.Model.Dashboarding;
+using Seq.Api.Model.Alerting;
 using Seq.Api.Model.Users;
 
 namespace Seq.Api.ResourceGroups
-{
+{    
     /// <summary>
-    /// Perform operations on dashboards. Dashboards are collections of charts and alerts that are either shared or user-specific.
+    /// Create and manage alerts being monitored by the server.
     /// </summary>
-    public class DashboardsResourceGroup : ApiResourceGroup
-    {
-        internal DashboardsResourceGroup(ILoadResourceGroup connection)
-            : base("Dashboards", connection)
+    public class AlertsResourceGroup : ApiResourceGroup
+    {        
+        internal AlertsResourceGroup(ILoadResourceGroup connection)
+            : base("Alerts", connection)
         {
         }
 
@@ -38,65 +38,65 @@ namespace Seq.Api.ResourceGroups
         /// <param name="id">The id of the dashboard.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> allowing the operation to be canceled.</param>
         /// <returns>The dashboard.</returns>
-        public async Task<DashboardEntity> FindAsync(string id, CancellationToken cancellationToken = default)
+        public async Task<AlertEntity> FindAsync(string id, CancellationToken cancellationToken = default)
         {
             if (id == null) throw new ArgumentNullException(nameof(id));
-            return await GroupGetAsync<DashboardEntity>("Item", new Dictionary<string, object> { { "id", id } }, cancellationToken).ConfigureAwait(false);
+            return await GroupGetAsync<AlertEntity>("Item", new Dictionary<string, object> { { "id", id } }, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
-        /// Retrieve dashboards.
+        /// Retrieve alerts.
         /// </summary>
-        /// <param name="ownerId">If the id of a <see cref="UserEntity"/> is provided, only dashboards owned by them will be included in the result; if
-        /// not specified, personal dashboards for all owners will be listed.</param>
-        /// <param name="shared">If <c>true</c>, shared dashboards will be included in the result.</param>
+        /// <param name="ownerId">If the id of a <see cref="UserEntity"/> is provided, only alerts owned by them will be included in the result; if
+        /// not specified, personal alerts for all owners will be listed.</param>
+        /// <param name="shared">If <c>true</c>, shared alerts will be included in the result.</param>
         /// <param name="cancellationToken"><see cref="CancellationToken"/> allowing the operation to be canceled.</param>
-        /// <returns>A list containing matching dashboards.</returns>
-        public async Task<List<DashboardEntity>> ListAsync(string ownerId = null, bool shared = false, CancellationToken cancellationToken = default)
+        /// <returns>A list containing matching alerts.</returns>
+        public async Task<List<AlertEntity>> ListAsync(string ownerId = null, bool shared = false, CancellationToken cancellationToken = default)
         {
             var parameters = new Dictionary<string, object> { { "ownerId", ownerId }, { "shared", shared } };
-            return await GroupListAsync<DashboardEntity>("Items", parameters, cancellationToken).ConfigureAwait(false);
+            return await GroupListAsync<AlertEntity>("Items", parameters, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
-        /// Construct a dashboard with server defaults pre-initialized.
+        /// Construct a alert with server defaults pre-initialized.
         /// </summary>
         /// <param name="cancellationToken"><see cref="CancellationToken"/> allowing the operation to be canceled.</param>
-        /// <returns>The unsaved dashboard.</returns>
-        public async Task<DashboardEntity> TemplateAsync(CancellationToken cancellationToken = default)
+        /// <returns>The unsaved alert.</returns>
+        public async Task<AlertEntity> TemplateAsync(CancellationToken cancellationToken = default)
         {
-            return await GroupGetAsync<DashboardEntity>("Template", cancellationToken: cancellationToken).ConfigureAwait(false);
+            return await GroupGetAsync<AlertEntity>("Template", cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
-        /// Add a new dashboard.
+        /// Add a new alert.
         /// </summary>
-        /// <param name="entity">The dashboard to add.</param>
+        /// <param name="entity">The alert to add.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> allowing the operation to be canceled.</param>
-        /// <returns>The dashboard, with server-allocated properties such as <see cref="Entity.Id"/> initialized.</returns>
-        public async Task<DashboardEntity> AddAsync(DashboardEntity entity, CancellationToken cancellationToken = default)
+        /// <returns>The alert, with server-allocated properties such as <see cref="Entity.Id"/> initialized.</returns>
+        public async Task<AlertEntity> AddAsync(AlertEntity entity, CancellationToken cancellationToken = default)
         {
-            return await GroupCreateAsync<DashboardEntity, DashboardEntity>(entity, cancellationToken: cancellationToken).ConfigureAwait(false);
+            return await GroupCreateAsync<AlertEntity, AlertEntity>(entity, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
-        /// Remove an existing dashboard.
+        /// Remove an existing alert.
         /// </summary>
-        /// <param name="entity">The dashboard to remove.</param>
+        /// <param name="entity">The alert to remove.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> allowing the operation to be canceled.</param>
         /// <returns>A task indicating completion.</returns>
-        public async Task RemoveAsync(DashboardEntity entity, CancellationToken cancellationToken = default)
+        public async Task RemoveAsync(AlertEntity entity, CancellationToken cancellationToken = default)
         {
             await Client.DeleteAsync(entity, "Self", entity, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
-        /// Update an existing dashboard.
+        /// Update an existing alert.
         /// </summary>
-        /// <param name="entity">The dashboard to update.</param>
+        /// <param name="entity">The alert to update.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> allowing the operation to be canceled.</param>
         /// <returns>A task indicating completion.</returns>
-        public async Task UpdateAsync(DashboardEntity entity, CancellationToken cancellationToken = default)
+        public async Task UpdateAsync(AlertEntity entity, CancellationToken cancellationToken = default)
         {
             await Client.PutAsync(entity, "Self", entity, cancellationToken: cancellationToken).ConfigureAwait(false);
         }

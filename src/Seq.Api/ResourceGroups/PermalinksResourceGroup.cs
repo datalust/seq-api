@@ -27,7 +27,7 @@ namespace Seq.Api.ResourceGroups
     /// </summary>
     public class PermalinksResourceGroup : ApiResourceGroup
     {
-        internal PermalinksResourceGroup(ISeqConnection connection)
+        internal PermalinksResourceGroup(ILoadResourceGroup connection)
             : base("Permalinks", connection)
         {
         }

@@ -52,7 +52,7 @@ namespace Seq.Api.Model.Diagnostics
         /// <summary>
         /// Bytes of free space remaining on the disk used for event storage.
         /// </summary>
-        public long EventStoreDiskRemainingBytes { get; set; }
+        public long? EventStoreDiskRemainingBytes { get; set; }
 
         /// <summary>
         /// The number of events that arrived at the ingestion endpoint in the past minute.

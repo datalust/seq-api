@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using Newtonsoft.Json;
 using Seq.Api.Model.Signals;
 
 namespace Seq.Api.Model.Retention
@@ -38,7 +39,8 @@ namespace Seq.Api.Model.Retention
         /// <summary>
         /// Obsolete.
         /// </summary>
-        [Obsolete("Replaced by RemovedSignalExpression.")]
+        [Obsolete("Replaced by RemovedSignalExpression."),
+         JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string SignalId { get; set; }
     }
 }

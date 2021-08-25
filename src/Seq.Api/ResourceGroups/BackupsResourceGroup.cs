@@ -27,7 +27,7 @@ namespace Seq.Api.ResourceGroups
     /// </summary>
     public class BackupsResourceGroup : ApiResourceGroup
     {
-        internal BackupsResourceGroup(ISeqConnection connection)
+        internal BackupsResourceGroup(ILoadResourceGroup connection)
             : base("Backups", connection)
         {
         }

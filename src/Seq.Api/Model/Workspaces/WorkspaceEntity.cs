@@ -29,7 +29,7 @@ namespace Seq.Api.Model.Workspaces
         public string Title { get; set; }
 
         /// <summary>
-        /// A long-form description of the workspace.
+        /// An optional long-form description of the workspace.
         /// </summary>
         public string Description { get; set; }
 

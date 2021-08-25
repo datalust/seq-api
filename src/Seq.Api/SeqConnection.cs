@@ -29,7 +29,7 @@ namespace Seq.Api
     /// <summary>
     /// Exposes high-level (typed) interactions with the Seq API through various resource groups.
     /// </summary>
-    public class SeqConnection : ISeqConnection, IDisposable
+    public class SeqConnection : ILoadResourceGroup, IDisposable
     {
         readonly object _sync = new object();
         readonly Dictionary<string, Task<ResourceGroup>> _resourceGroups = new Dictionary<string, Task<ResourceGroup>>();
@@ -74,13 +74,18 @@ namespace Seq.Api
         /// the HTTP API.
         /// </summary>
         public SeqApiClient Client { get; }
+        
+        /// <summary>
+        /// Create and manage alerts.
+        /// </summary>
+        public AlertsResourceGroup Alerts => new AlertsResourceGroup(this);
 
         /// <summary>
         /// List and administratively remove active alerts. To create/edit/remove alerts in normal
         /// circumstances, use <see cref="Dashboards"/>.
         /// </summary>
         public AlertStateResourceGroup AlertState => new AlertStateResourceGroup(this);
- 
+
         /// <summary>
         /// Perform operations on API keys.
         /// </summary>
@@ -100,7 +105,12 @@ namespace Seq.Api
         /// Perform operations on backups.
         /// </summary>
         public BackupsResourceGroup Backups => new BackupsResourceGroup(this);
-
+        
+        /// <summary>
+        /// Perform operations on the Seq cluster.
+        /// </summary>
+        public ClusterNodesResourceGroup ClusterNodes => new ClusterNodesResourceGroup(this);
+        
         /// <summary>
         /// Perform operations on dashboards.
         /// </summary>
@@ -228,8 +238,8 @@ namespace Seq.Api
 
             throw new SeqApiException($"Could not connect to the Seq API endpoint: {(int)statusCode}/{statusCode}.", statusCode);
         }
-
-        async Task<ResourceGroup> ISeqConnection.LoadResourceGroupAsync(string name, CancellationToken cancellationToken)
+        
+        async Task<ResourceGroup> ILoadResourceGroup.LoadResourceGroupAsync(string name, CancellationToken cancellationToken)
         {
             Task<RootEntity> loadRoot;
             lock (_sync)

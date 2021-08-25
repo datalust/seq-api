@@ -13,8 +13,9 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 
-namespace Seq.Api.Model.Monitoring
+namespace Seq.Api.Model.Alerting
 {
     /// <summary>
     /// Describes the state of an active alert.
@@ -32,29 +33,14 @@ namespace Seq.Api.Model.Monitoring
         public string Title { get; set; }
         
         /// <summary>
-        /// The title of the chart to which the alert is attached.
-        /// </summary>
-        public string ChartTitle { get; set; }
-        
-        /// <summary>
-        /// The title of the dashboards in which the alert is set.
-        /// </summary>
-        public string DashboardTitle { get; set; }
-
-        /// <summary>
         /// The user id of the user who owns the alert; if <c>null</c>, the alert is shared.
         /// </summary>
         public string OwnerId { get; set; }
 
         /// <summary>
-        /// The notification level associated with the alert.
+        /// The ids of app instances that receive notifications when the alert is triggered.
         /// </summary>
-        public string Level { get; set; }
-        
-        /// <summary>
-        /// The id of an app instance that will receive notifications when the alert is triggered.
-        /// </summary>
-        public string NotificationAppInstanceId { get; set; }
+        public List<string> NotificationAppInstanceIds { get; set; }
 
         /// <summary>
         /// The time at which the alert was last checked. Not preserved across server restarts.

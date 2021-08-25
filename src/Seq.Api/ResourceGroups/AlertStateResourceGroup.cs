@@ -16,7 +16,8 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Seq.Api.Model.Monitoring;
+using Seq.Api.Model.Alerting;
+using Seq.Api.Model.Dashboarding;
 
 namespace Seq.Api.ResourceGroups
 {
@@ -25,7 +26,7 @@ namespace Seq.Api.ResourceGroups
     /// </summary>
     public class AlertStateResourceGroup : ApiResourceGroup
     {
-        internal AlertStateResourceGroup(ISeqConnection connection)
+        internal AlertStateResourceGroup(ILoadResourceGroup connection)
             : base("AlertState", connection)
         {
         }

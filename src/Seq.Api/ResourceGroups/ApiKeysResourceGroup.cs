@@ -30,7 +30,7 @@ namespace Seq.Api.ResourceGroups
     /// </summary>
     public class ApiKeysResourceGroup : ApiResourceGroup
     {
-        internal ApiKeysResourceGroup(ISeqConnection connection)
+        internal ApiKeysResourceGroup(ILoadResourceGroup connection)
             : base("ApiKeys", connection)
         {
         }

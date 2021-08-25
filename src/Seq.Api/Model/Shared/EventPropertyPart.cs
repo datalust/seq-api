@@ -1,4 +1,4 @@
-// Copyright © Datalust and contributors. 
+﻿// Copyright © Datalust and contributors. 
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,12 +14,13 @@
 
 using System;
 
-namespace Seq.Api.Model.Events
+// ReSharper disable MemberCanBePrivate.Global
+
+namespace Seq.Api.Model.Shared
 {
     /// <summary>
     /// A name/value property associated with an event.
     /// </summary>
-    //  Note, this duplicates InputAppliedPropertyPart.
     public class EventPropertyPart
     {
         /// <summary>

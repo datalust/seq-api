@@ -67,5 +67,10 @@ namespace Seq.Api.Model.License
         /// update the license when the subscription is renewed or tier changed.
         /// </summary>
         public bool AutomaticallyRefresh { get; set; }
+
+        /// <summary>
+        /// If <c>true</c>, the license supports running Seq in a DR configuration.
+        /// </summary>
+        public bool IncludesDisasterRecovery { get; set; }
     }
 }

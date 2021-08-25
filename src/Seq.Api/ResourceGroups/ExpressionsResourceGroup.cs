@@ -24,7 +24,7 @@ namespace Seq.Api.ResourceGroups
     /// </summary>
     public class ExpressionsResourceGroup : ApiResourceGroup
     {
-        internal ExpressionsResourceGroup(ISeqConnection connection)
+        internal ExpressionsResourceGroup(ILoadResourceGroup connection)
             : base("Expressions", connection)
         {
         }

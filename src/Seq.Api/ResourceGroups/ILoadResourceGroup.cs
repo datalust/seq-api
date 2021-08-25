@@ -19,9 +19,25 @@ using Seq.Api.Model;
 
 namespace Seq.Api.ResourceGroups
 {
-    interface ISeqConnection
+    /// <summary>
+    /// The contract between resource groups and the implementing connection type.
+    /// </summary>
+    /// <remarks>This interface is an implementation detail that should not be relied on by
+    /// application-level consumers.</remarks>
+    public interface ILoadResourceGroup
     {
+        /// <summary>
+        /// Load the resource group with the given <paramref name="name"/>.
+        /// </summary>
+        /// <param name="name">The resource group name. The name is the simple form, for example,
+        /// <c>"Dashboards"</c>.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken"/> allowing the operation to be canceled.</param>
+        /// <returns>The requested resource group.</returns>
         Task<ResourceGroup> LoadResourceGroupAsync(string name, CancellationToken cancellationToken = default);
+        
+        /// <summary>
+        /// The underlying Seq API client.
+        /// </summary>
         SeqApiClient Client { get; }
     }
 }

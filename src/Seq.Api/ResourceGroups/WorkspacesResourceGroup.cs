@@ -27,7 +27,7 @@ namespace Seq.Api.ResourceGroups
     /// </summary>
     public class WorkspacesResourceGroup : ApiResourceGroup
     {
-        internal WorkspacesResourceGroup(ISeqConnection connection)
+        internal WorkspacesResourceGroup(ILoadResourceGroup connection)
             : base("Workspaces", connection)
         {
         }

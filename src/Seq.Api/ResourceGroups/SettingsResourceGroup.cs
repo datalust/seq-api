@@ -25,7 +25,7 @@ namespace Seq.Api.ResourceGroups
     /// </summary>
     public class SettingsResourceGroup : ApiResourceGroup
     {
-        internal SettingsResourceGroup(ISeqConnection connection)
+        internal SettingsResourceGroup(ILoadResourceGroup connection)
             : base("Settings", connection)
         {
         }
