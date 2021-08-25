@@ -27,7 +27,7 @@ namespace Seq.Api.ResourceGroups
     /// </summary>
     public class SqlQueriesResourceGroup : ApiResourceGroup
     {
-        internal SqlQueriesResourceGroup(ISeqConnection connection)
+        internal SqlQueriesResourceGroup(ILoadResourceGroup connection)
             : base("SqlQueries", connection)
         {
         }

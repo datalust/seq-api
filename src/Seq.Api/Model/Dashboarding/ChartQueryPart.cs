@@ -13,9 +13,10 @@
 // limitations under the License.
 
 using System.Collections.Generic;
+using Seq.Api.Model.Shared;
 using Seq.Api.Model.Signals;
 
-namespace Seq.Api.Model.Monitoring
+namespace Seq.Api.Model.Dashboarding
 {
     /// <summary>
     /// A query within a chart.
@@ -30,7 +31,7 @@ namespace Seq.Api.Model.Monitoring
         /// <summary>
         /// Individual measurements included in the query. These are effectively projected columns.
         /// </summary>
-        public List<MeasurementPart> Measurements { get; set; } = new List<MeasurementPart>();
+        public List<ColumnPart> Measurements { get; set; } = new List<ColumnPart>();
 
         /// <summary>
         /// An optional filtering <c>where</c> clause limiting the data that contributes to the chart.
@@ -51,11 +52,6 @@ namespace Seq.Api.Model.Monitoring
         /// How measurements included in the chart will be displayed.
         /// </summary>
         public MeasurementDisplayStylePart DisplayStyle { get; set; } = new MeasurementDisplayStylePart();
-
-        /// <summary>
-        /// Alerts attached to the chart.
-        /// </summary>
-        public List<AlertPart> Alerts { get; set; } = new List<AlertPart>();
 
         /// <summary>
         /// A filter that limits which groups will be displayed on the chart. Not supported by all chart types.

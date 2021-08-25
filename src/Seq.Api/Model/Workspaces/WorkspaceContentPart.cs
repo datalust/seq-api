@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using System.Collections.Generic;
-using Seq.Api.Model.Monitoring;
+using Seq.Api.Model.Dashboarding;
 using Seq.Api.Model.Signals;
 using Seq.Api.Model.SqlQueries;
 

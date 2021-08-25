@@ -12,22 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Seq.Api.Model.Inputs
+namespace Seq.Api.Model.Shared
 {
     /// <summary>
-    /// A name/value property attached to events ingested through an API key.
+    /// A column with value and label.
     /// </summary>
-    //  Note, this duplicates EventPropertyPart.
-    public class InputAppliedPropertyPart
+    public class ColumnPart
     {
         /// <summary>
-        /// The property name (required).
+        /// The expression (<c>select</c>ed column) that computes the value of the measurement.
         /// </summary>
-        public string Name { get; set; }
+        public string Value { get; set; }
 
         /// <summary>
-        /// The property value, or <c>null</c>.
+        /// An optional label for the measurement (effectively the right-hand size of an <c>as</c> clause).
         /// </summary>
-        public object Value { get; set; }
+        public string Label { get; set; }
     }
 }

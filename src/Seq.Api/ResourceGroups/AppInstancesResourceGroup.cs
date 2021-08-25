@@ -29,7 +29,7 @@ namespace Seq.Api.ResourceGroups
     /// </summary>
     public class AppInstancesResourceGroup : ApiResourceGroup
     {
-        internal AppInstancesResourceGroup(ISeqConnection connection)
+        internal AppInstancesResourceGroup(ILoadResourceGroup connection)
             : base("AppInstances", connection)
         {
         }

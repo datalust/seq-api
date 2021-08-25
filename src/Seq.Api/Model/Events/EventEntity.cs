@@ -14,6 +14,9 @@
 
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using Seq.Api.Model.Shared;
+
+// ReSharper disable UnusedAutoPropertyAccessor.Global
 
 namespace Seq.Api.Model.Events
 {

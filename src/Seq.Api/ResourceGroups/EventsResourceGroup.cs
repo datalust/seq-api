@@ -29,7 +29,7 @@ namespace Seq.Api.ResourceGroups
     /// </summary>
     public class EventsResourceGroup : ApiResourceGroup
     {
-        internal EventsResourceGroup(ISeqConnection connection)
+        internal EventsResourceGroup(ILoadResourceGroup connection)
             : base("Events", connection)
         {
         }

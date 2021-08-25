@@ -30,9 +30,14 @@ namespace Seq.Api.ResourceGroups
     public abstract class ApiResourceGroup
     {
         readonly string _name;
-        readonly ISeqConnection _connection;
+        readonly ILoadResourceGroup _connection;
 
-        internal ApiResourceGroup(string name, ISeqConnection connection)
+        /// <summary>
+        /// Construct an <see cref="ApiResourceGroup"/> for the named 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="connection"></param>
+        protected ApiResourceGroup(string name, ILoadResourceGroup connection)
         {
             _name = name;
             _connection = connection;

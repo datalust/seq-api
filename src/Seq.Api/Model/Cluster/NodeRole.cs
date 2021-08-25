@@ -1,4 +1,4 @@
-﻿// Copyright © Datalust and contributors. 
+// Copyright Datalust and contributors. 
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,41 +12,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Seq.Api.Model.Monitoring
+namespace Seq.Api.Model.Cluster
 {
     /// <summary>
-    /// The method used to visually represent a measurement.
+    /// The role a node is acting in within a cluster of connected Seq instances.
     /// </summary>
-    public enum MeasurementDisplayType
+    public enum NodeRole
     {
         /// <summary>
-        /// A line chart. Requires the measurement and query to include a time axis.
+        /// The node is not part of a cluster.
         /// </summary>
-        Line,
-
+        Standalone,
+        
         /// <summary>
-        /// A bar chart.
+        /// The node is a replica, following the state of a leader node.
         /// </summary>
-        Bar,
-
+        Follower,
+        
         /// <summary>
-        /// A point (scatter) chart.
+        /// The node is a replication leader.
         /// </summary>
-        Point,
-
-        /// <summary>
-        /// A single textual value. Requires that the measurement and query produce a single value.
-        /// </summary>
-        Value,
-
-        /// <summary>
-        /// A (donut-styled) pie chart.
-        /// </summary>
-        Pie,
-
-        /// <summary>
-        /// A table of raw data values.
-        /// </summary>
-        Table
+        Leader
     }
 }

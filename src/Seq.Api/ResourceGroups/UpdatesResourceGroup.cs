@@ -24,7 +24,7 @@ namespace Seq.Api.ResourceGroups
     /// </summary>
     public class UpdatesResourceGroup : ApiResourceGroup
     {
-        internal UpdatesResourceGroup(ISeqConnection connection)
+        internal UpdatesResourceGroup(ILoadResourceGroup connection)
             : base("Updates", connection)
         {
         }

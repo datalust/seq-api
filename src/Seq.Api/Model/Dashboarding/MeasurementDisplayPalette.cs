@@ -12,21 +12,36 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Seq.Api.Model.Monitoring
+namespace Seq.Api.Model.Dashboarding
 {
     /// <summary>
-    /// A measurement that contributes to a chart.
+    /// The color palette used for displaying a measurement on a chart.
     /// </summary>
-    public class MeasurementPart
+    public enum MeasurementDisplayPalette
     {
         /// <summary>
-        /// The expression (<c>select</c>ed column) that computes the value of the measurement.
+        /// The default palette.
         /// </summary>
-        public string Value { get; set; }
+        Default,
 
         /// <summary>
-        /// An optional label for the measurement (effectively the right-hand size of an <c>as</c> clause).
+        /// A predominantly red palette.
         /// </summary>
-        public string Label { get; set; }
+        Reds,
+
+        /// <summary>
+        /// A predominantly green palette.
+        /// </summary>
+        Greens,
+
+        /// <summary>
+        /// A predominantly blue palette.
+        /// </summary>
+        Blues,
+
+        /// <summary>
+        /// An orange/purple palette.
+        /// </summary>
+        OrangePurple
     }
 }
