@@ -12,36 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Seq.Api.Model.Monitoring
+namespace Seq.Api.Model.Dashboarding
 {
     /// <summary>
-    /// The color palette used for displaying a measurement on a chart.
+    /// How a chart will be displayed on a dashboard.
     /// </summary>
-    public enum MeasurementDisplayPalette
+    public class ChartDisplayStylePart
     {
         /// <summary>
-        /// The default palette.
+        /// The width of the chart, in 1/12th columns.
         /// </summary>
-        Default,
+        public int WidthColumns { get; set; } = 6;
 
         /// <summary>
-        /// A predominantly red palette.
+        /// The height of the chart, in rows.
         /// </summary>
-        Reds,
-
-        /// <summary>
-        /// A predominantly green palette.
-        /// </summary>
-        Greens,
-
-        /// <summary>
-        /// A predominantly blue palette.
-        /// </summary>
-        Blues,
-
-        /// <summary>
-        /// An orange/purple palette.
-        /// </summary>
-        OrangePurple
+        public int HeightRows { get; set; } = 1;
     }
 }

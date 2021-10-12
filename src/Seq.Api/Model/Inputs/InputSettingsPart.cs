@@ -28,7 +28,7 @@ namespace Seq.Api.Model.Inputs
         /// Properties that will be automatically added to all events ingested using the key. These will override any properties with
         /// the same names already present on the event.
         /// </summary>
-        public List<InputAppliedPropertyPart> AppliedProperties { get; set; } = new List<InputAppliedPropertyPart>();
+        public List<EventPropertyPart> AppliedProperties { get; set; } = new List<EventPropertyPart>();
 
         /// <summary>
         /// A filter that selects events to ingest. If <c>null</c>, all events received using the key will be ingested.

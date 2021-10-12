@@ -12,21 +12,41 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Seq.Api.Model.Monitoring
+namespace Seq.Api.Model.Dashboarding
 {
     /// <summary>
-    /// How a chart will be displayed on a dashboard.
+    /// The method used to visually represent a measurement.
     /// </summary>
-    public class ChartDisplayStylePart
+    public enum MeasurementDisplayType
     {
         /// <summary>
-        /// The width of the chart, in 1/12th columns.
+        /// A line chart. Requires the measurement and query to include a time axis.
         /// </summary>
-        public int WidthColumns { get; set; } = 6;
+        Line,
 
         /// <summary>
-        /// The height of the chart, in rows.
+        /// A bar chart.
         /// </summary>
-        public int HeightRows { get; set; } = 1;
+        Bar,
+
+        /// <summary>
+        /// A point (scatter) chart.
+        /// </summary>
+        Point,
+
+        /// <summary>
+        /// A single textual value. Requires that the measurement and query produce a single value.
+        /// </summary>
+        Value,
+
+        /// <summary>
+        /// A (donut-styled) pie chart.
+        /// </summary>
+        Pie,
+
+        /// <summary>
+        /// A table of raw data values.
+        /// </summary>
+        Table
     }
 }

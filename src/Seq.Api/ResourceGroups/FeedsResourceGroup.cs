@@ -26,7 +26,7 @@ namespace Seq.Api.ResourceGroups
     /// </summary>
     public class FeedsResourceGroup : ApiResourceGroup
     {
-        internal FeedsResourceGroup(ISeqConnection connection)
+        internal FeedsResourceGroup(ILoadResourceGroup connection)
             : base("Feeds", connection)
         {
         }

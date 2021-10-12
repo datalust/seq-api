@@ -26,7 +26,7 @@ namespace Seq.Api.ResourceGroups
     /// </summary>
     public class RetentionPoliciesResourceGroup : ApiResourceGroup
     {
-        internal RetentionPoliciesResourceGroup(ISeqConnection connection)
+        internal RetentionPoliciesResourceGroup(ILoadResourceGroup connection)
             : base("RetentionPolicies", connection)
         {
         }

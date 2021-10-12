@@ -12,6 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
+using Newtonsoft.Json;
+
 namespace Seq.Api.Model.Root
 {
     /// <summary>
@@ -41,6 +44,13 @@ namespace Seq.Api.Model.Root
         /// An informational name identifying the instance.
         /// </summary>
         public string InstanceName { get; set; }
+        
+        /// <summary>
+        /// A list of non-default features enabled on this server. Normally, <c langword="null">null</c> unless
+        /// an administrator has explicitly opted-into alpha or beta-level features.
+        /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public List<string> EnabledFeatures { get; set; }
 
         /// <summary>
         /// Links to resources exposed by the API.

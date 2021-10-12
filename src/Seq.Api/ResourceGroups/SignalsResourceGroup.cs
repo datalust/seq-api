@@ -27,7 +27,7 @@ namespace Seq.Api.ResourceGroups
     /// </summary>
     public class SignalsResourceGroup : ApiResourceGroup
     {
-        internal SignalsResourceGroup(ISeqConnection connection)
+        internal SignalsResourceGroup(ILoadResourceGroup connection)
             : base("Signals", connection)
         {
         }

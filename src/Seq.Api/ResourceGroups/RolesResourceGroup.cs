@@ -25,7 +25,7 @@ namespace Seq.Api.ResourceGroups
     /// </summary>
     public class RolesResourceGroup : ApiResourceGroup
     {
-        internal RolesResourceGroup(ISeqConnection connection)
+        internal RolesResourceGroup(ILoadResourceGroup connection)
             : base("Roles", connection)
         {
         }

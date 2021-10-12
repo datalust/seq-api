@@ -26,7 +26,7 @@ namespace Seq.Api.ResourceGroups
     /// </summary>
     public class DataResourceGroup : ApiResourceGroup
     {
-        internal DataResourceGroup(ISeqConnection connection)
+        internal DataResourceGroup(ILoadResourceGroup connection)
             : base("Data", connection)
         {
         }

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Seq.Api.Model.Monitoring
+namespace Seq.Api.Model.Dashboarding
 {
     /// <summary>
     /// How a measurement will be displayed within a chart.

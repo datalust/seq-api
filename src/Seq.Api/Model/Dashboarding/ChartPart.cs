@@ -15,7 +15,7 @@
 using System.Collections.Generic;
 using Seq.Api.Model.Signals;
 
-namespace Seq.Api.Model.Monitoring
+namespace Seq.Api.Model.Dashboarding
 {
     /// <summary>
     /// A chart that appears on a dashboard.

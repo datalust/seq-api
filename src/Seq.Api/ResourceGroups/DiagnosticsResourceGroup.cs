@@ -18,7 +18,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Seq.Api.Model.Diagnostics;
 using Seq.Api.Model.Diagnostics.Storage;
-using Seq.Api.Model.Inputs;
 
 // ReSharper disable UnusedMember.Global
 
@@ -29,7 +28,7 @@ namespace Seq.Api.ResourceGroups
     /// </summary>
     public class DiagnosticsResourceGroup : ApiResourceGroup
     {
-        internal DiagnosticsResourceGroup(ISeqConnection connection)
+        internal DiagnosticsResourceGroup(ILoadResourceGroup connection)
             : base("Diagnostics", connection)
         {
         }

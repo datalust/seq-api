@@ -28,7 +28,7 @@ namespace Seq.Api.ResourceGroups
     /// </summary>
     public class UsersResourceGroup : ApiResourceGroup
     {
-        internal UsersResourceGroup(ISeqConnection connection)
+        internal UsersResourceGroup(ILoadResourceGroup connection)
             : base("Users", connection)
         {
         }

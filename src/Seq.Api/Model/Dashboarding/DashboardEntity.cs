@@ -16,7 +16,7 @@ using System.Collections.Generic;
 using Seq.Api.Model.Security;
 using Seq.Api.Model.Signals;
 
-namespace Seq.Api.Model.Monitoring
+namespace Seq.Api.Model.Dashboarding
 {
     /// <summary>
     /// A dashboard.
