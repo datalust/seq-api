@@ -18,6 +18,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Seq.Api.Model;
 using Seq.Api.Model.Alerting;
+using Seq.Api.Model.Signals;
 using Seq.Api.Model.Users;
 
 namespace Seq.Api.ResourceGroups
@@ -55,17 +56,25 @@ namespace Seq.Api.ResourceGroups
         public async Task<List<AlertEntity>> ListAsync(string ownerId = null, bool shared = false, CancellationToken cancellationToken = default)
         {
             var parameters = new Dictionary<string, object> { { "ownerId", ownerId }, { "shared", shared } };
-            return await GroupListAsync<AlertEntity>("Items", parameters, cancellationToken: cancellationToken).ConfigureAwait(false);
+            return await GroupListAsync<AlertEntity>("Items", parameters, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
         /// Construct a alert with server defaults pre-initialized.
         /// </summary>
         /// <param name="cancellationToken"><see cref="CancellationToken"/> allowing the operation to be canceled.</param>
+        /// <param name="signal">The source of events that will contribute to the alert.</param>
+        /// <param name="query">An SQL query that will supply default clauses to the new alert.</param>
         /// <returns>The unsaved alert.</returns>
-        public async Task<AlertEntity> TemplateAsync(CancellationToken cancellationToken = default)
+        public async Task<AlertEntity> TemplateAsync(SignalExpressionPart signal = null, string query = null, CancellationToken cancellationToken = default)
         {
-            return await GroupGetAsync<AlertEntity>("Template", cancellationToken: cancellationToken).ConfigureAwait(false);
+            var parameters = new Dictionary<string, object>
+            {
+                ["signal"] = signal?.ToString(),
+                ["q"] = query
+            };
+            
+            return await GroupGetAsync<AlertEntity>("Template", parameters, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
