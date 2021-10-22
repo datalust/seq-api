@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 
 namespace Seq.Api.Model.Alerting
@@ -40,8 +41,20 @@ namespace Seq.Api.Model.Alerting
         public List<AlertOccurrencePart> RecentOccurrences { get; set; } = new List<AlertOccurrencePart>();
 
         /// <summary>
+        /// Minimal metrics for the most recent occurrences of the alert that triggered notifications.
+        /// The metrics in this list are a superset of <see cref="RecentOccurrences"/>.
+        /// </summary>
+        public List<AlertOccurrenceRangePart> RecentOccurrenceRanges { get; set; } =
+            new List<AlertOccurrenceRangePart>();
+
+        /// <summary>
         /// The number of times this alert has been triggered since its creation.
         /// </summary>
         public int TotalOccurrences { get; set; }
+
+        /// <summary>
+        /// The detection time of the most recent occurrence not included in <see cref="RecentOccurrences"/>.
+        /// </summary>
+        public DateTime? LastEarlierOccurrence { get; set; }
     }
 }
