@@ -40,12 +40,7 @@ namespace Seq.Api.Model.Apps
         /// Package authorship information.
         /// </summary>
         public string Authors { get; set; }
-
-        /// <summary>
-        /// URL of an icon for the app package.
-        /// </summary>
-        public string IconUrl { get; set; }
-
+        
         /// <summary>
         /// URL of the package license.
         /// </summary>
