@@ -34,5 +34,10 @@ namespace Seq.Api.Model.Users
         /// log in using the default provider.
         /// </summary>
         public bool IsAlternative { get; set; }
+
+        /// <summary>
+        /// A template for the URL where the user can log in.
+        /// </summary>
+        public Link Challenge { get; set; }
     }
 }

@@ -26,6 +26,11 @@ namespace Seq.Api.Model.Diagnostics.Storage
         /// The range of timestamps covered by the result.
         /// </summary>
         public DateTimeRange Range { get; set; }
+        
+        /// <summary>
+        /// The available range of timestamps.
+        /// </summary>
+        public DateTimeRange FullRange { get; set; }
 
         /// <summary>
         /// The duration of the timestamp interval covered by each result.
