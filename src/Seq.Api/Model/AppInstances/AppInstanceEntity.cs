@@ -20,6 +20,8 @@ using Seq.Api.Model.Inputs;
 using Seq.Api.Model.Signals;
 using Seq.Api.ResourceGroups;
 
+#nullable enable
+
 namespace Seq.Api.Model.AppInstances
 {
     /// <summary>
@@ -49,12 +51,12 @@ namespace Seq.Api.Model.AppInstances
         /// <summary>
         /// The id of the <see cref="AppEntity"/> that this is an instance of.
         /// </summary>
-        public string AppId { get; set; }
+        public string? AppId { get; set; }
 
         /// <summary>
         /// The user-friendly title of the app instance.
         /// </summary>
-        public string Title { get; set; }
+        public string? Title { get; set; }
 
         /// <summary>
         /// Values for the settings exposed by the app.
@@ -95,7 +97,7 @@ namespace Seq.Api.Model.AppInstances
         /// The signal expression describing which events will be sent to the app; if <c>null</c>,
         /// all events will reach the app.
         /// </summary>
-        public SignalExpressionPart StreamedSignalExpression { get; set; }
+        public SignalExpressionPart? StreamedSignalExpression { get; set; }
 
         /// <summary>
         /// If a value is specified, events will be buffered to disk and sorted by timestamp-order
@@ -162,13 +164,15 @@ namespace Seq.Api.Model.AppInstances
         public bool? DisallowManualInput { get; set; }
 
         /// <summary>
-        /// The name of the application.
+        /// The name of the app.
         /// </summary>
-        public string AppName { get; set; }
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public string? AppName { get; set; }
 
         /// <summary>
-        /// Is the application an input application?
+        /// If <c>true</c>, then the app is able to write events to the log.
         /// </summary>
-        public bool IsInput { get; set; }
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public bool? IsInput { get; set; }
     }
 }

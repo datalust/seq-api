@@ -53,7 +53,7 @@ namespace Seq.Api.Model.Security
         /// Access to administrative features of Seq, management of other users, app installation, backups.
         /// </summary>
         [Obsolete("The `Setup` permission has been replaced by `Project` and `System`.")]
-        Setup = 5,
+        Setup,
 
         /// <summary>
         /// Access to settings required for day-to-day operation of Seq, such as users, retention policies, API keys.
