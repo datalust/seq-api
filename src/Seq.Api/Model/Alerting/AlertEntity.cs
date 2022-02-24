@@ -42,7 +42,7 @@ namespace Seq.Api.Model.Alerting
         public string OwnerId { get; set; }
 
         /// <summary>
-        /// If <c>true</c>, the alert can only be modified by users with the <see cref="Permission.Setup"/> permission.
+        /// If <c>true</c>, the alert can only be modified by users with the <see cref="Permission.Project"/> permission.
         /// </summary>
         public bool IsProtected { get; set; }
         

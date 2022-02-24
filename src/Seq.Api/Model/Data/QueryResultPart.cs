@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace Seq.Api.Model.Data
@@ -50,6 +51,12 @@ namespace Seq.Api.Model.Data
         /// </summary>
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public TimeseriesPart[] Series { get; set; }
+        
+        /// <summary>
+        /// Result variables.
+        /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public Dictionary<string, object> Variables { get; set; }
 
         /// <summary>
         /// On error only, a description of the error.

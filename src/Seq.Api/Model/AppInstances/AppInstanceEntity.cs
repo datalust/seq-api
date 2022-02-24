@@ -20,6 +20,8 @@ using Seq.Api.Model.Inputs;
 using Seq.Api.Model.Signals;
 using Seq.Api.ResourceGroups;
 
+#nullable enable
+
 namespace Seq.Api.Model.AppInstances
 {
     /// <summary>
@@ -49,17 +51,17 @@ namespace Seq.Api.Model.AppInstances
         /// <summary>
         /// The id of the <see cref="AppEntity"/> that this is an instance of.
         /// </summary>
-        public string AppId { get; set; }
+        public string? AppId { get; set; }
 
         /// <summary>
         /// The user-friendly title of the app instance.
         /// </summary>
-        public string Title { get; set; }
+        public string? Title { get; set; }
 
         /// <summary>
         /// Values for the settings exposed by the app.
         /// </summary>
-        public Dictionary<string, string> Settings { get; set; }
+        public Dictionary<string, string>? Settings { get; set; }
 
         /// <summary>
         /// If <c>true</c>, administrative users may invoke the app manually or through alerts.
@@ -77,13 +79,13 @@ namespace Seq.Api.Model.AppInstances
         /// The settings that can be overridden at invocation time (when an event is sent to
         /// the instance).
         /// </summary>
-        public List<string> InvocationOverridableSettings { get; set; }
+        public List<string>? InvocationOverridableSettings { get; set; }
 
         /// <summary>
         /// Metadata describing the overridable settings. This field is provided by the server
         /// and cannot be modified.
         /// </summary>
-        public List<AppSettingPart> InvocationOverridableSettingDefinitions { get; set; }
+        public List<AppSettingPart>? InvocationOverridableSettingDefinitions { get; set; }
 
         /// <summary>
         /// If <c>true</c>, events will be streamed to the app. Otherwise, events will be
@@ -95,7 +97,7 @@ namespace Seq.Api.Model.AppInstances
         /// The signal expression describing which events will be sent to the app; if <c>null</c>,
         /// all events will reach the app.
         /// </summary>
-        public SignalExpressionPart StreamedSignalExpression { get; set; }
+        public SignalExpressionPart? StreamedSignalExpression { get; set; }
 
         /// <summary>
         /// If a value is specified, events will be buffered to disk and sorted by timestamp-order
@@ -121,31 +123,31 @@ namespace Seq.Api.Model.AppInstances
         /// Settings that control how events are ingested through the app.
         /// </summary>
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public InputSettingsPart InputSettings { get; set; }
+        public InputSettingsPart? InputSettings { get; set; }
 
         /// <summary>
         /// Metrics describing the state and activity of the app process.
         /// </summary>
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public AppInstanceProcessMetricsPart ProcessMetrics { get; set; }
+        public AppInstanceProcessMetricsPart? ProcessMetrics { get; set; }
         
         /// <summary>
         /// Information about ingestion activity through this app.
         /// </summary>
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public InputMetricsPart InputMetrics { get; set; }
+        public InputMetricsPart? InputMetrics { get; set; }
 
         /// <summary>
         /// Information about the app's diagnostic input.
         /// </summary>
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public InputMetricsPart DiagnosticInputMetrics { get; set; }
+        public InputMetricsPart? DiagnosticInputMetrics { get; set; }
 
         /// <summary>
         /// Information about events output through the app.
         /// </summary>
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public AppInstanceOutputMetricsPart OutputMetrics { get; set; }
+        public AppInstanceOutputMetricsPart? OutputMetrics { get; set; }
         
         /// <summary>
         /// Obsolete.
@@ -160,5 +162,17 @@ namespace Seq.Api.Model.AppInstances
         [Obsolete("Use !AcceptDirectInvocation instead.")]
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public bool? DisallowManualInput { get; set; }
+
+        /// <summary>
+        /// The name of the app.
+        /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public string? AppName { get; set; }
+
+        /// <summary>
+        /// If <c>true</c>, then the app is able to write events to the log.
+        /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public bool? IsInput { get; set; }
     }
 }

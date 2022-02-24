@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Seq.Api.Model.Data;
+using Seq.Api.Model.Shared;
 using Seq.Api.Model.Signals;
 
 namespace Seq.Api.ResourceGroups
@@ -41,6 +42,7 @@ namespace Seq.Api.ResourceGroups
         /// <param name="unsavedSignal">A constructed signal that may not appear on the server, for example, a <see cref="SignalEntity"/> that has been
         /// created but not saved, a signal from another server, or the modified representation of an entity already persisted.</param>
         /// <param name="timeout">The query timeout; if not specified, the query will run until completion.</param>
+        /// <param name="variables">Values for any free variables that appear in <paramref name="query"/>.</param>
         /// <param name="cancellationToken">Token through which the operation can be cancelled.</param>
         /// <returns>A structured result set.</returns>
         public async Task<QueryResultPart> QueryAsync(
@@ -50,10 +52,11 @@ namespace Seq.Api.ResourceGroups
             SignalExpressionPart signal = null,
             SignalEntity unsavedSignal = null,
             TimeSpan? timeout = null,
+            Dictionary<string, object> variables = null,
             CancellationToken cancellationToken = default)
         {
-            MakeParameters(query, rangeStartUtc, rangeEndUtc, signal, unsavedSignal, timeout, out var body, out var parameters);
-            return await GroupPostAsync<SignalEntity, QueryResultPart>("Query", body, parameters, cancellationToken).ConfigureAwait(false);
+            MakeParameters(query, rangeStartUtc, rangeEndUtc, signal, unsavedSignal, timeout, variables, out var body, out var parameters);
+            return await GroupPostAsync<EvaluationContextPart, QueryResultPart>("Query", body, parameters, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -66,6 +69,7 @@ namespace Seq.Api.ResourceGroups
         /// <param name="unsavedSignal">A constructed signal that may not appear on the server, for example, a <see cref="SignalEntity"/> that has been
         /// created but not saved, a signal from another server, or the modified representation of an entity already persisted.</param>
         /// <param name="timeout">The query timeout; if not specified, the query will run until completion.</param>
+        /// <param name="variables">Values for any free variables that appear in <paramref name="query"/>.</param>
         /// <param name="cancellationToken">Token through which the operation can be cancelled.</param>
         /// <returns>A CSV result set.</returns>
         public async Task<string> QueryCsvAsync(
@@ -75,9 +79,10 @@ namespace Seq.Api.ResourceGroups
             SignalExpressionPart signal = null,
             SignalEntity unsavedSignal = null,
             TimeSpan? timeout = null,
+            Dictionary<string, object> variables = null,
             CancellationToken cancellationToken = default)
         {
-            MakeParameters(query, rangeStartUtc, rangeEndUtc, signal, unsavedSignal, timeout, out var body, out var parameters);
+            MakeParameters(query, rangeStartUtc, rangeEndUtc, signal, unsavedSignal, timeout, variables, out var body, out var parameters);
             parameters.Add("format", "text/csv");
             return await GroupPostReadStringAsync("Query", body, parameters, cancellationToken).ConfigureAwait(false);
         }
@@ -89,7 +94,8 @@ namespace Seq.Api.ResourceGroups
             SignalExpressionPart signal,
             SignalEntity unsavedSignal,
             TimeSpan? timeout,
-            out SignalEntity body,
+            Dictionary<string, object> variables,
+            out EvaluationContextPart body,
             out Dictionary<string, object> parameters)
         {
             parameters = new Dictionary<string, object>
@@ -109,7 +115,7 @@ namespace Seq.Api.ResourceGroups
             if (timeout != null)
                 parameters.Add("timeoutMS", timeout.Value.TotalMilliseconds.ToString("0"));
 
-            body = unsavedSignal ?? new SignalEntity();
+            body = new EvaluationContextPart { Signal = unsavedSignal, Variables = variables };
         }
     }
 }
