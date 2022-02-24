@@ -35,16 +35,16 @@ namespace Seq.Api.Client
     /// <summary>
     /// A low-level client that provides navigation over the linked resource structure of the Seq HTTP API.
     /// </summary>
-    public class SeqApiClient : IDisposable
+    public sealed class SeqApiClient : IDisposable
     {
         readonly string _apiKey;
 
-        // Future versions of Seq may not completely support v1 features, however
+        // Future versions of Seq may not completely support vN-1 features, however
         // providing this as an Accept header will ensure what compatibility is available
         // can be utilized.
-        const string SeqApiV8MediaType = "application/vnd.datalust.seq.v8+json";
+        const string SeqApiV9MediaType = "application/vnd.datalust.seq.v9+json";
 
-        readonly CookieContainer _cookies = new CookieContainer();
+        readonly CookieContainer _cookies = new();
         readonly JsonSerializer _serializer = JsonSerializer.Create(
             new JsonSerializerSettings
             {
@@ -89,7 +89,7 @@ namespace Seq.Api.Client
                 baseAddress += "/";
 
             HttpClient = new HttpClient(handler) { BaseAddress = new Uri(baseAddress) };
-            HttpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(SeqApiV8MediaType));
+            HttpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(SeqApiV9MediaType));
 
             if (_apiKey != null)
                 HttpClient.DefaultRequestHeaders.Add("X-Seq-ApiKey", _apiKey);
@@ -175,8 +175,8 @@ namespace Seq.Api.Client
             var linkUri = ResolveLink(entity, link, parameters);
             var request = new HttpRequestMessage(HttpMethod.Post, linkUri) { Content = MakeJsonContent(content) };
             var stream = await HttpSendAsync(request, cancellationToken).ConfigureAwait(false);
-            using (var reader = new StreamReader(stream))
-                reader.ReadToEnd();
+            using var reader = new StreamReader(stream);
+            await reader.ReadToEndAsync();
         }
 
         /// <summary>
@@ -213,8 +213,8 @@ namespace Seq.Api.Client
             var linkUri = ResolveLink(entity, link, parameters);
             var request = new HttpRequestMessage(HttpMethod.Post, linkUri) { Content = MakeJsonContent(content) };
             var stream = await HttpSendAsync(request, cancellationToken).ConfigureAwait(false);
-            using (var reader = new StreamReader(stream))
-                return await reader.ReadToEndAsync();
+            using var reader = new StreamReader(stream);
+            return await reader.ReadToEndAsync();
         }
 
         /// <summary>

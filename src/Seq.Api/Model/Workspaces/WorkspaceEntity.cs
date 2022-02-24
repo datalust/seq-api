@@ -39,7 +39,7 @@ namespace Seq.Api.Model.Workspaces
         public string OwnerId { get; set; }
 
         /// <summary>
-        /// If <c>true</c>, only users with the <see cref="Permission.Setup"/> permission can modify the workspace.
+        /// If <c>true</c>, only users with the <see cref="Permission.Project"/> permission can modify the workspace.
         /// </summary>
         public bool IsProtected { get; set; }
 

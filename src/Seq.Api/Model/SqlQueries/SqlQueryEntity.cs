@@ -46,7 +46,7 @@ namespace Seq.Api.Model.SqlQueries
         public string Sql { get; set; }
 
         /// <summary>
-        /// If <c>true</c>, only users with <see cref="Permission.Setup"/> permission can edit the signal.
+        /// If <c>true</c>, only users with <see cref="Permission.Project"/> permission can edit the SQL query.
         /// </summary>
         public bool IsProtected { get; set; }
 

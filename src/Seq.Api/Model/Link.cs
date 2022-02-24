@@ -26,7 +26,7 @@ namespace Seq.Api.Model
     /// parameterized in order to produce a complete URI (if the template contains no
     /// parameters then it may also be a literal URI).
     /// </summary>
-    public struct Link
+    public readonly struct Link
     {
         /// <summary>
         /// An empty link.

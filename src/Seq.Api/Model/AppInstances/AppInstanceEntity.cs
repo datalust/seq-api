@@ -160,5 +160,15 @@ namespace Seq.Api.Model.AppInstances
         [Obsolete("Use !AcceptDirectInvocation instead.")]
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public bool? DisallowManualInput { get; set; }
+
+        /// <summary>
+        /// The name of the application.
+        /// </summary>
+        public string AppName { get; set; }
+
+        /// <summary>
+        /// Is the application an input application?
+        /// </summary>
+        public bool IsInput { get; set; }
     }
 }
