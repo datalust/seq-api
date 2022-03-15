@@ -48,7 +48,9 @@ namespace Seq.Api.Client
         readonly JsonSerializer _serializer = JsonSerializer.Create(
             new JsonSerializerSettings
             {
-                Converters = { new StringEnumConverter(), new LinkCollectionConverter() }
+                Converters = { new StringEnumConverter(), new LinkCollectionConverter() },
+                DateParseHandling = DateParseHandling.None,
+                FloatParseHandling = FloatParseHandling.Decimal
             });
 
         /// <summary>
