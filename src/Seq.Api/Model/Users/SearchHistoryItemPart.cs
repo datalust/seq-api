@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// ReSharper disable ClassNeverInstantiated.Global
+
 namespace Seq.Api.Model.Users
 {
     /// <summary>
@@ -20,13 +22,13 @@ namespace Seq.Api.Model.Users
     public class SearchHistoryItemPart
     {
         /// <summary>
-        /// The filter entered by the user into the filter bar.
+        /// The search or query entered by the user into the search bar.
         /// </summary>
         public string Search { get; set; }
 
         /// <summary>
         /// Status to apply to the search history item.
         /// </summary>
-        public SearchHistoryItemStatus Status { get; set; }
+        public SearchHistoryItemAction Action { get; set; }
     }
 }

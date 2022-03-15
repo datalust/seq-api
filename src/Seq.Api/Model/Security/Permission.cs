@@ -56,15 +56,21 @@ namespace Seq.Api.Model.Security
         Setup,
 
         /// <summary>
-        /// Access to settings required for day-to-day operation of Seq, such as users, retention policies, API keys.
+        /// Access to settings that control data ingestion, storage, dashboarding and alerting.
         /// </summary>
         Project,
         
         /// <summary>
         /// Access to settings and features that interact with, or provide access to, the underlying host server,
         /// such as app (plug-in) installation, backup settings, cluster configuration, diagnostics, and features
-        /// relying on outbound network access like package feeds and update checks.
+        /// relying on outbound network access like package feeds and update checks. This permission is required for
+        /// configuration of the authentication provider and related settings.
         /// </summary>
-        System
+        System,
+        
+        /// <summary>
+        /// Create, edit, and delete user accounts, reset local user passwords.
+        /// </summary>
+        Organization
     }
 }

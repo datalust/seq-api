@@ -29,6 +29,11 @@ namespace Seq.Api.Model.Security
         /// <summary>
         /// Permissions granted to users in the role.
         /// </summary>
-        public HashSet<Permission> Permissions { get; set; } = new HashSet<Permission>();
+        public HashSet<Permission> Permissions { get; set; } = new();
+        
+        /// <summary>
+        /// Optionally, an extended description of the role.
+        /// </summary>
+        public string Description { get; set; }
     }
 }
