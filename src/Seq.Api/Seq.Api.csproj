@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Description>Client library for the Seq HTTP API.</Description>
-    <VersionPrefix>2022.1.0</VersionPrefix>
+    <VersionPrefix>2022.1.1</VersionPrefix>
     <Authors>Datalust;Contributors</Authors>
     <TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
