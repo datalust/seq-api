@@ -64,7 +64,7 @@ namespace Seq.Api.Model.Signals
         public bool? IsRestricted { get; set; }
 
         /// <summary>
-        /// If <c>true</c>, the signal can only be modified by users with the <see cref="Permission.Setup"/> permission.
+        /// If <c>true</c>, the signal can only be modified by users with the <see cref="Permission.Project"/> permission.
         /// </summary>
         public bool IsProtected { get; set; }
 

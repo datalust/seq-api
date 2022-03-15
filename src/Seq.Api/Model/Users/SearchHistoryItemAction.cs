@@ -12,23 +12,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// ReSharper disable ClassNeverInstantiated.Global
-
 namespace Seq.Api.Model.Users
 {
     /// <summary>
-    /// A entry to include in a user's search history.
+    /// An operation applied to a search history item.
     /// </summary>
-    public class SearchHistoryItemPart
+    public enum SearchHistoryItemAction
     {
         /// <summary>
-        /// The search or query entered by the user into the search bar.
+        /// The item was used (make it more recent).
         /// </summary>
-        public string Search { get; set; }
+        Used,
 
         /// <summary>
-        /// Status to apply to the search history item.
+        /// The item has been pinned.
         /// </summary>
-        public SearchHistoryItemAction Action { get; set; }
+        Pinned,
+        
+        /// <summary>
+        /// The item has been unpinned.
+        /// </summary>
+        Unpinned
     }
 }

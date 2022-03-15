@@ -12,26 +12,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Seq.Api.Model.Users
+using System.Collections.Generic;
+using Seq.Api.Model.Signals;
+
+#nullable enable
+
+namespace Seq.Api.Model.Shared
 {
     /// <summary>
-    /// An operation applied to a search history item.
+    /// Specifies the context that queries and searches execute within.
     /// </summary>
-    public enum SearchHistoryItemStatus
+    public class EvaluationContextPart
     {
         /// <summary>
-        /// The item was used (make it more recent).
+        /// An unsaved or modified signal.
         /// </summary>
-        Used,
-
+        public SignalEntity? Signal { get; set; }
+        
         /// <summary>
-        /// The item has been pinned.
+        /// Values for free variables that appear in the query or search condition.
         /// </summary>
-        Pinned,
-
-        /// <summary>
-        /// The item has been un-pinned.
-        /// </summary>
-        Forgotten
+        /// <remarks>Variables will only be visible in the query or search being executed: any free variables
+        /// in signal filters will remain undefined.</remarks>
+        public Dictionary<string, object?>? Variables { get; set; }
     }
 }

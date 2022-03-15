@@ -34,7 +34,7 @@ namespace Seq.Api.Model.Dashboarding
         public string Title { get; set; }
 
         /// <summary>
-        /// If <c>true</c>, only users with <see cref="Permission.Setup"/> can modify the dashboard.
+        /// If <c>true</c>, only users with <see cref="Permission.Project"/> can modify the dashboard.
         /// </summary>
         public bool IsProtected { get; set; }
 

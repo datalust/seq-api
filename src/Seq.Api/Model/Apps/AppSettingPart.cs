@@ -54,5 +54,16 @@ namespace Seq.Api.Model.Apps
         /// for the setting.
         /// </summary>
         public List<AppSettingValuePart> AllowedValues { get; set; } = new List<AppSettingValuePart>();
+
+        /// <summary>
+        /// If the setting value contains code in a programming or markup language, the
+        /// language name.
+        /// </summary>
+        /// <remarks>Valid names are a subset of the names and aliases recognized by
+        /// <a href="https://github.com/github/linguist/blob/master/lib/linguist/languages.yml">GitHub
+        /// Linguist</a>. The generic value <c>code</c> will be specified if the language is non-specific but
+        /// the value should be displayed in fixed-width font. Seq also recognizes the special Seq-specific
+        /// <c>template</c> and <c>expression</c> syntaxes.</remarks>
+        public string Syntax { get; set; }
     }
 }
