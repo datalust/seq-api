@@ -17,7 +17,7 @@ namespace Seq.Api.Model.Users
     /// <summary>
     /// An operation applied to a search history item.
     /// </summary>
-    public enum SearchHistoryItemStatus
+    public enum SearchHistoryItemAction
     {
         /// <summary>
         /// The item was used (make it more recent).
@@ -28,10 +28,10 @@ namespace Seq.Api.Model.Users
         /// The item has been pinned.
         /// </summary>
         Pinned,
-
+        
         /// <summary>
-        /// The item has been un-pinned.
+        /// The item has been unpinned.
         /// </summary>
-        Forgotten
+        Unpinned
     }
 }
