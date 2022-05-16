@@ -49,37 +49,15 @@ See the [signal-copy app](https://github.com/datalust/seq-api/blob/main/example/
 
 Seq internally limits the resources a query is allowed to consume. The query methods on `SeqConnection.Events` include a _status_ with each result set - a `Partial` status indicates that further results must be retrieved.
 
-The snippet below demonstrates paging through results to retrieve the complete set.
+The snippet below demonstrates lazily enumerating through results to retrieve the complete set.
 
 ```csharp
-string lastReadEventId = null;
-
-while(true)
-{
-  var resultSet = await connection.Events.InSignalAsync(
-      filter: "Environment = 'Test'",
-      render: true,
-      afterId: lastReadEventId);
-      
-  foreach (var evt in resultSet.Events)
-    Console.WriteLine(evt.RenderedMessage);
-
-  if (resultSet.Statistics.Status == ResultSetStatus.Complete)
-    break;
-    
-  lastReadEventId = resultSet.Statistics.LastReadEventId;
-}
-```
-
-If the result set is expected to be small, `ListAsync()` will buffer results and return a complete list:
-
-```csharp
-var resultSet = await connection.Events.ListAsync(
+var resultSet = await connection.Events.EnumerateAsync(
     filter: "Environment = 'Test'",
     render: true,
     count: 1000);
-  
-foreach (var evt in resultSet)
+
+await foreach (var evt in resultSet)
   Console.WriteLine(evt.RenderedMessage);
 ```
 
