@@ -64,17 +64,6 @@ namespace Seq.Api.ResourceGroups
         }
 
         /// <summary>
-        /// Add a new app.
-        /// </summary>
-        /// <param name="entity">The app to add.</param>
-        /// <param name="cancellationToken">A <see cref="CancellationToken"/> allowing the operation to be canceled.</param>
-        /// <returns>The app, with server-allocated properties such as <see cref="Entity.Id"/> initialized.</returns>
-        public async Task<AppEntity> AddAsync(AppEntity entity, CancellationToken cancellationToken = default)
-        {
-            return await GroupCreateAsync<AppEntity, AppEntity>(entity, cancellationToken: cancellationToken).ConfigureAwait(false);
-        }
-
-        /// <summary>
         /// Remove an existing app.
         /// </summary>
         /// <param name="entity">The app to remove.</param>
@@ -83,17 +72,6 @@ namespace Seq.Api.ResourceGroups
         public async Task RemoveAsync(AppEntity entity, CancellationToken cancellationToken = default)
         {
             await Client.DeleteAsync(entity, "Self", entity, cancellationToken: cancellationToken).ConfigureAwait(false);
-        }
-
-        /// <summary>
-        /// Update an existing app.
-        /// </summary>
-        /// <param name="entity">The app to update.</param>
-        /// <param name="cancellationToken">A <see cref="CancellationToken"/> allowing the operation to be canceled.</param>
-        /// <returns>A task indicating completion.</returns>
-        public async Task UpdateAsync(AppEntity entity, CancellationToken cancellationToken = default)
-        {
-            await Client.PutAsync(entity, "Self", entity, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>

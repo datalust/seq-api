@@ -28,26 +28,6 @@ namespace Seq.Api.Model.Diagnostics
         public ServerMetricsEntity()
         {
         }
-                
-        /// <summary>
-        /// The start time in UTC of the events in the memory cache.
-        /// </summary>
-        public DateTime? EventStoreCacheStart { get; set; }
-        
-        /// <summary>
-        /// The end time in UTC of the events in the memory cache.
-        /// </summary>
-        public DateTime? EventStoreCacheEnd { get; set; }
-
-        /// <summary>
-        /// The number of days of events able to fit in the memory cache.
-        /// </summary>
-        public double EventStoreDaysCached { get; set; }
-
-        /// <summary>
-        /// The number of events able to fit in the memory cache.
-        /// </summary>
-        public int EventStoreEventsCached { get; set; }
 
         /// <summary>
         /// Bytes of free space remaining on the disk used for event storage.
@@ -100,18 +80,8 @@ namespace Seq.Api.Model.Diagnostics
         public double SystemMemoryUtilization { get; set; }
 
         /// <summary>
-        /// The number of SQL-style queries executed in the past minute.
+        /// The number of queries and searches executed in the past minute.
         /// </summary>
         public int QueriesPerMinute { get; set; }
-
-        /// <summary>
-        /// The number of time slices from SQL-style queries that could be read from cache in the past minute.
-        /// </summary>
-        public int QueryCacheTimeSliceHitsPerMinute { get; set; }
-
-        /// <summary>
-        /// The number of cached SQL query time slices invalidated in the past minute.
-        /// </summary>
-        public int QueryCacheInvalidationsPerMinute { get; set; }
     }
 }
