@@ -20,22 +20,6 @@ namespace Seq.Api.Model.Data
     public class QueryExecutionStatisticsPart
     {
         /// <summary>
-        /// The number of events inspected in the course of computing the query result. This will
-        /// not include events that could be skipped based on index information or text pre-filtering.
-        /// </summary>
-        public ulong ScannedEventCount { get; set; }
-
-        /// <summary>
-        /// The number of events that contributed to the query result.
-        /// </summary>
-        public ulong MatchingEventCount { get; set; }
-
-        /// <summary>
-        /// Whether the query needed to search disk-backed storage.
-        /// </summary>
-        public bool UncachedSegmentsScanned { get; set; }
-
-        /// <summary>
         /// The server-side elapsed time taken to compute the query result.
         /// </summary>
         public double ElapsedMilliseconds { get; set; }

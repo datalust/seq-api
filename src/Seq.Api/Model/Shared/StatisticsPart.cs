@@ -27,12 +27,6 @@ namespace Seq.Api.Model.Shared
         public TimeSpan Elapsed { get; set; }
 
         /// <summary>
-        /// The number of events that were scanned in the search (and were not
-        /// able to be excluded based on index information or pre-filtering).
-        /// </summary>
-        public ulong ScannedEventCount { get; set; }
-
-        /// <summary>
         /// The id of the last event inspected in the search.
         /// </summary>
         public string LastReadEventId { get; set; }
@@ -46,10 +40,5 @@ namespace Seq.Api.Model.Shared
         /// Status of the result set.
         /// </summary>
         public ResultSetStatus Status { get; set; }
-
-        /// <summary>
-        /// Whether it was necessary to read from disk in processing this request.
-        /// </summary>
-        public bool UncachedSegmentsScanned { get; set; }
     }
 }
