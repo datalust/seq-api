@@ -31,5 +31,11 @@ namespace Seq.Api.Model.Settings
         /// at Datalust can respond with fix/mitigation information.
         /// </summary>
         public string ReplyEmail { get; set; }
+        
+        /// <summary>
+        /// If <c>true</c>, anonymized usage telemetry will be sent
+        /// automatically to Datalust.
+        /// </summary>
+        public bool UsageTelemetryEnabled { get; set; }
     }
 }

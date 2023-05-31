@@ -1,4 +1,4 @@
-﻿// Copyright © Datalust and contributors. 
+﻿// Copyright © Datalust and contributors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -65,19 +65,9 @@ namespace Seq.Api.Model.Diagnostics
         public TimeSpan ProcessUptime { get; set; }
 
         /// <summary>
-        /// The number of bytes working set held by the Seq server process.
-        /// </summary>
-        public long ProcessWorkingSetBytes { get; set; }
-
-        /// <summary>
         /// The number of threads running in the Seq server process.
         /// </summary>
         public int ProcessThreads { get; set; }
-
-        /// <summary>
-        /// The proportion of system physical memory that is currently allocated.
-        /// </summary>
-        public double SystemMemoryUtilization { get; set; }
 
         /// <summary>
         /// The number of queries and searches executed in the past minute.
