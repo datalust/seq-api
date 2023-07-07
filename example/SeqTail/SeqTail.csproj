@@ -1,9 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net461;netcoreapp2.2</TargetFrameworks>
+    <TargetFramework>net6.0</TargetFramework>
     <AssemblyName>seq-tail</AssemblyName>
     <OutputType>Exe</OutputType>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,10 +12,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="docopt.net" Version="0.6.1.9" />
-    <PackageReference Include="Serilog.Formatting.Compact.Reader" Version="1.0.1" />
-    <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
-    <PackageReference Include="System.Reactive" Version="3.0.0" />
+    <PackageReference Include="docopt.net" Version="0.8.1" />
+    <PackageReference Include="Serilog.Formatting.Compact.Reader" Version="2.0.0" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="4.1.0" />
+    <PackageReference Include="System.Reactive" Version="6.0.0" />
   </ItemGroup>
 
 </Project>

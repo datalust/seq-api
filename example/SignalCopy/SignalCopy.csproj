@@ -1,9 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net461;netcoreapp2.2</TargetFrameworks>
+    <TargetFramework>net6.0</TargetFramework>
     <AssemblyName>signal-copy</AssemblyName>
     <OutputType>Exe</OutputType>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="docopt.net" Version="0.6.1.9" />
+    <PackageReference Include="docopt.net" Version="0.8.1" />
   </ItemGroup>
 
 </Project>

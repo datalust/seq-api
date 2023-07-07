@@ -2,12 +2,13 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-    <RootNamespace>SeqEnableAuth</RootNamespace>
+    <TargetFramework>net6.0</TargetFramework>
+    <AssemblyName>seq-enable-aad</AssemblyName>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="docopt.net" Version="0.6.1.9" />
+    <PackageReference Include="docopt.net" Version="0.8.1" />
   </ItemGroup>
 
   <ItemGroup>
