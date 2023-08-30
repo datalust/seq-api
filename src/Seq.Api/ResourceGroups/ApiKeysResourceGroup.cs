@@ -121,5 +121,17 @@ namespace Seq.Api.ResourceGroups
             var parameters = new Dictionary<string, object>{ ["id"] = entity.Id, ["measurement"] = measurement };
             return await GroupGetAsync<MeasurementTimeseriesPart>("Metric", parameters, cancellationToken);
         }
+
+        /// <summary>
+        /// Retrieve a detailed metric for all API keys.
+        /// </summary>
+        /// <param name="cancellationToken">A <see cref="CancellationToken"/> allowing the operation to be canceled.</param>
+        /// <param name="measurement">The measurement to get.</param>
+        /// <returns></returns>
+        public async Task<Dictionary<string, MeasurementTimeseriesPart>> GetAllMeasurementTimeseriesAsync(string measurement, CancellationToken cancellationToken = default)
+        {
+            var parameters = new Dictionary<string, object>{ ["measurement"] = measurement };
+            return await GroupGetAsync<Dictionary<string, MeasurementTimeseriesPart>>("Metrics", parameters, cancellationToken);
+        }
     }
 }

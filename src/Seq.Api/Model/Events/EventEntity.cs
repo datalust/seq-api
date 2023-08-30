@@ -62,5 +62,24 @@ namespace Seq.Api.Model.Events
         /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string RenderedMessage { get; set; }
+        
+        /// <summary>
+        /// A trace id associated with the event, if any.
+        /// </summary>
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string TraceId { get; set; }
+
+        /// <summary>
+        /// A span id associated with the event, if any.
+        /// </summary>
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string SpanId { get; set; }
+
+        /// <summary>
+        /// A collection of properties describing the origin of the event, if any. These correspond to resource
+        /// attributes in the OpenTelemetry spec.
+        /// </summary>
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public List<EventPropertyPart> Resource { get; set; }
     }
 }

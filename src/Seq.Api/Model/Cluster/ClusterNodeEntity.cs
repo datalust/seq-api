@@ -43,6 +43,21 @@ namespace Seq.Api.Model.Cluster
         /// The time since the node's last completed sync operation.
         /// </summary>
         public double? MillisecondsSinceLastSync { get; set; }
+        
+        /// <summary>
+        /// The time since the follower's active sync was started.
+        /// </summary>
+        public double? MillisecondsSinceActiveSync { get; set; }
+        
+        /// <summary>
+        /// The total number of operations in the active sync.
+        /// </summary>
+        public int? TotalActiveOps { get; set;  }
+
+        /// <summary>
+        /// The remaining number of operations in the active sync.
+        /// </summary>
+        public int? RemainingActiveOps { get; set; }
 
         /// <summary>
         /// An informational description of the node's current state, or <c langword="null">null</c> if no additional
