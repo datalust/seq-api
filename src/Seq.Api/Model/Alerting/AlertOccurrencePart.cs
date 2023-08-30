@@ -19,7 +19,7 @@ namespace Seq.Api.Model.Alerting
         /// <summary>
         /// The time grouping that triggered the alert.
         /// </summary>
-        public DateTimeRange DetectedOverRange { get; set; }
+        public DateTimeRangePart DetectedOverRange { get; set; }
 
         /// <summary>
         /// The level of notifications sent for this instance.

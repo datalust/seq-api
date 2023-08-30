@@ -59,7 +59,7 @@ namespace Seq.Api.Client
         /// <param name="serverUrl">The base URL of the Seq server.</param>
         /// <param name="apiKey">An API key to use when making requests to the server, if required.</param>
         /// <param name="useDefaultCredentials">Whether default credentials will be sent with HTTP requests; the default is <c>true</c>.</param>
-        [Obsolete("Prefer `SeqApiClient(serverUrl, apiKey, handler => handler.UseDefaultCredentials = true)` instead."), EditorBrowsable(EditorBrowsableState.Never)]
+        [Obsolete("Prefer `SeqApiClient(serverUrl, apiKey, createHttpMessageHandler)` instead."), EditorBrowsable(EditorBrowsableState.Never)]
         public SeqApiClient(string serverUrl, string apiKey, bool useDefaultCredentials)
             : this(serverUrl, apiKey, handler => handler.UseDefaultCredentials = useDefaultCredentials)
         {
@@ -72,25 +72,45 @@ namespace Seq.Api.Client
         /// <param name="apiKey">An API key to use when making requests to the server, if required.</param>
         /// <param name="configureHttpClientHandler">An optional callback to configure the <see cref="HttpClientHandler"/> used when making HTTP requests
         /// to the Seq API.</param>
-        public SeqApiClient(string serverUrl, string apiKey = null, Action<HttpClientHandler> configureHttpClientHandler = null)
+        [Obsolete("Prefer `SeqApiClient(serverUrl, apiKey, createHttpMessageHandler)` instead."), EditorBrowsable(EditorBrowsableState.Never)]
+        public SeqApiClient(string serverUrl, string apiKey, Action<HttpClientHandler> configureHttpClientHandler)
+            : this(serverUrl, apiKey, cookies =>
+            {
+                var handler = new HttpClientHandler { CookieContainer = cookies };
+                configureHttpClientHandler?.Invoke(handler);
+                return handler;
+            })
         {
+        }
+
+        /// <summary>
+        /// Construct a <see cref="SeqApiClient"/>.
+        /// </summary>
+        /// <param name="serverUrl">The base URL of the Seq server.</param>
+        /// <param name="apiKey">An API key to use when making requests to the server, if required.</param>
+        /// <param name="createHttpMessageHandler">An optional callback to construct the HTTP message handler used when making requests
+        /// to the Seq API. The callback receives a <see cref="CookieContainer"/> that is shared with WebSocket requests made by the client.</param>
+        public SeqApiClient(string serverUrl, string apiKey = null, Func<CookieContainer, HttpMessageHandler> createHttpMessageHandler = null)
+        {
+            // This is required for compatibility with the obsolete constructor, which we can remove sometime in 2024.
+            var httpMessageHandler = createHttpMessageHandler?.Invoke(_cookies) ??
+#if SOCKETS_HTTP_HANDLER
+                                     new SocketsHttpHandler { CookieContainer = _cookies };
+#else
+                                     new HttpClientHandler { CookieContainer = _cookies };
+#endif
+            
             ServerUrl = serverUrl ?? throw new ArgumentNullException(nameof(serverUrl));
 
             if (!string.IsNullOrEmpty(apiKey))
                 _apiKey = apiKey;
-
-            var handler = new HttpClientHandler
-            {
-                CookieContainer = _cookies
-            };
-
-            configureHttpClientHandler?.Invoke(handler);
-
+            
             var baseAddress = serverUrl;
             if (!baseAddress.EndsWith("/"))
                 baseAddress += "/";
 
-            HttpClient = new HttpClient(handler) { BaseAddress = new Uri(baseAddress) };
+            HttpClient = new HttpClient(httpMessageHandler);
+            HttpClient.BaseAddress = new Uri(baseAddress);
             HttpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(SeqApiV9MediaType));
 
             if (_apiKey != null)
@@ -251,8 +271,8 @@ namespace Seq.Api.Client
             var linkUri = ResolveLink(entity, link, parameters);
             var request = new HttpRequestMessage(HttpMethod.Put, linkUri) { Content = MakeJsonContent(content) };
             var stream = await HttpSendAsync(request, cancellationToken).ConfigureAwait(false);
-            using (var reader = new StreamReader(stream))
-                reader.ReadToEnd();
+            using var reader = new StreamReader(stream);
+            await reader.ReadToEndAsync();
         }
 
         /// <summary>
@@ -270,8 +290,8 @@ namespace Seq.Api.Client
             var linkUri = ResolveLink(entity, link, parameters);
             var request = new HttpRequestMessage(HttpMethod.Delete, linkUri) { Content = MakeJsonContent(content) };
             var stream = await HttpSendAsync(request, cancellationToken).ConfigureAwait(false);
-            using (var reader = new StreamReader(stream))
-                reader.ReadToEnd();
+            using var reader = new StreamReader(stream);
+            await reader.ReadToEndAsync();
         }
 
         /// <summary>
@@ -345,8 +365,8 @@ namespace Seq.Api.Client
         {
             var request = new HttpRequestMessage(HttpMethod.Get, url);
             var stream = await HttpSendAsync(request, cancellationToken).ConfigureAwait(false);
-            using (var reader = new StreamReader(stream))
-                return await reader.ReadToEndAsync();
+            using var reader = new StreamReader(stream);
+            return await reader.ReadToEndAsync().ConfigureAwait(false);
         }
 
         async Task<Stream> HttpSendAsync(HttpRequestMessage request, CancellationToken cancellationToken = default)

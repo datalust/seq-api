@@ -41,7 +41,7 @@ namespace Seq.Api
         /// <param name="serverUrl">The base URL of the Seq server.</param>
         /// <param name="apiKey">An API key to use when making requests to the server, if required.</param>
         /// <param name="useDefaultCredentials">Whether default credentials will be sent with HTTP requests; the default is <c>true</c>.</param>
-        [Obsolete("Prefer `SeqConnection(serverUrl, apiKey, handler => handler.UseDefaultCredentials = true)` instead."), EditorBrowsable(EditorBrowsableState.Never)]
+        [Obsolete("Prefer `SeqConnection(serverUrl, apiKey, createHttpMessageHandler)` instead."), EditorBrowsable(EditorBrowsableState.Never)]
         public SeqConnection(string serverUrl, string apiKey, bool useDefaultCredentials)
         {
             if (serverUrl == null) throw new ArgumentNullException(nameof(serverUrl));
@@ -55,10 +55,24 @@ namespace Seq.Api
         /// <param name="apiKey">An API key to use when making requests to the server, if required.</param>
         /// <param name="configureHttpClientHandler">An optional callback to configure the <see cref="HttpClientHandler"/> used when making HTTP requests
         /// to the Seq API.</param>
-        public SeqConnection(string serverUrl, string apiKey = null, Action<HttpClientHandler> configureHttpClientHandler = null)
+        [Obsolete("Prefer `SeqConnection(serverUrl, apiKey, createHttpMessageHandler)` instead."), EditorBrowsable(EditorBrowsableState.Never)]
+        public SeqConnection(string serverUrl, string apiKey, Action<HttpClientHandler> configureHttpClientHandler)
         {
             if (serverUrl == null) throw new ArgumentNullException(nameof(serverUrl));
             Client = new SeqApiClient(serverUrl, apiKey, configureHttpClientHandler);
+        }
+
+        /// <summary>
+        /// Construct a <see cref="SeqConnection"/>.
+        /// </summary>
+        /// <param name="serverUrl">The base URL of the Seq server.</param>
+        /// <param name="apiKey">An API key to use when making requests to the server, if required.</param>
+        /// <param name="createHttpMessageHandler">An optional callback to construct the HTTP message handler used when making requests
+        /// to the Seq API. The callback receives a <see cref="CookieContainer"/> that is shared with WebSocket requests made by the client.</param>
+        public SeqConnection(string serverUrl, string apiKey = null, Func<CookieContainer, HttpMessageHandler> createHttpMessageHandler = null)
+        {
+            if (serverUrl == null) throw new ArgumentNullException(nameof(serverUrl));
+            Client = new SeqApiClient(serverUrl, apiKey, createHttpMessageHandler);
         }
         
         /// <summary>
