@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using System;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using Seq.Api.Model.Events;
 using Seq.Api.ResourceGroups;
 
@@ -49,7 +49,7 @@ namespace Seq.Api.Model.Permalinks
         /// The event itself. Only populated when explicitly requested from the API.
         /// See <see cref="PermalinksResourceGroup.FindAsync"/>.
         /// </summary>
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public EventEntity Event { get; set; }
     }
 }

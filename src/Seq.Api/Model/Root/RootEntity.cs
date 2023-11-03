@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Seq.Api.Model.Root
 {
@@ -49,7 +49,7 @@ namespace Seq.Api.Model.Root
         /// A list of non-default features enabled on this server. Normally, <c langword="null">null</c> unless
         /// an administrator has explicitly opted-into alpha or beta-level features.
         /// </summary>
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public List<string> EnabledFeatures { get; set; }
 
         /// <summary>
