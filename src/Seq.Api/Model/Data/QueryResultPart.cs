@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Seq.Api.Model.Data
 {
@@ -37,49 +37,49 @@ namespace Seq.Api.Model.Data
         /// <summary>
         /// Result rows.
         /// </summary>
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public object[][] Rows { get; set; }
 
         /// <summary>
         /// Result time slices.
         /// </summary>
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public TimeSlicePart[] Slices { get; set; }
 
         /// <summary>
         /// Result timeseries.
         /// </summary>
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public TimeseriesPart[] Series { get; set; }
         
         /// <summary>
         /// Result variables.
         /// </summary>
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public Dictionary<string, object> Variables { get; set; }
 
         /// <summary>
         /// On error only, a description of the error.
         /// </summary>
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public string Error { get; set; }
 
         /// <summary>
         /// Reasons for the <see cref="Error"/>.
         /// </summary>
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public string[] Reasons { get; set; }
 
         /// <summary>
         /// A corrected version of the query, if one could be suggested.
         /// </summary>
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public string Suggestion { get; set; }
 
         /// <summary>
         /// Execution statistics.
         /// </summary>
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public QueryExecutionStatisticsPart Statistics { get; set; }
     }
 }

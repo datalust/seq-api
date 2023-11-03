@@ -14,8 +14,8 @@
 
 using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Seq.Api.Model
 {
@@ -50,8 +50,8 @@ namespace Seq.Api.Model
         /// <summary>
         /// Facilitates backwards compatibility in the Seq server. Should not be used by consumers/clients.
         /// </summary>
-        [JsonExtensionData, JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonExtensionData, JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         [Obsolete("Facilitates backwards compatibility in the Seq server. Should not be used by consumers/clients.")]
-        public Dictionary<string, JToken> ExtensionData { get; set; }
+        public Dictionary<string, JsonElement> ExtensionData { get; set; }
     }
 }

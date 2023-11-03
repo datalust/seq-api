@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Seq.Api.Model.Events
 {
@@ -24,25 +24,25 @@ namespace Seq.Api.Model.Events
         /// <summary>
         /// Plain text, if the token is a text token.
         /// </summary>
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string Text { get; set; }
 
         /// <summary>
         /// The name of the property to be rendered in place of the token, if a property token.
         /// </summary>
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string PropertyName { get; set; }
 
         /// <summary>
         /// The raw source text from the message template (provided for both text and property tokens).
         /// </summary>
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string RawText { get; set; }
 
         /// <summary>
         /// A pre-formatted value, if the token carries language-specific formatting directives.
         /// </summary>
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string FormattedValue { get; set; }
     }
 }

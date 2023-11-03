@@ -21,8 +21,8 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Seq.Api.Model;
 using Seq.Api.Model.Root;
 using Seq.Api.Serialization;
@@ -45,13 +45,11 @@ namespace Seq.Api.Client
         const string SeqApiV9MediaType = "application/vnd.datalust.seq.v9+json";
 
         readonly CookieContainer _cookies = new();
-        readonly JsonSerializer _serializer = JsonSerializer.Create(
-            new JsonSerializerSettings
-            {
-                Converters = { new StringEnumConverter(), new LinkCollectionConverter() },
-                DateParseHandling = DateParseHandling.None,
-                FloatParseHandling = FloatParseHandling.Decimal
-            });
+        readonly JsonSerializerOptions _serializerOptions = new JsonSerializerOptions()
+        {
+            Converters = { new JsonStringEnumConverter(), new LinkCollectionConverter() },
+            NumberHandling = JsonNumberHandling.AllowReadingFromString,                       
+        };
 
         /// <summary>
         /// Construct a <see cref="SeqApiClient"/>.
@@ -217,7 +215,7 @@ namespace Seq.Api.Client
             var linkUri = ResolveLink(entity, link, parameters);
             var request = new HttpRequestMessage(HttpMethod.Post, linkUri) { Content = MakeJsonContent(content) };
             var stream = await HttpSendAsync(request, cancellationToken).ConfigureAwait(false);
-            return _serializer.Deserialize<TResponse>(new JsonTextReader(new StreamReader(stream)));
+            return await JsonSerializer.DeserializeAsync<TResponse>(stream, _serializerOptions, cancellationToken);
         }
 
         /// <summary>
@@ -310,7 +308,7 @@ namespace Seq.Api.Client
             var linkUri = ResolveLink(entity, link, parameters);
             var request = new HttpRequestMessage(HttpMethod.Delete, linkUri) { Content = MakeJsonContent(content) };
             var stream = await HttpSendAsync(request, cancellationToken).ConfigureAwait(false);
-            return _serializer.Deserialize<TResponse>(new JsonTextReader(new StreamReader(stream)));
+            return await JsonSerializer.DeserializeAsync<TResponse>(stream, _serializerOptions, cancellationToken);
         }
 
         /// <summary>
@@ -324,7 +322,8 @@ namespace Seq.Api.Client
         /// <returns>A stream of values from the websocket.</returns>
         public async Task<ObservableStream<TEntity>> StreamAsync<TEntity>(ILinked entity, string link, IDictionary<string, object> parameters = null, CancellationToken cancellationToken = default)
         {
-            return await WebSocketStreamAsync(entity, link, parameters, reader => _serializer.Deserialize<TEntity>(new JsonTextReader(reader)), cancellationToken);
+            return await WebSocketStreamAsync(entity, link, parameters, stream =>
+               JsonSerializer.DeserializeAsync<TEntity>(stream, _serializerOptions).AsTask(), cancellationToken);
         }
 
         /// <summary>
@@ -337,10 +336,10 @@ namespace Seq.Api.Client
         /// <returns>A stream of raw messages from the websocket.</returns>
         public async Task<ObservableStream<string>> StreamTextAsync(ILinked entity, string link, IDictionary<string, object> parameters = null, CancellationToken cancellationToken = default)
         {
-            return await WebSocketStreamAsync(entity, link, parameters, reader => reader.ReadToEnd(), cancellationToken);
+            return await WebSocketStreamAsync(entity, link, parameters, stream => new StreamReader(stream).ReadToEndAsync(), cancellationToken);
         }
 
-        async Task<ObservableStream<T>> WebSocketStreamAsync<T>(ILinked entity, string link, IDictionary<string, object> parameters, Func<TextReader, T> deserialize, CancellationToken cancellationToken = default)
+        async Task<ObservableStream<T>> WebSocketStreamAsync<T>(ILinked entity, string link, IDictionary<string, object> parameters, Func<Stream, Task<T>> deserialize, CancellationToken cancellationToken = default)
         {
             var linkUri = ResolveLink(entity, link, parameters);
 
@@ -358,7 +357,7 @@ namespace Seq.Api.Client
         {
             var request = new HttpRequestMessage(HttpMethod.Get, url);
             var stream = await HttpSendAsync(request, cancellationToken).ConfigureAwait(false);
-            return _serializer.Deserialize<T>(new JsonTextReader(new StreamReader(stream)));
+            return await JsonSerializer.DeserializeAsync<T>(stream, _serializerOptions, cancellationToken);
         }
 
         async Task<string> HttpGetStringAsync(string url, CancellationToken cancellationToken = default)
@@ -380,7 +379,7 @@ namespace Seq.Api.Client
             Dictionary<string, object> payload = null;
             try
             {
-                payload = _serializer.Deserialize<Dictionary<string, object>>(new JsonTextReader(new StreamReader(stream)));
+                payload = await JsonSerializer.DeserializeAsync<Dictionary<string, object>>(stream, _serializerOptions, cancellationToken);
             }
             // ReSharper disable once EmptyGeneralCatchClause
             catch { }
@@ -393,9 +392,8 @@ namespace Seq.Api.Client
 
         HttpContent MakeJsonContent(object content)
         {
-            var json = new StringWriter();
-            _serializer.Serialize(json, content);
-            return new StringContent(json.ToString(), Encoding.UTF8, "application/json");
+            var jsonString = JsonSerializer.Serialize(content, _serializerOptions);
+            return new StringContent(jsonString, Encoding.UTF8, "application/json");
         }
 
         static string ResolveLink(ILinked entity, string link, IDictionary<string, object> parameters = null)

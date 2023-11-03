@@ -14,7 +14,7 @@
 
 using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using Seq.Api.Model.Security;
 using Seq.Api.Model.Shared;
 
@@ -60,7 +60,7 @@ namespace Seq.Api.Model.Signals
         /// </summary>
         // ReSharper disable once UnusedMember.Global
         [Obsolete("This member has been renamed `IsProtected` to better reflect its purpose.")]
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public bool? IsRestricted { get; set; }
 
         /// <summary>

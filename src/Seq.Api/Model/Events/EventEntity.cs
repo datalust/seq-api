@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using Seq.Api.Model.Shared;
 
 // ReSharper disable UnusedAutoPropertyAccessor.Global
@@ -48,38 +48,38 @@ namespace Seq.Api.Model.Events
         /// <summary>
         /// A level associated with an event; <c>null</c> may indicate that the event is informational.
         /// </summary>
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string Level { get; set; }
 
         /// <summary>
         /// An exception, stack trace/backtrace associated with the event.
         /// </summary>
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string Exception { get; set; }
 
         /// <summary>
         /// If requested, a pre-rendered version of the templated event message.
         /// </summary>
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string RenderedMessage { get; set; }
         
         /// <summary>
         /// A trace id associated with the event, if any.
         /// </summary>
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string TraceId { get; set; }
 
         /// <summary>
         /// A span id associated with the event, if any.
         /// </summary>
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string SpanId { get; set; }
 
         /// <summary>
         /// A collection of properties describing the origin of the event, if any. These correspond to resource
         /// attributes in the OpenTelemetry spec.
         /// </summary>
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public List<EventPropertyPart> Resource { get; set; }
     }
 }

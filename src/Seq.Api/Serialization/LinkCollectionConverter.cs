@@ -15,35 +15,37 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Seq.Api.Model;
 
 namespace Seq.Api.Serialization
 {
-    class LinkCollectionConverter : JsonConverter
+    class LinkCollectionConverter : JsonConverter<LinkCollection>
     {
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        public override bool CanConvert(Type objectType)
         {
-            var lc = (LinkCollection)value;
-            var dictionary = lc.ToDictionary(kv => kv.Key, kv => kv.Value.Template);
-            serializer.Serialize(writer, dictionary);
+            return objectType == typeof(LinkCollection);
         }
 
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        public override LinkCollection Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            var hrefs = serializer.Deserialize<Dictionary<string, string>>(reader);
-            if (hrefs == null) return existingValue;
+            var hrefs = JsonSerializer.Deserialize<Dictionary<string, string>>(ref reader, options);            
             var result = new LinkCollection();
-            foreach (var href in hrefs)
+            if (hrefs != null)
             {
-                result.Add(href.Key, new Link(href.Value));
+                foreach (var href in hrefs)
+                {
+                    result.Add(href.Key, new Link(href.Value));
+                }
             }
             return result;
         }
 
-        public override bool CanConvert(Type objectType)
+        public override void Write(Utf8JsonWriter writer, LinkCollection value, JsonSerializerOptions options)
         {
-            return objectType == typeof(LinkCollection);
+            var dictionary = value.ToDictionary(kv => kv.Key, kv => kv.Value.Template);
+            JsonSerializer.Serialize(writer, dictionary, options);
         }
     }
 }

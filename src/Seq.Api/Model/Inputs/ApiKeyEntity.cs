@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using Seq.Api.Model.Security;
 
 namespace Seq.Api.Model.Inputs
@@ -68,7 +68,7 @@ namespace Seq.Api.Model.Inputs
         /// <summary>
         /// Information about the ingestion activity using this API key.
         /// </summary>
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public InputMetricsPart InputMetrics { get; set; } = new InputMetricsPart();
     }
 }

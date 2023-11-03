@@ -15,7 +15,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
+
 
 namespace Seq.Api.Model.Signals
 {
@@ -35,21 +36,21 @@ namespace Seq.Api.Model.Signals
         /// When <see cref="Kind"/> is <see cref="SignalExpressionKind.Signal"/>, the id of the
         /// signal represented by this expression node.
         /// </summary>
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public string SignalId { get; set; }
 
         /// <summary>
         /// When <see cref="Kind"/> is <see cref="SignalExpressionKind.Intersection"/> or
         /// <see cref="SignalExpressionKind.Union"/>, the left side of the operation.
         /// </summary>
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public SignalExpressionPart Left { get; set; }
 
         /// <summary>
         /// When <see cref="Kind"/> is <see cref="SignalExpressionKind.Intersection"/> or
         /// <see cref="SignalExpressionKind.Union"/>, the right side of the operation.
         /// </summary>
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public SignalExpressionPart Right { get; set; }
 
         /// <summary>

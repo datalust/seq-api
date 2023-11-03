@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using Seq.Api.Model.Shared;
 using Seq.Api.Model.Signals;
 
@@ -48,14 +48,14 @@ namespace Seq.Api.Model.Users
         /// <summary>
         /// If changing password, the new password for the user.
         /// </summary>
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public string NewPassword { get; set; }
 
         /// <summary>
         /// A filter that is applied to searches and queries instigated by
         /// the user.
         /// </summary>
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public DescriptiveFilterPart ViewFilter { get; set; }
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace Seq.Api.Model.Users
         /// changing their password. Recommended when administratively assigning
         /// a password for the user.
         /// </summary>
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public bool MustChangePassword { get; set; }
 
         /// <summary>
@@ -78,14 +78,14 @@ namespace Seq.Api.Model.Users
         /// user may need to be unlinked from an existing provider so that login can proceed through
         /// the new provider.
         /// </summary>
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public string AuthenticationProvider { get; set; }
 
         /// <summary>
         /// The unique identifier that links the identity provided by the authentication provider
         /// with the Seq user.
         /// </summary>
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public string AuthenticationProviderUniqueIdentifier { get; set; }
     }
 }

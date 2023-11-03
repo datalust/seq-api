@@ -19,7 +19,6 @@ using System.Threading;
 using System.Net.WebSockets;
 using System.Threading.Tasks;
 using System.IO;
-using System.Text;
 using System.Linq;
 
 namespace Seq.Api.Streams
@@ -36,9 +35,9 @@ namespace Seq.Api.Streams
         Task _run;
 
         readonly ClientWebSocket _socket;
-        readonly Func<TextReader, T> _deserialize;
+        readonly Func<Stream, Task<T>> _deserialize;
 
-        internal ObservableStream(ClientWebSocket socket, Func<TextReader, T> deserialize)
+        internal ObservableStream(ClientWebSocket socket, Func<Stream, Task<T>> deserialize)
         {
             _deserialize = deserialize ?? throw new ArgumentNullException(nameof(deserialize));
             _socket = socket ?? throw new ArgumentNullException(nameof(socket));
@@ -86,7 +85,6 @@ namespace Seq.Api.Streams
         {
             var buffer = new byte[16 * 1024];
             var current = new MemoryStream();
-            var reader = new StreamReader(current, new UTF8Encoding(false));
 
             while (_socket.State == WebSocketState.Open)
             {
@@ -106,10 +104,9 @@ namespace Seq.Api.Streams
                     if (received.EndOfMessage)
                     {
                         current.Position = 0;
-                        var value = _deserialize(reader);
+                        var value = await _deserialize(current);
 
                         current.SetLength(0);
-                        reader.DiscardBufferedData();
 
                         Emit(value);
                     }

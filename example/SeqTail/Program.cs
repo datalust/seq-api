@@ -6,7 +6,7 @@ using Serilog;
 using System.Reactive.Linq;
 using Serilog.Formatting.Compact.Reader;
 using System.Threading;
-using Newtonsoft.Json.Linq;
+using System.Text.Json;
 
 const string usage = @"seq-tail: watch a Seq query from your console.
 
@@ -67,7 +67,7 @@ static async Task Run(string server, string? apiKey, string? filter, Cancellatio
         strict = converted.StrictExpression;
     }
 
-    using var stream = await connection.Events.StreamAsync<JObject>(filter: strict);
+    using var stream = await connection.Events.StreamAsync<JsonElement>(filter: strict);
     var subscription = stream
         .Select(LogEventReader.ReadFromJObject)
         .Subscribe(Log.Write, cancel.Cancel);

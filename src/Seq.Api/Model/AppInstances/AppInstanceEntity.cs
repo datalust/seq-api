@@ -14,7 +14,7 @@
 
 using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using Seq.Api.Model.Apps;
 using Seq.Api.Model.Inputs;
 using Seq.Api.Model.Signals;
@@ -122,57 +122,57 @@ namespace Seq.Api.Model.AppInstances
         /// <summary>
         /// Settings that control how events are ingested through the app.
         /// </summary>
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public InputSettingsPart? InputSettings { get; set; }
 
         /// <summary>
         /// Metrics describing the state and activity of the app process.
         /// </summary>
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public AppInstanceProcessMetricsPart? ProcessMetrics { get; set; }
         
         /// <summary>
         /// Information about ingestion activity through this app.
         /// </summary>
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public InputMetricsPart? InputMetrics { get; set; }
 
         /// <summary>
         /// Information about the app's diagnostic input.
         /// </summary>
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public InputMetricsPart? DiagnosticInputMetrics { get; set; }
 
         /// <summary>
         /// Information about events output through the app.
         /// </summary>
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public AppInstanceOutputMetricsPart? OutputMetrics { get; set; }
         
         /// <summary>
         /// Obsolete.
         /// </summary>
         [Obsolete("Use !AcceptStreamedEvents instead.")]
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public bool? IsManualInputOnly { get; set; }
 
         /// <summary>
         /// Obsolete.
         /// </summary>
         [Obsolete("Use !AcceptDirectInvocation instead.")]
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public bool? DisallowManualInput { get; set; }
 
         /// <summary>
         /// The name of the app.
         /// </summary>
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public string? AppName { get; set; }
 
         /// <summary>
         /// If <c>true</c>, then the app is able to write events to the log.
         /// </summary>
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public bool? IsInput { get; set; }
     }
 }
