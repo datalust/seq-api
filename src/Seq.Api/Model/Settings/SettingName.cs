@@ -170,11 +170,6 @@ namespace Seq.Api.Model.Settings
         /// If using OpenID Connect, overrides the URI of the provider's metadata endpoint.
         /// </summary>
         OpenIdConnectMetadataAddress,
-    
-        /// <summary>
-        /// If using OpenID Connect, overrides the URI of the provider's metadata endpoint.
-        /// </summary>
-        OpenIdConnectMetadataAddress,
         
         /// <summary>
         /// If <c>true</c>, ingestion requests incoming via HTTP must be authenticated using an API key or
