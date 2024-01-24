@@ -101,5 +101,25 @@ namespace Seq.Api.ResourceGroups
             };
             return await GroupGetAsync<StorageConsumptionPart>("Storage", parameters, cancellationToken);
         }
+        
+        /// <summary>
+        /// Retrieve the cluster log.
+        /// </summary>
+        /// <param name="cancellationToken">A <see cref="CancellationToken"/> allowing the operation to be canceled.</param>
+        /// <returns>The cluster log.</returns>
+        public async Task<string> GetClusterLogAsync(CancellationToken cancellationToken = default)
+        {
+            return await GroupGetStringAsync("ClusterLog", cancellationToken: cancellationToken);
+        }
+
+        /// <summary>
+        /// Retrieve metrics about cluster connections.
+        /// </summary>
+        /// <param name="cancellationToken">A <see cref="CancellationToken"/> allowing the operation to be canceled.</param>
+        /// <returns>A set of metrics relating to cluster network activity.</returns>
+        public async Task<ClusterMetricsPart> GetClusterMetricsAsync(CancellationToken cancellationToken = default)
+        {
+            return await GroupGetAsync<ClusterMetricsPart>("ClusterMetrics", cancellationToken: cancellationToken);
+        }
     }
 }
