@@ -165,7 +165,7 @@ namespace Seq.Api.Model.Settings
         /// list. For example, <c>openid, profile, email</c>.
         /// </summary>
         OpenIdConnectScopes,
-    
+        
         /// <summary>
         /// If using OpenID Connect, overrides the URI of the provider's metadata endpoint.
         /// </summary>

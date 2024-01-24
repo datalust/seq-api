@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Seq.Api.Model.Shared;
@@ -30,6 +31,12 @@ namespace Seq.Api.Model.Events
         /// </summary>
         public string Timestamp { get; set; }
 
+        /// <summary>
+        /// If the event represents a span, the ISO-8601 timestamp at which the span started.
+        /// </summary>
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Start { get; set; }
+        
         /// <summary>
         /// Properties associated with the event.
         /// </summary>
@@ -76,10 +83,30 @@ namespace Seq.Api.Model.Events
         public string SpanId { get; set; }
 
         /// <summary>
+        /// The id of the event's parent span, if any.
+        /// </summary>
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string ParentId { get; set; }
+
+        /// <summary>
         /// A collection of properties describing the origin of the event, if any. These correspond to resource
-        /// attributes in the OpenTelemetry spec.
+        /// attributes in the OpenTelemetry protocol.
         /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public List<EventPropertyPart> Resource { get; set; }
+        
+        /// <summary>
+        /// A collection of properties describing the instrumentation that produced an event, if any. These correspond
+        /// to instrumentation scope attributes in the OpenTelemetry protocol, and may include the OpenTelemetry scope name
+        /// in a well-known <c>name</c> property.
+        /// </summary>
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public List<EventPropertyPart> Scope { get; set; }
+        
+        /// <summary>
+        /// If the event is a span, the elapsed time between the start and end of the span.
+        /// </summary>
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public TimeSpan? Elapsed { get; set; }
     }
 }
