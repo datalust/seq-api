@@ -87,6 +87,14 @@ namespace Seq.Api.Model.Events
         /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string ParentId { get; set; }
+        
+        /// <summary>
+        /// If the event is a span, its kind. This will typically be one of either <c>Client</c>, <c>Server</c>,
+        /// <c>Producer</c>, <c>Consumer</c>, or <c>Internal</c>. The span kind records how the span relates to its
+        /// parent or child span within a trace.
+        /// </summary>
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string SpanKind { get; set; }
 
         /// <summary>
         /// A collection of properties describing the origin of the event, if any. These correspond to resource
