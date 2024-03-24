@@ -253,3 +253,5 @@ paket-files/
 
 .vscode/
 *.orig
+
+.DS_Store
