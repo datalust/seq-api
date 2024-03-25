@@ -54,10 +54,10 @@ static async Task Run(string server, string? username, string? tenantId, string?
 
     var user = await connection.Users.FindCurrentAsync();
     var provider = await connection.Settings.FindNamedAsync(SettingName.AuthenticationProvider);
-    var cid = await connection.Settings.FindNamedAsync(SettingName.AzureADClientId);
-    var ckey = await connection.Settings.FindNamedAsync(SettingName.AzureADClientKey);
-    var aut = await connection.Settings.FindNamedAsync(SettingName.AzureADAuthority);
-    var tid = await connection.Settings.FindNamedAsync(SettingName.AzureADTenantId);
+    var cid = await connection.Settings.FindNamedAsync(SettingName.EntraIDClientId);
+    var ckey = await connection.Settings.FindNamedAsync(SettingName.EntraIDClientKey);
+    var aut = await connection.Settings.FindNamedAsync(SettingName.EntraIDAuthority);
+    var tid = await connection.Settings.FindNamedAsync(SettingName.EntraIDTenantId);
 
     user.Username = username;
     provider.Value = "Azure Active Directory";

@@ -27,7 +27,7 @@ namespace Seq.Api.Model.Settings
     {
         /// <summary>
         /// The authentication provider to use. Allowed values are <c>null</c> (local username/password),
-        /// <c>"Active Directory"</c>, <c>"Azure Active Directory"</c> and <c>"OpenID Connect"</c>.
+        /// <c>"Active Directory"</c>, <c>"Microsoft Entra ID"</c> and <c>"OpenID Connect"</c>.
         /// </summary>
         AuthenticationProvider,
         
@@ -38,7 +38,7 @@ namespace Seq.Api.Model.Settings
         AutomaticAccessADGroup,
 
         /// <summary>
-        /// If <c>true</c>, Azure Active Directory accounts in the configured tenant will
+        /// If <c>true</c>, Microsoft Entra ID accounts in the configured tenant will
         /// be automatically granted user access to Seq.
         /// </summary>
         [Obsolete("Use `AutomaticallyProvisionAuthenticatedUsers`.", error: true)]
@@ -51,25 +51,29 @@ namespace Seq.Api.Model.Settings
         AutomaticallyProvisionAuthenticatedUsers,
 
         /// <summary>
-        /// The AAD authority. The default is <c>login.windows.net</c>; government cloud users may
+        /// The Microsoft Entra ID authority. The default is <c>login.windows.net</c>; government cloud users may
         /// require <c>login.microsoftonline.us</c> or similar.
         /// </summary>
-        AzureADAuthority,
+        // ReSharper disable once InconsistentNaming
+        EntraIDAuthority,
         
         /// <summary>
-        /// The Azure Active Directory client id.
+        /// The Microsoft Entra ID client id.
         /// </summary>
-        AzureADClientId,
+        // ReSharper disable once InconsistentNaming
+        EntraIDClientId,
 
         /// <summary>
-        /// The Azure Active Directory client key.
+        /// The Microsoft Entra ID client key.
         /// </summary>
-        AzureADClientKey,
+        // ReSharper disable once InconsistentNaming
+        EntraIDClientKey,
 
         /// <summary>
-        /// The Azure Active Directory tenant id.
+        /// The Microsoft Entra ID tenant id.
         /// </summary>
-        AzureADTenantId,
+        // ReSharper disable once InconsistentNaming
+        EntraIDTenantId,
 
         /// <summary>
         /// Server-local filesystem location where automatic backups are stored.
@@ -170,7 +174,7 @@ namespace Seq.Api.Model.Settings
         /// If using OpenID Connect, overrides the URI of the provider's metadata endpoint.
         /// </summary>
         OpenIdConnectMetadataAddress,
-        
+    
         /// <summary>
         /// If <c>true</c>, ingestion requests incoming via HTTP must be authenticated using an API key or
         /// logged-in user session. Only effective when <see cref="IsAuthenticationEnabled"/> is <c>true</c>.
