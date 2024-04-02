@@ -60,7 +60,7 @@ static async Task Run(string server, string? username, string? tenantId, string?
     var tid = await connection.Settings.FindNamedAsync(SettingName.EntraIDTenantId);
 
     user.Username = username;
-    provider.Value = "Azure Active Directory";
+    provider.Value = "Microsoft Entra ID";
     cid.Value = clientId;
     ckey.Value = clientKey;
     tid.Value = tenantId;
