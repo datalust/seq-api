@@ -1,7 +1,7 @@
-namespace Seq.Api.Model.Indexes
+    namespace Seq.Api.Model.Indexes
 {
     /// <summary>
-    /// Model type specifically for the Data > Indexes list.
+    /// An index over the event stream. May be one of several types discriminated by <see cref="IndexedEntityType"/>.
     /// </summary>
     public class IndexEntity: Entity
     {
