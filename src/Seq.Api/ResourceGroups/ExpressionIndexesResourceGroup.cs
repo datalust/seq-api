@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Seq.Api.Model;
+using Seq.Api.Model.Indexes;
 using Seq.Api.Model.Indexing;
 
 namespace Seq.Api.ResourceGroups
@@ -23,6 +25,18 @@ namespace Seq.Api.ResourceGroups
         public async Task<List<ExpressionIndexEntity>> ListAsync(CancellationToken cancellationToken = default)
         {
             return await GroupListAsync<ExpressionIndexEntity>("Items", cancellationToken: cancellationToken).ConfigureAwait(false);
+        }
+        
+        /// <summary>
+        /// Retrieve the expression index with the given id; throws if the entity does not exist.
+        /// </summary>
+        /// <param name="id">The id of the expression index.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken"/> allowing the operation to be canceled.</param>
+        /// <returns>The expression index.</returns>
+        public async Task<ExpressionIndexEntity> FindAsync(string id, CancellationToken cancellationToken = default)
+        {
+            if (id == null) throw new ArgumentNullException(nameof(id));
+            return await GroupGetAsync<ExpressionIndexEntity>("Item", new Dictionary<string, object> { { "id", id } }, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
