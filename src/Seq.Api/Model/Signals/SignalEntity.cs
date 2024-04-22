@@ -67,6 +67,11 @@ namespace Seq.Api.Model.Signals
         /// If <c>true</c>, the signal can only be modified by users with the <see cref="Permission.Project"/> permission.
         /// </summary>
         public bool IsProtected { get; set; }
+        
+        /// <summary>
+        /// If <c>true</c>, the signal has no backing index.
+        /// </summary>
+        public bool IsIndexSuppressed { get; set; }
 
         /// <summary>
         /// How the signal is grouped in the Seq UI.

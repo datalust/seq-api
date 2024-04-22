@@ -15,6 +15,7 @@
 using System;
 using Seq.Api.Model.Apps;
 using Seq.Api.Model.Updates;
+using Seq.Api.Model.Users;
 using Seq.Api.ResourceGroups;
 
 namespace Seq.Api.Model.Settings
@@ -124,6 +125,16 @@ namespace Seq.Api.Model.Settings
         /// Seq will stop accepting new events.
         /// </summary>
         MinimumFreeStorageSpace,
+        
+        /// <summary>
+        /// A dictionary of `(string, string)` pairs that will be used to initialize the
+        /// <see cref="UserEntity.Preferences"/> property when preparing new user entities
+        /// with <see cref="UsersResourceGroup.TemplateAsync"/>, and with automatically
+        /// provisioning SSO users (when enabled).
+        /// </summary>
+        /// <remarks>User preference keys are unconstrained; the Seq UI uses a number of these, but
+        /// alternative interfaces and integrations may add additional items to this collection.</remarks>
+        NewUserPreferences,
 
         /// <summary>
         /// A comma-separated list of role ids that will be assigned to new users by default.
