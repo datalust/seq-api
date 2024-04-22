@@ -18,19 +18,19 @@ namespace Seq.Api.ResourceGroups
             : base("Indexes", connection)
         {
         }
+        
         /// <summary>
         /// Retrieve the index with the given id; throws if the entity does not exist.
         /// </summary>
         /// <param name="id">The id of the index.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> allowing the operation to be canceled.</param>
         /// <returns>The index.</returns>
-        public async Task<SignalEntity> FindAsync(string id, CancellationToken cancellationToken = default)
+        public async Task<IndexEntity> FindAsync(string id, CancellationToken cancellationToken = default)
         {
             if (id == null) throw new ArgumentNullException(nameof(id));
-            return await GroupGetAsync<SignalEntity>("Item", new Dictionary<string, object> { { "id", id } }, cancellationToken).ConfigureAwait(false);
+            return await GroupGetAsync<IndexEntity>("Item", new Dictionary<string, object> { { "id", id } }, cancellationToken).ConfigureAwait(false);
         }
-
-
+        
         /// <summary>
         /// Retrieve statistics on all indexes.
         /// </summary>
