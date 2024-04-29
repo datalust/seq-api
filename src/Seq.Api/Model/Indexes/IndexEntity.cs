@@ -1,4 +1,4 @@
-    namespace Seq.Api.Model.Indexes
+namespace Seq.Api.Model.Indexes
 {
     /// <summary>
     /// An index over the event stream. May be one of several types discriminated by <see cref="IndexedEntityType"/>.
