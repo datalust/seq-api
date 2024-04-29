@@ -38,9 +38,9 @@ namespace Seq.Api.ResourceGroups
         /// </summary>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> allowing the operation to be canceled.</param>
         /// <returns>Current server metrics.</returns>
-        public async Task<ServerMetricsEntity> GetServerMetricsAsync(CancellationToken cancellationToken = default)
+        public async Task<ServerMetricsPart> GetServerMetricsAsync(CancellationToken cancellationToken = default)
         {
-            return await GroupGetAsync<ServerMetricsEntity>("ServerMetrics", cancellationToken: cancellationToken).ConfigureAwait(false);
+            return await GroupGetAsync<ServerMetricsPart>("ServerMetrics", cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>

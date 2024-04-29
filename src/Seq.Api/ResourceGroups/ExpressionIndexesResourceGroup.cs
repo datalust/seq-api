@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Seq.Api.Model;
-using Seq.Api.Model.Indexes;
 using Seq.Api.Model.Indexing;
 
 namespace Seq.Api.ResourceGroups
