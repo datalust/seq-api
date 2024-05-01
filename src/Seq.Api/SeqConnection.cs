@@ -149,11 +149,21 @@ namespace Seq.Api
         /// Perform operations on queries and filter expressions.
         /// </summary>
         public ExpressionsResourceGroup Expressions => new ExpressionsResourceGroup(this);
+        
+        /// <summary>
+        /// Perform operations on expression indexes.
+        /// </summary>
+        public ExpressionIndexesResourceGroup ExpressionIndexes => new ExpressionIndexesResourceGroup(this);
 
         /// <summary>
         /// Perform operations on NuGet feeds.
         /// </summary>
         public FeedsResourceGroup Feeds => new FeedsResourceGroup(this);
+
+        /// <summary>
+        /// Statistics about indexes.
+        /// </summary>
+        public IndexesResourceGroup Indexes => new IndexesResourceGroup(this);
 
         /// <summary>
         /// Perform operations on the Seq license certificate.

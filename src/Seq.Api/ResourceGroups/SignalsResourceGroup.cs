@@ -78,6 +78,7 @@ namespace Seq.Api.ResourceGroups
         {
             return await GroupCreateAsync<SignalEntity, SignalEntity>(entity, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
+        
         /// <summary>
         /// Remove an existing signal.
         /// </summary>

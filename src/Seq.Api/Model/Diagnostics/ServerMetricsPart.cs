@@ -13,19 +13,19 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
 
 namespace Seq.Api.Model.Diagnostics
 {
     /// <summary>
     /// Metrics describing the state and performance of the Seq server.
     /// </summary>
-    public class ServerMetricsEntity : Entity
+    /// <remarks>This information is not preserved across server restarts or fail-over.</remarks>
+    public class ServerMetricsPart
     {
         /// <summary>
-        /// Construct a <see cref="ServerMetricsEntity"/>.
+        /// Construct a <see cref="ServerMetricsPart"/>.
         /// </summary>
-        public ServerMetricsEntity()
+        public ServerMetricsPart()
         {
         }
 
@@ -33,6 +33,16 @@ namespace Seq.Api.Model.Diagnostics
         /// Bytes of free space remaining on the disk used for event storage.
         /// </summary>
         public long? EventStoreDiskRemainingBytes { get; set; }
+
+        /// <summary>
+        /// The total time spent indexing the event store in the last 24 hours.
+        /// </summary>
+        public TimeSpan EventStoreIndexingTimeLastDay { get; set; }
+
+        /// <summary>
+        /// The total time spent writing events to disk in the last minute.
+        /// </summary>
+        public TimeSpan EventStoreWriteTimeLastMinute { get; set; }
 
         /// <summary>
         /// The number of events that arrived at the ingestion endpoint in the past minute.
