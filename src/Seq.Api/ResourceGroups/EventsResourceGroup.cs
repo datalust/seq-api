@@ -40,12 +40,15 @@ namespace Seq.Api.ResourceGroups
         /// <param name="permalinkId">If the request is for a permalinked event, specifying the id of the permalink here will
         /// allow events that have otherwise been deleted to be found. The special value `"unknown"` provides backwards compatibility
         /// with versions prior to 5.0, which did not mark permalinks explicitly.</param>
+        /// <param name="background">Run the search at a lower priority, using a lower proportion of available server
+        /// resources (may take longer to complete).</param>
         /// <param name="cancellationToken">Token through which the operation can be cancelled.</param>
         /// <returns>The event.</returns>
         public async Task<EventEntity> FindAsync(
             string id,
             bool render = false,
             string permalinkId = null,
+            bool background = false,
             CancellationToken cancellationToken = default)
         {
             if (id == null) throw new ArgumentNullException(nameof(id));
@@ -53,6 +56,7 @@ namespace Seq.Api.ResourceGroups
             var parameters = new Dictionary<string, object> {{"id", id}};
             if (render) parameters.Add("render", true);
             if (permalinkId != null) parameters.Add("permalinkId", permalinkId);
+            if (background) parameters.Add("background", true);
 
             return await GroupGetAsync<EventEntity>("Item", parameters, cancellationToken).ConfigureAwait(false);
         }
@@ -77,8 +81,10 @@ namespace Seq.Api.ResourceGroups
         /// <param name="permalinkId">If the request is for a permalinked event, specifying the id of the permalink here will
         /// allow events that have otherwise been deleted to be found. The special value `"unknown"` provides backwards compatibility
         /// with versions prior to 5.0, which did not mark permalinks explicitly.</param>
-        /// <param name="cancellationToken">Token through which the operation can be cancelled.</param>
         /// <param name="variables">Values for any free variables that appear in <paramref name="filter"/>.</param>
+        /// <param name="background">Run the search at a lower priority, using a lower proportion of available server
+        /// resources (may take longer to complete).</param>
+        /// <param name="cancellationToken">Token through which the operation can be cancelled.</param>
         /// <returns>The complete list of events, ordered from least to most recent.</returns>
         public async IAsyncEnumerable<EventEntity> EnumerateAsync(
             SignalEntity unsavedSignal = null,
@@ -93,6 +99,7 @@ namespace Seq.Api.ResourceGroups
             int? shortCircuitAfter = null,
             string permalinkId = null,
             Dictionary<string, object> variables = null,
+            bool background = false,
             [EnumeratorCancellation]
             CancellationToken cancellationToken = default)
         {
@@ -107,7 +114,7 @@ namespace Seq.Api.ResourceGroups
             while (true)
             {
                 var resultSet = await PageAsync(unsavedSignal, signal, filter, nextCount, startAtId, nextAfterId, render,
-                    fromDateUtc, toDateUtc, shortCircuitAfter, permalinkId, variables, cancellationToken).ConfigureAwait(false);
+                    fromDateUtc, toDateUtc, shortCircuitAfter, permalinkId, variables, background, cancellationToken).ConfigureAwait(false);
 
                 foreach (var evt in resultSet.Events)
                 {
@@ -153,6 +160,8 @@ namespace Seq.Api.ResourceGroups
         /// allow events that have otherwise been deleted to be found. The special value `"unknown"` provides backwards compatibility
         /// with versions prior to 5.0, which did not mark permalinks explicitly.</param>
         /// <param name="variables">Values for any free variables that appear in <paramref name="filter"/>.</param>
+        /// <param name="background">Run the search at a lower priority, using a lower proportion of available server
+        /// resources (may take longer to complete).</param>
         /// <param name="cancellationToken">Token through which the operation can be cancelled.</param>
         /// <returns>The result set with a page of events.</returns>
         public async Task<List<EventEntity>> ListAsync(
@@ -168,11 +177,12 @@ namespace Seq.Api.ResourceGroups
             int? shortCircuitAfter = null,
             string permalinkId = null,
             Dictionary<string, object> variables = null,
+            bool background = false,
             CancellationToken cancellationToken = default)
         {
             var results = new List<EventEntity>();
             await foreach (var item in EnumerateAsync(unsavedSignal, signal, filter, count, startAtId, afterId, render,
-                                   fromDateUtc, toDateUtc, shortCircuitAfter, permalinkId, variables, cancellationToken)
+                                   fromDateUtc, toDateUtc, shortCircuitAfter, permalinkId, variables, background, cancellationToken)
                            .WithCancellation(cancellationToken)
                            .ConfigureAwait(false))
                 results.Add(item);
@@ -200,6 +210,8 @@ namespace Seq.Api.ResourceGroups
         /// allow events that have otherwise been deleted to be found. The special value `"unknown"` provides backwards compatibility
         /// with versions prior to 5.0, which did not mark permalinks explicitly.</param>
         /// <param name="variables">Values for any free variables that appear in <paramref name="filter"/>.</param>
+        /// <param name="background">Run the search at a lower priority, using a lower proportion of available server
+        /// resources (may take longer to complete).</param>
         /// <param name="cancellationToken">Token through which the operation can be cancelled.</param>
         /// <returns>The result set with a page of events.</returns>
         public async Task<ResultSetPart> PageAsync(
@@ -215,6 +227,7 @@ namespace Seq.Api.ResourceGroups
             int? shortCircuitAfter = null,
             string permalinkId = null,
             Dictionary<string, object> variables = null,
+            bool background = false,
             CancellationToken cancellationToken = default)
         {
             var parameters = new Dictionary<string, object>{{ "count", count }};
@@ -227,6 +240,7 @@ namespace Seq.Api.ResourceGroups
             if (toDateUtc != null) { parameters.Add("toDateUtc", toDateUtc.Value); }
             if (shortCircuitAfter != null) { parameters.Add("shortCircuitAfter", shortCircuitAfter.Value); }
             if (permalinkId != null) { parameters.Add("permalinkId", permalinkId); }
+            if (background) parameters.Add("background", true);
 
             var body = new EvaluationContextPart { Signal = unsavedSignal, Variables = variables };
             return await GroupPostAsync<EvaluationContextPart, ResultSetPart>("InSignal", body, parameters, cancellationToken).ConfigureAwait(false);

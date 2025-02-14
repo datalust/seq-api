@@ -15,7 +15,6 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Seq.Api.Model.Shared;
-using Seq.Api.Model.Signals;
 
 namespace Seq.Api.Model.Users
 {

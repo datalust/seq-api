@@ -174,5 +174,16 @@ namespace Seq.Api.ResourceGroups
             response.EnsureSuccessStatusCode();
             return await FindCurrentAsync(cancellationToken).ConfigureAwait(false);
         }
+        
+        /// <summary>Reset the authentication properties stored for <paramref name="entity"/>. After this operation
+        /// completes, the user's <see cref="UserEntity.Username"/> will exclusively determine how they are linked
+        /// to the authentication provider on their next login.</summary>
+        /// <param name="entity">The user to modify.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken"/> allowing the operation to be canceled.</param>
+        /// <returns>A task signalling completion.</returns>
+        public async Task UnlinkAuthenticationProviderAsync(UserEntity entity, CancellationToken cancellationToken = default)
+        { 
+            await Client.PostAsync(entity, "UnlinkAuthenticationProvider", new {}, cancellationToken: cancellationToken).ConfigureAwait(false);
+        }
     }
 }

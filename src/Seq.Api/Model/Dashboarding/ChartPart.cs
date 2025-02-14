@@ -41,11 +41,16 @@ namespace Seq.Api.Model.Dashboarding
         /// The individual queries making up the chart. In most instances, only one query is currently supported
         /// here.
         /// </summary>
-        public List<ChartQueryPart> Queries { get; set; } = new List<ChartQueryPart>();
+        public List<ChartQueryPart> Queries { get; set; } = new();
 
         /// <summary>
         /// How the chart will appear on the dashboard.
         /// </summary>
-        public ChartDisplayStylePart DisplayStyle { get; set; } = new ChartDisplayStylePart();
+        public ChartDisplayStylePart DisplayStyle { get; set; } = new();
+
+        /// <summary>
+        /// A short summary of the chart contents.
+        /// </summary>
+        public string Description { get; set; }
     }
 }
