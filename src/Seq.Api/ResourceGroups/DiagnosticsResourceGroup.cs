@@ -84,34 +84,24 @@ namespace Seq.Api.ResourceGroups
         /// <param name="rangeEnd">The (exclusive) end of the range to report on. If omitted, the results will report from the
         /// earliest stored data. The range must be a multiple of the interval size, or a whole number of days if
         /// no interval is specified.</param>
-        /// <param name="intervalMinutes">The bucket size to use. Must be a multiple of 5 minutes. Defaults to 1440 (one day).</param>
+        /// <param name="intervalSeconds">The bucket size to use. Must be a multiple of 5 minutes. Defaults to 1440 (one day).</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> allowing the operation to be canceled.</param>
         /// <returns>Storage consumption information.</returns>
         public async Task<StorageConsumptionPart> GetStorageConsumptionAsync(
             DateTime? rangeStart,
             DateTime? rangeEnd,
-            int? intervalMinutes,
+            int? intervalSeconds,
             CancellationToken cancellationToken = default)
         {
             var parameters = new Dictionary<string, object>
             {
                 ["rangeStart"] = rangeStart,
                 ["rangeEnd"] = rangeEnd,
-                ["intervalMinutes"] = intervalMinutes
+                ["intervalSeconds"] = intervalSeconds
             };
             return await GroupGetAsync<StorageConsumptionPart>("Storage", parameters, cancellationToken);
         }
         
-        /// <summary>
-        /// Retrieve the cluster log.
-        /// </summary>
-        /// <param name="cancellationToken">A <see cref="CancellationToken"/> allowing the operation to be canceled.</param>
-        /// <returns>The cluster log.</returns>
-        public async Task<string> GetClusterLogAsync(CancellationToken cancellationToken = default)
-        {
-            return await GroupGetStringAsync("ClusterLog", cancellationToken: cancellationToken);
-        }
-
         /// <summary>
         /// Retrieve metrics about cluster connections.
         /// </summary>

@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Collections.Generic;
+using Seq.Api.Model.LogEvents;
 
 namespace Seq.Api.Model.Alerting
 {
@@ -41,25 +41,15 @@ namespace Seq.Api.Model.Alerting
         /// The ids of app instances that receive notifications when the alert is triggered.
         /// </summary>
         public List<string> NotificationAppInstanceIds { get; set; }
-
-        /// <summary>
-        /// The time at which the alert was last checked. Not preserved across server restarts.
-        /// </summary>
-        public DateTime? LastCheck { get; set; }
-
-        /// <summary>
-        /// The time at which the alert last triggered a notification. Not preserved across server restarts.
-        /// </summary>
-        public DateTime? LastNotification { get; set; }
         
         /// <summary>
-        /// The time until which no further notifications will be sent by the alert.
+        /// A level indicating the severity or priority of the alert.
         /// </summary>
-        public DateTime? SuppressedUntil { get; set; }
-        
+        public LogEventLevel NotificationLevel { get; set; }
+
         /// <summary>
-        /// <c>true</c> if the alert is in the failing state; otherwise, <c>false</c>.
+        /// Any recent activity for the alert.
         /// </summary>
-        public bool IsFailing { get; set; }
+        public AlertActivityPart Activity { get; set; }
     }
 }

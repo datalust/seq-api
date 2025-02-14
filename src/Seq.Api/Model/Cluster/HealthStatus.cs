@@ -1,4 +1,4 @@
-﻿// Copyright © Datalust and contributors. 
+// Copyright Datalust and contributors. 
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,28 +12,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Seq.Api.Model.Feeds;
-
-namespace Seq.Api.Model.Apps
+namespace Seq.Api.Model.Cluster
 {
     /// <summary>
-    /// Describes a NuGet package containing executable app components.
+    /// A status value returned from a health check endpoint.
     /// </summary>
-    public class AppPackagePart : AppPackageIdentityPart
+    /// <remarks>Note that HTTP status code values returned from health checks should be inspected prior to
+    /// reading status information from the health check response payload.</remarks>
+    public enum HealthStatus
     {
         /// <summary>
-        /// Package authorship information.
+        /// The target is healthy.
         /// </summary>
-        public string Authors { get; set; }
+        Healthy,
         
         /// <summary>
-        /// URL of the package license.
+        /// The target is functioning in a degraded state; attention is required.
         /// </summary>
-        public string LicenseUrl { get; set; }
-
+        Degraded,
+        
         /// <summary>
-        /// Whether an update is known to be available for the app.
+        /// The target is unhealthy.
         /// </summary>
-        public bool UpdateAvailable { get; set; }
+        Unhealthy
     }
 }

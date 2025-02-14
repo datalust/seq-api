@@ -20,34 +20,39 @@ namespace Seq.Api.Model.Cluster
     public class ClusterNodeEntity : Entity
     {
         /// <summary>
-        /// The role the node is currently acting in.
-        /// </summary>
-        public NodeRole Role { get; set; }
-        
-        /// <summary>
         /// An informational name associated with the node.
         /// </summary>
         public string Name { get; set; }
-
+        
         /// <summary>
-        /// An informational representation of the storage generation committed to the node.
+        /// The address the node will serve intra-cluster traffic on.
         /// </summary>
-        public string Generation { get; set; }
+        public string ClusterListenUri { get; set; }
+        
+        /// <summary>
+        /// The address the node will serve regular API requests on.
+        /// </summary>
+        public string InternalListenUri { get; set; }
         
         /// <summary>
         /// Whether any writes have occurred since the node's last completed sync.
         /// </summary>
-        public bool? IsUpToDate { get; set; }
+        public bool IsUpToDate { get; set; }
         
         /// <summary>
         /// The time since the node's last completed sync operation.
         /// </summary>
-        public double? MillisecondsSinceLastSync { get; set; }
+        public double? DataAgeMilliseconds { get; set; }
         
         /// <summary>
         /// The time since the follower's active sync was started.
         /// </summary>
         public double? MillisecondsSinceActiveSync { get; set; }
+        
+        /// <summary>
+        /// The time since the follower's last heartbeat.
+        /// </summary>
+        public double? MillisecondsSinceLastHeartbeat { get; set; }
         
         /// <summary>
         /// The total number of operations in the active sync.
@@ -64,5 +69,10 @@ namespace Seq.Api.Model.Cluster
         /// information about the node is available.
         /// </summary>
         public string StateDescription { get; set; }
+        
+        /// <summary>
+        /// Whether the node is currently leading the cluster.
+        /// </summary>
+        public bool IsLeading { get; set; }
     }
 }

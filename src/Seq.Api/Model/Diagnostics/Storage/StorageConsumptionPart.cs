@@ -35,7 +35,12 @@ namespace Seq.Api.Model.Diagnostics.Storage
         /// <summary>
         /// The duration of the timestamp interval covered by each result.
         /// </summary>
-        public uint IntervalMinutes { get; set; }
+        public uint IntervalSeconds { get; set; }
+        
+        /// <summary>
+        /// The file interval of the underlying storage.
+        /// </summary>
+        public uint TickIntervalSeconds { get; set; }
         
         /// <summary>
         /// A potentially-sparse rowset describing the storage space consumed

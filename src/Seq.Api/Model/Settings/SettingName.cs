@@ -50,6 +50,12 @@ namespace Seq.Api.Model.Settings
         /// be automatically granted default user access to Seq.
         /// </summary>
         AutomaticallyProvisionAuthenticatedUsers,
+        
+        /// <summary>
+        /// In a clustered configuration, the maximum data age allowed before a warning notification is generated
+        /// for an out-of-date follower node.
+        /// </summary>
+        DataAgeWarningThresholdMilliseconds,
 
         /// <summary>
         /// The Microsoft Entra ID authority. The default is <c>login.windows.net</c>; government cloud users may
@@ -206,6 +212,12 @@ namespace Seq.Api.Model.Settings
         /// Tracks whether an admin user has dismissed the secret key backup warning.
         /// </summary>
         SecretKeyIsBackedUp,
+        
+        /// <summary>
+        /// In a clustered configuration, the minimum number of nodes that must carry up-to-date data in order for
+        /// operations like graceful fail-over to proceed.
+        /// </summary>
+        TargetReplicaCount,
         
         /// <summary>
         /// A snippet of CSS that will be included in the front-end's user interface styles.

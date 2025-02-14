@@ -29,6 +29,7 @@ using Seq.Api.Serialization;
 using System.Threading;
 using Seq.Api.Streams;
 using System.Net.WebSockets;
+using Seq.Api.Model.Shared;
 
 namespace Seq.Api.Client
 {
@@ -42,7 +43,7 @@ namespace Seq.Api.Client
         // Future versions of Seq may not completely support vN-1 features, however
         // providing this as an Accept header will ensure what compatibility is available
         // can be utilized.
-        const string SeqApiV10MediaType = "application/vnd.datalust.seq.v10+json";
+        const string SeqApiV11MediaType = "application/vnd.datalust.seq.v11+json";
 
         readonly CookieContainer _cookies = new();
         readonly JsonSerializer _serializer = JsonSerializer.Create(
@@ -111,7 +112,7 @@ namespace Seq.Api.Client
 
             HttpClient = new HttpClient(httpMessageHandler);
             HttpClient.BaseAddress = new Uri(baseAddress);
-            HttpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(SeqApiV10MediaType));
+            HttpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(SeqApiV11MediaType));
 
             if (_apiKey != null)
                 HttpClient.DefaultRequestHeaders.Add("X-Seq-ApiKey", _apiKey);
@@ -372,23 +373,25 @@ namespace Seq.Api.Client
         async Task<Stream> HttpSendAsync(HttpRequestMessage request, CancellationToken cancellationToken = default)
         {
             var response = await HttpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
+            // ReSharper disable once MethodSupportsCancellation
             var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
             if (response.IsSuccessStatusCode)
                 return stream;
 
-            Dictionary<string, object> payload = null;
+            ErrorPart error = null;
             try
             {
-                payload = _serializer.Deserialize<Dictionary<string, object>>(new JsonTextReader(new StreamReader(stream)));
+                error = _serializer.Deserialize<ErrorPart>(new JsonTextReader(new StreamReader(stream)));
             }
             // ReSharper disable once EmptyGeneralCatchClause
             catch { }
 
-            if (payload != null && payload.TryGetValue("Error", out var error) && error != null)
-                throw new SeqApiException($"{(int)response.StatusCode} - {error}", response.StatusCode);
+            var exceptionMessage = $"The Seq request failed ({(int)response.StatusCode}/{response.StatusCode}).";
+            if (error?.Error != null)
+                exceptionMessage += $" {error.Error}";
 
-            throw new SeqApiException($"The Seq request failed ({(int)response.StatusCode}/{response.StatusCode}).", response.StatusCode);
+            throw new SeqApiException(exceptionMessage, response.StatusCode);
         }
 
         HttpContent MakeJsonContent(object content)
