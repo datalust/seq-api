@@ -43,6 +43,7 @@ namespace Seq.Api.ResourceGroups
         /// created but not saved, a signal from another server, or the modified representation of an entity already persisted.</param>
         /// <param name="timeout">The query timeout; if not specified, the query will run until completion.</param>
         /// <param name="variables">Values for any free variables that appear in <paramref name="query"/>.</param>
+        /// <param name="trace">Enable detailed (server-side) query tracing.</param>
         /// <param name="cancellationToken">Token through which the operation can be cancelled.</param>
         /// <returns>A structured result set.</returns>
         public async Task<QueryResultPart> QueryAsync(
@@ -53,9 +54,10 @@ namespace Seq.Api.ResourceGroups
             SignalEntity unsavedSignal = null,
             TimeSpan? timeout = null,
             Dictionary<string, object> variables = null,
+            bool trace = false,
             CancellationToken cancellationToken = default)
         {
-            MakeParameters(query, rangeStartUtc, rangeEndUtc, signal, unsavedSignal, timeout, variables, out var body, out var parameters);
+            MakeParameters(query, rangeStartUtc, rangeEndUtc, signal, unsavedSignal, timeout, variables, trace, out var body, out var parameters);
             return await GroupPostAsync<EvaluationContextPart, QueryResultPart>("Query", body, parameters, cancellationToken).ConfigureAwait(false);
         }
 
@@ -71,6 +73,7 @@ namespace Seq.Api.ResourceGroups
         /// <param name="timeout">The query timeout; if not specified, the query will run until completion.</param>
         /// <param name="variables">Values for any free variables that appear in <paramref name="query"/>.</param>
         /// <param name="cancellationToken">Token through which the operation can be cancelled.</param>
+        /// <param name="trace">Enable detailed (server-side) query tracing.</param>
         /// <returns>A CSV result set.</returns>
         public async Task<string> QueryCsvAsync(
             string query,
@@ -80,9 +83,10 @@ namespace Seq.Api.ResourceGroups
             SignalEntity unsavedSignal = null,
             TimeSpan? timeout = null,
             Dictionary<string, object> variables = null,
+            bool trace = false,
             CancellationToken cancellationToken = default)
         {
-            MakeParameters(query, rangeStartUtc, rangeEndUtc, signal, unsavedSignal, timeout, variables, out var body, out var parameters);
+            MakeParameters(query, rangeStartUtc, rangeEndUtc, signal, unsavedSignal, timeout, variables, trace, out var body, out var parameters);
             parameters.Add("format", "text/csv");
             return await GroupPostReadStringAsync("Query", body, parameters, cancellationToken).ConfigureAwait(false);
         }
@@ -95,6 +99,7 @@ namespace Seq.Api.ResourceGroups
             SignalEntity unsavedSignal,
             TimeSpan? timeout,
             Dictionary<string, object> variables,
+            bool trace,
             out EvaluationContextPart body,
             out Dictionary<string, object> parameters)
         {
@@ -114,6 +119,9 @@ namespace Seq.Api.ResourceGroups
 
             if (timeout != null)
                 parameters.Add("timeoutMS", timeout.Value.TotalMilliseconds.ToString("0"));
+            
+            if (trace)
+                parameters.Add("trace", true);
 
             body = new EvaluationContextPart { Signal = unsavedSignal, Variables = variables };
         }

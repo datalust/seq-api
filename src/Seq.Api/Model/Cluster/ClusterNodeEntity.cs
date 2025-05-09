@@ -65,14 +65,13 @@ namespace Seq.Api.Model.Cluster
         public int? RemainingActiveOps { get; set; }
 
         /// <summary>
-        /// An informational description of the node's current state, or <c langword="null">null</c> if no additional
-        /// information about the node is available.
-        /// </summary>
-        public string StateDescription { get; set; }
-        
-        /// <summary>
         /// Whether the node is currently leading the cluster.
         /// </summary>
         public bool IsLeading { get; set; }
+        
+        /// <summary>
+        /// Whether the node has connected to the cluster network.
+        /// </summary>
+        public bool IsConnected { get; set; }
     }
 }

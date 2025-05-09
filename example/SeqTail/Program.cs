@@ -3,10 +3,10 @@ using System.Threading.Tasks;
 using DocoptNet;
 using Seq.Api;
 using Serilog;
-using System.Reactive.Linq;
 using Serilog.Formatting.Compact.Reader;
 using System.Threading;
-using Newtonsoft.Json.Linq;
+
+// ReSharper disable AccessToDisposedClosure
 
 const string usage = @"seq-tail: watch a Seq query from your console.
 
@@ -29,17 +29,17 @@ TaskScheduler.UnobservedTaskException += (_,e) => Log.Fatal(e.Exception, "Unobse
 
 try
 {
-    var arguments = new Docopt().Apply(usage, args, version: "Seq Tail 0.2", exit: true)!;
+    var arguments = new Docopt().Apply(usage, args, version: "Seq Tail 0.3", exit: true)!;
 
     var server = arguments["<server>"].ToString();
     var apiKey = Normalize(arguments["--apikey"]);
     var filter = Normalize(arguments["--filter"]);
 
-    var cancel = new CancellationTokenSource();
+    using var cts = new CancellationTokenSource();
     Console.WriteLine("Tailing, press Ctrl+C to exit.");
-    Console.CancelKeyPress += (_,_) => cancel.Cancel();
+    Console.CancelKeyPress += (_,_) => cts.Cancel();
 
-    var run = Task.Run(() => Run(server, apiKey, filter, cancel), cancel.Token);
+    var run = Task.Run(() => Run(server, apiKey, filter, cts.Token), cts.Token);
 
     run.GetAwaiter().GetResult();
 }
@@ -56,22 +56,20 @@ static string? Normalize(ValueObject? v)
     return string.IsNullOrWhiteSpace(s) ? null : s;
 }
 
-static async Task Run(string server, string? apiKey, string? filter, CancellationTokenSource cancel)
+static async Task Run(string server, string? apiKey, string? filter, CancellationToken cancel)
 {
     var connection = new SeqConnection(server, apiKey);
 
-    string? strict = null;
+    string? strictFilter = null;
     if (filter != null)
     {
         var converted = await connection.Expressions.ToStrictAsync(filter);
-        strict = converted.StrictExpression;
+        strictFilter = converted.StrictExpression;
     }
 
-    using var stream = await connection.Events.StreamAsync<JObject>(filter: strict);
-    var subscription = stream
-        .Select(LogEventReader.ReadFromJObject)
-        .Subscribe(Log.Write, cancel.Cancel);
-
-    cancel.Token.WaitHandle.WaitOne();
-    subscription.Dispose();
+    await foreach (var evt in connection.Events.StreamDocumentsAsync(filter: strictFilter, clef: true, cancellationToken: cancel))
+    {
+        var logEvent = LogEventReader.ReadFromString(evt);
+        Log.Write(logEvent);
+    }
 }
