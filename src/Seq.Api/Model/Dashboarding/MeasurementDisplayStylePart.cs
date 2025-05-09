@@ -38,6 +38,11 @@ namespace Seq.Api.Model.Dashboarding
         /// For bar chart measurement display types, whether the sum of all bars will be shown as an overlay.
         /// </summary>
         public bool BarOverlaySum { get; set; }
+        
+        /// <summary>
+        /// For heatmap measurement display types, whether the scale is logarithmic.
+        /// </summary>
+        public bool UseLogarithmicScale { get; set; }
 
         /// <summary>
         /// For measurement display types that include a legend, whether the legend will be shown.

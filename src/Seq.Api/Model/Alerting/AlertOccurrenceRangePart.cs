@@ -1,5 +1,4 @@
-﻿using Seq.Api.Model.LogEvents;
-using Seq.Api.Model.Shared;
+﻿using Seq.Api.Model.Shared;
 
 namespace Seq.Api.Model.Alerting
 {

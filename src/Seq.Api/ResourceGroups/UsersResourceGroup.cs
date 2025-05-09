@@ -169,10 +169,21 @@ namespace Seq.Api.ResourceGroups
             var providers = await GroupGetAsync<AuthProvidersPart>("AuthenticationProviders", cancellationToken: cancellationToken).ConfigureAwait(false);
             var provider = providers.Providers.SingleOrDefault(p => p.Name == "Integrated Windows Authentication");
             if (provider == null)
-                throw new SeqApiException("The Integrated Windows Authentication provider is not available.", null);
+                throw new SeqApiException("The Integrated Windows Authentication provider is not available.");
             var response = await Client.HttpClient.GetAsync(provider.Url, cancellationToken).ConfigureAwait(false);
             response.EnsureSuccessStatusCode();
             return await FindCurrentAsync(cancellationToken).ConfigureAwait(false);
+        }
+        
+        /// <summary>Reset the authentication properties stored for <paramref name="entity"/>. After this operation
+        /// completes, the user's <see cref="UserEntity.Username"/> will exclusively determine how they are linked
+        /// to the authentication provider on their next login.</summary>
+        /// <param name="entity">The user to modify.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken"/> allowing the operation to be canceled.</param>
+        /// <returns>A task signalling completion.</returns>
+        public async Task UnlinkAuthenticationProviderAsync(UserEntity entity, CancellationToken cancellationToken = default)
+        { 
+            await Client.PostAsync(entity, "UnlinkAuthenticationProvider", new {}, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
     }
 }

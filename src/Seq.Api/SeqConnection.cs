@@ -14,14 +14,15 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using Seq.Api.Client;
 using Seq.Api.Model;
 using Seq.Api.Model.Root;
+using Seq.Api.Model.Shared;
 using Seq.Api.ResourceGroups;
 
 namespace Seq.Api
@@ -31,36 +32,9 @@ namespace Seq.Api
     /// </summary>
     public class SeqConnection : ILoadResourceGroup, IDisposable
     {
-        readonly object _sync = new object();
-        readonly Dictionary<string, Task<ResourceGroup>> _resourceGroups = new Dictionary<string, Task<ResourceGroup>>();
+        readonly object _sync = new();
+        readonly Dictionary<string, Task<ResourceGroup>> _resourceGroups = new();
         Task<RootEntity> _root;
-
-        /// <summary>
-        /// Construct a <see cref="SeqConnection"/>.
-        /// </summary>
-        /// <param name="serverUrl">The base URL of the Seq server.</param>
-        /// <param name="apiKey">An API key to use when making requests to the server, if required.</param>
-        /// <param name="useDefaultCredentials">Whether default credentials will be sent with HTTP requests; the default is <c>true</c>.</param>
-        [Obsolete("Prefer `SeqConnection(serverUrl, apiKey, createHttpMessageHandler)` instead."), EditorBrowsable(EditorBrowsableState.Never)]
-        public SeqConnection(string serverUrl, string apiKey, bool useDefaultCredentials)
-        {
-            if (serverUrl == null) throw new ArgumentNullException(nameof(serverUrl));
-            Client = new SeqApiClient(serverUrl, apiKey, useDefaultCredentials);
-        }
-
-        /// <summary>
-        /// Construct a <see cref="SeqConnection"/>.
-        /// </summary>
-        /// <param name="serverUrl">The base URL of the Seq server.</param>
-        /// <param name="apiKey">An API key to use when making requests to the server, if required.</param>
-        /// <param name="configureHttpClientHandler">An optional callback to configure the <see cref="HttpClientHandler"/> used when making HTTP requests
-        /// to the Seq API.</param>
-        [Obsolete("Prefer `SeqConnection(serverUrl, apiKey, createHttpMessageHandler)` instead."), EditorBrowsable(EditorBrowsableState.Never)]
-        public SeqConnection(string serverUrl, string apiKey, Action<HttpClientHandler> configureHttpClientHandler)
-        {
-            if (serverUrl == null) throw new ArgumentNullException(nameof(serverUrl));
-            Client = new SeqApiClient(serverUrl, apiKey, configureHttpClientHandler);
-        }
 
         /// <summary>
         /// Construct a <see cref="SeqConnection"/>.
@@ -92,133 +66,133 @@ namespace Seq.Api
         /// <summary>
         /// Create and manage alerts.
         /// </summary>
-        public AlertsResourceGroup Alerts => new AlertsResourceGroup(this);
+        public AlertsResourceGroup Alerts => new(this);
 
         /// <summary>
         /// List and administratively remove active alerts. To create/edit/remove alerts in normal
         /// circumstances, use <see cref="Dashboards"/>.
         /// </summary>
-        public AlertStateResourceGroup AlertState => new AlertStateResourceGroup(this);
+        public AlertStateResourceGroup AlertState => new(this);
 
         /// <summary>
         /// Perform operations on API keys.
         /// </summary>
-        public ApiKeysResourceGroup ApiKeys => new ApiKeysResourceGroup(this);
+        public ApiKeysResourceGroup ApiKeys => new(this);
 
         /// <summary>
         /// Perform operations on Seq app instances.
         /// </summary>
-        public AppInstancesResourceGroup AppInstances => new AppInstancesResourceGroup(this);
+        public AppInstancesResourceGroup AppInstances => new(this);
 
         /// <summary>
         /// Perform operations on Seq app packages.
         /// </summary>
-        public AppsResourceGroup Apps => new AppsResourceGroup(this);
+        public AppsResourceGroup Apps => new(this);
 
         /// <summary>
         /// Perform operations on backups.
         /// </summary>
-        public BackupsResourceGroup Backups => new BackupsResourceGroup(this);
-        
+        public BackupsResourceGroup Backups => new(this);
+
         /// <summary>
-        /// Perform operations on the Seq cluster.
+        /// Perform operations on Seq cluster nodes.
         /// </summary>
-        public ClusterNodesResourceGroup ClusterNodes => new ClusterNodesResourceGroup(this);
+        public ClusterResourceGroup Cluster => new(this);
         
         /// <summary>
         /// Perform operations on dashboards.
         /// </summary>
-        public DashboardsResourceGroup Dashboards => new DashboardsResourceGroup(this);
+        public DashboardsResourceGroup Dashboards => new(this);
 
         /// <summary>
         /// Execute SQL-style queries against the API.
         /// </summary>
-        public DataResourceGroup Data => new DataResourceGroup(this);
+        public DataResourceGroup Data => new(this);
 
         /// <summary>
         /// Access server diagnostics.
         /// </summary>
-        public DiagnosticsResourceGroup Diagnostics => new DiagnosticsResourceGroup(this);
+        public DiagnosticsResourceGroup Diagnostics => new(this);
 
         /// <summary>
         /// Read and subscribe to events from the event store.
         /// </summary>
-        public EventsResourceGroup Events => new EventsResourceGroup(this);
+        public EventsResourceGroup Events => new(this);
 
         /// <summary>
         /// Perform operations on queries and filter expressions.
         /// </summary>
-        public ExpressionsResourceGroup Expressions => new ExpressionsResourceGroup(this);
+        public ExpressionsResourceGroup Expressions => new(this);
         
         /// <summary>
         /// Perform operations on expression indexes.
         /// </summary>
-        public ExpressionIndexesResourceGroup ExpressionIndexes => new ExpressionIndexesResourceGroup(this);
+        public ExpressionIndexesResourceGroup ExpressionIndexes => new(this);
 
         /// <summary>
         /// Perform operations on NuGet feeds.
         /// </summary>
-        public FeedsResourceGroup Feeds => new FeedsResourceGroup(this);
+        public FeedsResourceGroup Feeds => new(this);
 
         /// <summary>
         /// Statistics about indexes.
         /// </summary>
-        public IndexesResourceGroup Indexes => new IndexesResourceGroup(this);
+        public IndexesResourceGroup Indexes => new(this);
 
         /// <summary>
         /// Perform operations on the Seq license certificate.
         /// </summary>
-        public LicensesResourceGroup Licenses => new LicensesResourceGroup(this);
+        public LicensesResourceGroup Licenses => new(this);
 
         /// <summary>
         /// Perform operations on permalinked events.
         /// </summary>
-        public PermalinksResourceGroup Permalinks => new PermalinksResourceGroup(this);
+        public PermalinksResourceGroup Permalinks => new(this);
 
         /// <summary>
         /// Perform operations on retention policies.
         /// </summary>
-        public RetentionPoliciesResourceGroup RetentionPolicies => new RetentionPoliciesResourceGroup(this);
+        public RetentionPoliciesResourceGroup RetentionPolicies => new(this);
         
         /// <summary>
         /// Perform operations on user roles.
         /// </summary>
-        public RolesResourceGroup Roles => new RolesResourceGroup(this);
+        public RolesResourceGroup Roles => new(this);
 
         /// <summary>
         /// Perform operations on tasks running in the Seq server.
         /// </summary>
-        public RunningTasksResourceGroup RunningTasks => new RunningTasksResourceGroup(this);
+        public RunningTasksResourceGroup RunningTasks => new(this);
 
         /// <summary>
         /// Perform operations on system settings.
         /// </summary>
-        public SettingsResourceGroup Settings => new SettingsResourceGroup(this);
+        public SettingsResourceGroup Settings => new(this);
 
         /// <summary>
         /// Perform operations on signals.
         /// </summary>
-        public SignalsResourceGroup Signals => new SignalsResourceGroup(this);
+        public SignalsResourceGroup Signals => new(this);
 
         /// <summary>
         /// Perform operations on saved SQL queries.
         /// </summary>
-        public SqlQueriesResourceGroup SqlQueries => new SqlQueriesResourceGroup(this);
+        public SqlQueriesResourceGroup SqlQueries => new(this);
 
         /// <summary>
         /// Perform operations on known available Seq versions.
         /// </summary>
-        public UpdatesResourceGroup Updates => new UpdatesResourceGroup(this);
+        public UpdatesResourceGroup Updates => new(this);
 
         /// <summary>
         /// Perform operations on users.
         /// </summary>
-        public UsersResourceGroup Users => new UsersResourceGroup(this);
+        public UsersResourceGroup Users => new(this);
 
         /// <summary>
         /// Perform operations on workspaces.
         /// </summary>
-        public WorkspacesResourceGroup Workspaces => new WorkspacesResourceGroup(this);
+        public WorkspacesResourceGroup Workspaces => new(this);
 
         /// <summary>
         /// Check that the Seq API is available. If the initial attempt fails (i.e. the server is starting up),
@@ -240,11 +214,11 @@ namespace Seq.Api
 
         async Task<bool> ConnectAsync(bool throwOnFailure)
         {
-            HttpStatusCode statusCode;
+            HttpResponseMessage response;
 
             try
             {
-                statusCode = (await Client.HttpClient.GetAsync("api")).StatusCode;
+                response = await Client.HttpClient.GetAsync("api");
             }
             catch
             {
@@ -254,13 +228,27 @@ namespace Seq.Api
                 return false;
             }
 
+            var statusCode = response.StatusCode;
             if (statusCode == HttpStatusCode.OK)
                 return true;
 
             if (!throwOnFailure)
                 return false;
+            
+            ErrorPart error = null;
+            try
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                error = JsonConvert.DeserializeObject<ErrorPart>(content);
+            }
+            // ReSharper disable once EmptyGeneralCatchClause
+            catch { }
 
-            throw new SeqApiException($"Could not connect to the Seq API endpoint: {(int)statusCode}/{statusCode}.", statusCode);
+            var exceptionMessage = $"Could not connect to the Seq API endpoint ({(int)statusCode}/{statusCode}).";
+            if (error?.Error != null)
+                exceptionMessage += $" {error.Error}";
+
+            throw new SeqApiException(exceptionMessage, statusCode);
         }
         
         async Task<ResourceGroup> ILoadResourceGroup.LoadResourceGroupAsync(string name, CancellationToken cancellationToken)

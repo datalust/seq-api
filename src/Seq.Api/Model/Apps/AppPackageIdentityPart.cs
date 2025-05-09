@@ -1,4 +1,4 @@
-// Copyright Datalust and contributors. 
+// Copyright © Datalust and contributors. 
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,26 +12,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Seq.Api.Model.Cluster
+namespace Seq.Api.Model.Apps
 {
     /// <summary>
-    /// The role a node is acting in within a cluster of connected Seq instances.
+    /// The data required to identify a NuGet package version. 
     /// </summary>
-    public enum NodeRole
+    public class AppPackageIdentityPart
     {
         /// <summary>
-        /// The node is not part of a cluster.
+        /// The id of the <see cref="Seq.Api.Model.Feeds.NuGetFeedEntity"/> from which the package was installed.
         /// </summary>
-        Standalone,
-        
+        public string NuGetFeedId { get; set; }
+
         /// <summary>
-        /// The node is a replica, following the state of a leader node.
+        /// The package id, for example <c>Seq.Input.HealthCheck</c>.
         /// </summary>
-        Follower,
-        
+        public string PackageId { get; set; }
+
         /// <summary>
-        /// The node is a replication leader.
+        /// The version of the package.
         /// </summary>
-        Leader
+        public string Version { get; set; }
     }
 }

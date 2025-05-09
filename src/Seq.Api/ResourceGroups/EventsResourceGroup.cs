@@ -20,7 +20,6 @@ using System.Threading.Tasks;
 using Seq.Api.Model.Events;
 using Seq.Api.Model.Shared;
 using Seq.Api.Model.Signals;
-using Seq.Api.Streams;
 
 namespace Seq.Api.ResourceGroups
 {
@@ -40,12 +39,17 @@ namespace Seq.Api.ResourceGroups
         /// <param name="permalinkId">If the request is for a permalinked event, specifying the id of the permalink here will
         /// allow events that have otherwise been deleted to be found. The special value `"unknown"` provides backwards compatibility
         /// with versions prior to 5.0, which did not mark permalinks explicitly.</param>
+        /// <param name="background">Run the search at a lower priority, using a lower proportion of available server
+        /// resources (may take longer to complete).</param>
+        /// <param name="trace">Enable detailed (server-side) query tracing.</param>
         /// <param name="cancellationToken">Token through which the operation can be cancelled.</param>
         /// <returns>The event.</returns>
         public async Task<EventEntity> FindAsync(
             string id,
             bool render = false,
             string permalinkId = null,
+            bool background = false,
+            bool trace = false,
             CancellationToken cancellationToken = default)
         {
             if (id == null) throw new ArgumentNullException(nameof(id));
@@ -53,6 +57,8 @@ namespace Seq.Api.ResourceGroups
             var parameters = new Dictionary<string, object> {{"id", id}};
             if (render) parameters.Add("render", true);
             if (permalinkId != null) parameters.Add("permalinkId", permalinkId);
+            if (background) parameters.Add("background", true);
+            if (trace) parameters.Add("trace", true);
 
             return await GroupGetAsync<EventEntity>("Item", parameters, cancellationToken).ConfigureAwait(false);
         }
@@ -71,16 +77,90 @@ namespace Seq.Api.ResourceGroups
         /// <param name="render">If specified, the event's message template and properties will be rendered into its RenderedMessage property.</param>
         /// <param name="fromDateUtc">Earliest (inclusive) date/time from which to search.</param>
         /// <param name="toDateUtc">Latest (exclusive) date/time from which to search.</param>
+        /// <param name="permalinkId">If the request is for a permalinked event, specifying the id of the permalink here will
+        /// allow events that have otherwise been deleted to be found. The special value `"unknown"` provides backwards compatibility
+        /// with versions prior to 5.0, which did not mark permalinks explicitly.</param>
+        /// <param name="variables">Values for any free variables that appear in <paramref name="filter"/>.</param>
+        /// <param name="background">Run the search at a lower priority, using a lower proportion of available server
+        /// resources (may take longer to complete).</param>
+        /// <param name="cancellationToken">Token through which the operation can be cancelled.</param>
+        /// <param name="trace">Enable detailed (server-side) query tracing.</param>
+        /// <returns>The complete list of events, ordered from least to most recent.</returns>
+        public async IAsyncEnumerable<EventEntity> EnumerateAsync(
+            SignalEntity unsavedSignal = null,
+            SignalExpressionPart signal = null,
+            string filter = null,
+            int count = 30,
+            string startAtId = null,
+            string afterId = null,
+            bool render = false,
+            DateTime? fromDateUtc = null,
+            DateTime? toDateUtc = null,
+            string permalinkId = null,
+            Dictionary<string, object> variables = null,
+            bool background = false,
+            bool trace = false,
+            [EnumeratorCancellation]
+            CancellationToken cancellationToken = default)
+        {
+            var parameters = new Dictionary<string, object>{{ "count", count }};
+            if (signal != null) { parameters.Add("signal", signal.ToString()); }
+            if (filter != null) { parameters.Add("filter", filter); }
+            if (startAtId != null) { parameters.Add("startAtId", startAtId); }
+            if (afterId != null) { parameters.Add("afterId", afterId); }
+            if (render) { parameters.Add("render", true); }
+            if (fromDateUtc != null) { parameters.Add("fromDateUtc", fromDateUtc.Value); }
+            if (toDateUtc != null) { parameters.Add("toDateUtc", toDateUtc.Value); }
+            if (permalinkId != null) { parameters.Add("permalinkId", permalinkId); }
+            if (background) parameters.Add("background", true);
+            if (trace) parameters.Add("trace", true);
+
+            var group = await LoadGroupAsync(cancellationToken).ConfigureAwait(false);
+            if (variables == null && unsavedSignal == null)
+            {
+                await foreach (var evt in Client.StreamAsync<EventEntity>(group, "Scan", parameters, cancellationToken))
+                {
+                    yield return evt;
+                }
+                yield break;
+            }
+
+            var body = new EvaluationContextPart { Signal = unsavedSignal, Variables = variables };
+            parameters.Add("wait", true);
+            await foreach (var evt in Client.StreamSendAsync<EvaluationContextPart, EventEntity>(group, "Scan", body, parameters, cancellationToken))
+            {
+                yield return evt;
+            }
+        }
+        
+        /// <summary>
+        /// Retrieve all events that match a set of conditions, using the paged search API rather than WebSockets. Note that this method is less
+        /// efficient and requires more server resources than the <see cref="EnumerateAsync"/>.
+        /// </summary>
+        /// <param name="unsavedSignal">A constructed signal that may not appear on the server, for example, a <see cref="SignalEntity"/> that has been
+        /// created but not saved, a signal from another server, or the modified representation of an entity already persisted.</param>
+        /// <param name="signal">If provided, a signal expression describing the set of events that will be filtered for the result.</param>
+        /// <param name="filter">A strict Seq filter expression to match (text expressions must be in double quotes). To
+        /// convert a "fuzzy" filter into a strict one the way the Seq UI does, use connection.Expressions.ToStrictAsync().</param>
+        /// <param name="count">The number of events to retrieve. If not specified will default to 30.</param>
+        /// <param name="startAtId">An event id from which to start searching (inclusively).</param>
+        /// <param name="afterId">An event id to search after (exclusively).</param>
+        /// <param name="render">If specified, the event's message template and properties will be rendered into its RenderedMessage property.</param>
+        /// <param name="fromDateUtc">Earliest (inclusive) date/time from which to search.</param>
+        /// <param name="toDateUtc">Latest (exclusive) date/time from which to search.</param>
         /// <param name="shortCircuitAfter">If specified, the number of events after the first match to keep searching before a partial
         /// result set is returned. Used to improve responsiveness when the result is displayed in a user interface, not typically used in
         /// batch processing scenarios.</param>
         /// <param name="permalinkId">If the request is for a permalinked event, specifying the id of the permalink here will
         /// allow events that have otherwise been deleted to be found. The special value `"unknown"` provides backwards compatibility
         /// with versions prior to 5.0, which did not mark permalinks explicitly.</param>
-        /// <param name="cancellationToken">Token through which the operation can be cancelled.</param>
         /// <param name="variables">Values for any free variables that appear in <paramref name="filter"/>.</param>
+        /// <param name="background">Run the search at a lower priority, using a lower proportion of available server
+        /// resources (may take longer to complete).</param>
+        /// <param name="trace">Enable detailed (server-side) query tracing.</param>
+        /// <param name="cancellationToken">Token through which the operation can be cancelled.</param>
         /// <returns>The complete list of events, ordered from least to most recent.</returns>
-        public async IAsyncEnumerable<EventEntity> EnumerateAsync(
+        public async IAsyncEnumerable<EventEntity> PagedEnumerateAsync(
             SignalEntity unsavedSignal = null,
             SignalExpressionPart signal = null,
             string filter = null,
@@ -93,6 +173,8 @@ namespace Seq.Api.ResourceGroups
             int? shortCircuitAfter = null,
             string permalinkId = null,
             Dictionary<string, object> variables = null,
+            bool background = false,
+            bool trace = false,
             [EnumeratorCancellation]
             CancellationToken cancellationToken = default)
         {
@@ -107,7 +189,7 @@ namespace Seq.Api.ResourceGroups
             while (true)
             {
                 var resultSet = await PageAsync(unsavedSignal, signal, filter, nextCount, startAtId, nextAfterId, render,
-                    fromDateUtc, toDateUtc, shortCircuitAfter, permalinkId, variables, cancellationToken).ConfigureAwait(false);
+                    fromDateUtc, toDateUtc, shortCircuitAfter, permalinkId, variables, background, trace, cancellationToken).ConfigureAwait(false);
 
                 foreach (var evt in resultSet.Events)
                 {
@@ -128,7 +210,6 @@ namespace Seq.Api.ResourceGroups
                 nextCount = Math.Min(remaining, pageSize);
             }
         }
-
         
         /// <summary>
         /// Retrieve all events that match a set of conditions. The complete result is buffered into memory,
@@ -146,13 +227,13 @@ namespace Seq.Api.ResourceGroups
         /// <param name="render">If specified, the event's message template and properties will be rendered into its RenderedMessage property.</param>
         /// <param name="fromDateUtc">Earliest (inclusive) date/time from which to search.</param>
         /// <param name="toDateUtc">Latest (exclusive) date/time from which to search.</param>
-        /// <param name="shortCircuitAfter">If specified, the number of events after the first match to keep searching before a partial
-        /// result set is returned. Used to improve responsiveness when the result is displayed in a user interface, not typically used in
-        /// batch processing scenarios.</param>
         /// <param name="permalinkId">If the request is for a permalinked event, specifying the id of the permalink here will
         /// allow events that have otherwise been deleted to be found. The special value `"unknown"` provides backwards compatibility
         /// with versions prior to 5.0, which did not mark permalinks explicitly.</param>
         /// <param name="variables">Values for any free variables that appear in <paramref name="filter"/>.</param>
+        /// <param name="background">Run the search at a lower priority, using a lower proportion of available server
+        /// resources (may take longer to complete).</param>
+        /// <param name="trace">Enable detailed (server-side) query tracing.</param>
         /// <param name="cancellationToken">Token through which the operation can be cancelled.</param>
         /// <returns>The result set with a page of events.</returns>
         public async Task<List<EventEntity>> ListAsync(
@@ -165,15 +246,15 @@ namespace Seq.Api.ResourceGroups
             bool render = false,
             DateTime? fromDateUtc = null,
             DateTime? toDateUtc = null,
-            int? shortCircuitAfter = null,
             string permalinkId = null,
             Dictionary<string, object> variables = null,
+            bool background = false,
+            bool trace = false,
             CancellationToken cancellationToken = default)
         {
             var results = new List<EventEntity>();
             await foreach (var item in EnumerateAsync(unsavedSignal, signal, filter, count, startAtId, afterId, render,
-                                   fromDateUtc, toDateUtc, shortCircuitAfter, permalinkId, variables, cancellationToken)
-                           .WithCancellation(cancellationToken)
+                                   fromDateUtc, toDateUtc, permalinkId, variables, background, trace, cancellationToken)
                            .ConfigureAwait(false))
                 results.Add(item);
             return results;   
@@ -200,7 +281,10 @@ namespace Seq.Api.ResourceGroups
         /// allow events that have otherwise been deleted to be found. The special value `"unknown"` provides backwards compatibility
         /// with versions prior to 5.0, which did not mark permalinks explicitly.</param>
         /// <param name="variables">Values for any free variables that appear in <paramref name="filter"/>.</param>
+        /// <param name="background">Run the search at a lower priority, using a lower proportion of available server
+        /// resources (may take longer to complete).</param>
         /// <param name="cancellationToken">Token through which the operation can be cancelled.</param>
+        /// <param name="trace">Enable detailed (server-side) query tracing.</param>
         /// <returns>The result set with a page of events.</returns>
         public async Task<ResultSetPart> PageAsync(
             SignalEntity unsavedSignal = null,
@@ -215,6 +299,8 @@ namespace Seq.Api.ResourceGroups
             int? shortCircuitAfter = null,
             string permalinkId = null,
             Dictionary<string, object> variables = null,
+            bool background = false,
+            bool trace = false,
             CancellationToken cancellationToken = default)
         {
             var parameters = new Dictionary<string, object>{{ "count", count }};
@@ -227,6 +313,8 @@ namespace Seq.Api.ResourceGroups
             if (toDateUtc != null) { parameters.Add("toDateUtc", toDateUtc.Value); }
             if (shortCircuitAfter != null) { parameters.Add("shortCircuitAfter", shortCircuitAfter.Value); }
             if (permalinkId != null) { parameters.Add("permalinkId", permalinkId); }
+            if (background) parameters.Add("background", true);
+            if (trace) parameters.Add("trace", true);
 
             var body = new EvaluationContextPart { Signal = unsavedSignal, Variables = variables };
             return await GroupPostAsync<EvaluationContextPart, ResultSetPart>("InSignal", body, parameters, cancellationToken).ConfigureAwait(false);
@@ -265,52 +353,96 @@ namespace Seq.Api.ResourceGroups
         }
 
         /// <summary>
-        /// Connect to the live event stream, read as strongly-typed objects. Dispose the resulting stream to disconnect.
+        /// Connect to the live event stream. Cancel or dispose the resulting iterator to disconnect.
         /// </summary>
-        /// <typeparam name="T">The type into which events should be deserialized.</typeparam>
+        /// <param name="unsavedSignal">A constructed signal that may not appear on the server, for example, a <see cref="SignalEntity"/> that has been
+        /// created but not saved, a signal from another server, or the modified representation of an entity already persisted.</param>
         /// <param name="signal">If provided, a signal expression describing the set of events that will be filtered for the result.</param>
         /// <param name="filter">A strict Seq filter expression to match (text expressions must be in double quotes). To
         /// convert a "fuzzy" filter into a strict one the way the Seq UI does, use connection.Expressions.ToStrictAsync().</param>
+        /// <param name="render">If specified, the event's message template and properties will be rendered into its <see cref="EventEntity.RenderedMessage"/> property.</param>
+        /// <param name="variables">Values for any free variables that appear in <paramref name="filter"/>.</param>
         /// <param name="cancellationToken">Token through which the operation can be cancelled.</param>
-        /// <returns>An observable that will stream events from the server to subscribers. Events will be buffered server-side until the first
-        /// subscriber connects, ensure at least one subscription is made in order to avoid event loss.</returns>
         /// <remarks>See <a href="https://docs.datalust.co/docs/posting-raw-events#section-compact-json-format">the Seq ingestion
         /// docs</a> for event schema information.</remarks>
-        public async Task<ObservableStream<T>> StreamAsync<T>(
+        public async IAsyncEnumerable<EventEntity> StreamAsync(
+            SignalEntity unsavedSignal = null,
             SignalExpressionPart signal = null,
             string filter = null,
-            CancellationToken cancellationToken = default)
+            Dictionary<string, object> variables = null,
+            bool render = false,
+            [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             var parameters = new Dictionary<string, object>();
             if (signal != null) { parameters.Add("signal", signal.ToString()); }
             if (filter != null) { parameters.Add("filter", filter); }
+            if (render) { parameters.Add("render", true);}
 
             var group = await LoadGroupAsync(cancellationToken).ConfigureAwait(false);
-            return await Client.StreamAsync<T>(group, "Stream", parameters, cancellationToken).ConfigureAwait(false);
+
+            if (unsavedSignal != null)
+            {
+                parameters.Add("wait", true);
+                var body = new EvaluationContextPart { Signal = unsavedSignal, Variables = variables };
+                await foreach (var evt in Client.StreamSendAsync<EvaluationContextPart, EventEntity>(group, "Stream", body, parameters,
+                                   cancellationToken))
+                {
+                    yield return evt;
+                }
+            }
+
+            await foreach (var evt in Client.StreamAsync<EventEntity>(group, "Stream", parameters, cancellationToken))
+            {
+                yield return evt;
+            }
         }
 
         /// <summary>
-        /// Connect to the live event stream, read as raw JSON documents. Dispose the resulting stream to disconnect.
+        /// Connect to the live event stream, returning events as raw JSON documents. Cancel or dispose the
+        /// resulting iterator to disconnect.
         /// </summary>
+        /// <param name="unsavedSignal">A constructed signal that may not appear on the server, for example, a <see cref="SignalEntity"/> that has been
+        /// created but not saved, a signal from another server, or the modified representation of an entity already persisted.</param>
         /// <param name="signal">If provided, a signal expression describing the set of events that will be filtered for the result.</param>
         /// <param name="filter">A strict Seq filter expression to match (text expressions must be in double quotes). To
         /// convert a "fuzzy" filter into a strict one the way the Seq UI does, use connection.Expressions.ToStrictAsync().</param>
+        /// <param name="render">If specified, the event's message template and properties will be rendered into its <see cref="EventEntity.RenderedMessage"/> property.</param>
+        /// <param name="clef">If specified, compact JSON format will be requested instead of the default format.</param>
+        /// <param name="variables">Values for any free variables that appear in <paramref name="filter"/>.</param>
         /// <param name="cancellationToken">Token through which the operation can be cancelled.</param>
-        /// <returns>An observable that will stream events from the server to subscribers. Events will be buffered server-side until the first
-        /// subscriber connects, ensure at least one subscription is made in order to avoid event loss.</returns>
         /// <remarks>See <a href="https://docs.datalust.co/docs/posting-raw-events#section-compact-json-format">the Seq ingestion
         /// docs</a> for event schema information.</remarks>
-        public async Task<ObservableStream<string>> StreamDocumentsAsync(
+        public async IAsyncEnumerable<string> StreamDocumentsAsync(
+            SignalEntity unsavedSignal = null,
             SignalExpressionPart signal = null,
             string filter = null,
-            CancellationToken cancellationToken = default)
+            Dictionary<string, object> variables = null,
+            bool render = false,
+            bool clef = false,
+            [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             var parameters = new Dictionary<string, object>();
             if (signal != null) { parameters.Add("signal", signal.ToString()); }
             if (filter != null) { parameters.Add("filter", filter); }
+            if (render) { parameters.Add("render", true);}
+            if (clef) { parameters.Add("clef", true);}
 
             var group = await LoadGroupAsync(cancellationToken).ConfigureAwait(false);
-            return await Client.StreamTextAsync(group, "Stream", parameters, cancellationToken).ConfigureAwait(false);
+
+            if (unsavedSignal != null)
+            {
+                parameters.Add("wait", true);
+                var body = new EvaluationContextPart { Signal = unsavedSignal, Variables = variables };
+                await foreach (var evt in Client.StreamTextSendAsync(group, "Stream", body, parameters, cancellationToken))
+                {
+                    yield return evt;
+                }
+            }
+
+            await foreach (var evt in Client.StreamTextAsync(group, "Stream", parameters, cancellationToken))
+            {
+                yield return evt;
+            }
         }
     }
 }

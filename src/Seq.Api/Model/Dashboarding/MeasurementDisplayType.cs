@@ -47,6 +47,11 @@ namespace Seq.Api.Model.Dashboarding
         /// <summary>
         /// A table of raw data values.
         /// </summary>
-        Table
+        Table,
+        
+        /// <summary>
+        /// A heatmap chart.
+        /// </summary>
+        Heatmap,
     }
 }

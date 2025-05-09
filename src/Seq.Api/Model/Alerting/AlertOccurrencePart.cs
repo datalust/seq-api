@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Seq.Api.Model.AppInstances;
 using Seq.Api.Model.LogEvents;
 using Seq.Api.Model.Shared;
 

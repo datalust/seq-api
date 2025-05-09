@@ -16,7 +16,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Seq.Api.Model;
 using Seq.Api.Model.Apps;
 
 namespace Seq.Api.ResourceGroups
@@ -86,9 +85,13 @@ namespace Seq.Api.ResourceGroups
         {
             if (feedId == null) throw new ArgumentNullException(nameof(feedId));
             if (packageId == null) throw new ArgumentNullException(nameof(packageId));
-            var parameters = new Dictionary<string, object> { { "feedId", feedId }, { "packageId", packageId } };
-            if (version != null) parameters.Add("version", version);
-            return await GroupPostAsync<object, AppEntity>("InstallPackage", new object(), parameters, cancellationToken).ConfigureAwait(false);
+            var identity = new AppPackageIdentityPart
+            {
+                NuGetFeedId = feedId,
+                PackageId = packageId,
+                Version = version,
+            };
+            return await GroupPostAsync<AppPackageIdentityPart, AppEntity>("InstallPackage", identity, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -97,14 +100,19 @@ namespace Seq.Api.ResourceGroups
         /// <param name="entity">The app to update the package for.</param>
         /// <param name="version">The version to update to; if <c>null</c>, the latest available version in the feed will be used.</param>
         /// <param name="force">If <c>true</c>, update the app package even if the same version is already installed.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken"/> allowing the operation to be canceled.</param>
         /// <returns>The app with updated package information.</returns>
-        public async Task<AppEntity> UpdatePackageAsync(AppEntity entity, string version = null, bool force = false)
+        public async Task<AppEntity> UpdatePackageAsync(AppEntity entity, string version = null, bool force = false, CancellationToken cancellationToken = default)
         {
             if (entity == null) throw new ArgumentNullException(nameof(entity));
             var parameters = new Dictionary<string, object>();
             if (force) parameters.Add("force", true);
-            if (version != null) parameters.Add("version", version);
-            return await Client.PostAsync<object, AppEntity>(entity, "UpdatePackage", new object(), parameters).ConfigureAwait(false);
+            var identity = new AppPackageIdentityPart
+            {
+                // `NuGetFeedId` and `PackageId` are ignored, but these may be accepted by a future API version.
+                Version = version,
+            };
+            return await Client.PostAsync<AppPackageIdentityPart, AppEntity>(entity, "UpdatePackage", identity, parameters, cancellationToken).ConfigureAwait(false);
         }
     }
 }

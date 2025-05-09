@@ -9,7 +9,7 @@ artifacts:
 deploy:
 - provider: NuGet
   api_key:
-    secure: uJjVQ3SRUEcaUqdyKuuIvtrpNrO+u9P07aLbUumFiqZhjj3uI+PlZULv8JtgrxR/
+    secure: Jxi/gameJWSW1ncE+SpU6C51kENE7mSxtKYPnM5CrvTYnfpaf8Y5B7PsROv2Oglg
   skip_symbols: true
   on:
     branch: /^(main|dev)$/

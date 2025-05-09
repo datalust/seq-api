@@ -67,10 +67,15 @@ namespace Seq.Api.Model.License
         /// update the license when the subscription is renewed or tier changed.
         /// </summary>
         public bool AutomaticallyRefresh { get; set; }
-
+        
         /// <summary>
-        /// If <c>true</c>, the license supports running Seq in a DR configuration.
+        /// The amount of storage (in gigabytes) that Seq is licensed to store.
         /// </summary>
-        public bool IncludesDisasterRecovery { get; set; }
+        public int? StorageLimitGigabytes { get; set; }
+        
+        /// <summary>
+        /// If <c>true</c>, the license supports running Seq in a HA configuration.
+        /// </summary>
+        public bool Clustered { get; set; }
     }
 }

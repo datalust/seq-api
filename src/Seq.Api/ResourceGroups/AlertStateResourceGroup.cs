@@ -17,7 +17,6 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Seq.Api.Model.Alerting;
-using Seq.Api.Model.Dashboarding;
 
 namespace Seq.Api.ResourceGroups
 {

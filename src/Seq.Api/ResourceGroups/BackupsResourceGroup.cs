@@ -58,7 +58,7 @@ namespace Seq.Api.ResourceGroups
         /// Download a backup with the current state of the server. Note that the backup will not be stored server-side.
         /// </summary>
         /// <param name="cancellationToken"><see cref="CancellationToken"/> allowing the operation to be canceled.</param>
-        /// <returns>The <c>.seqbak</c> backup file.</returns>
+        /// <returns>The <c>.seqbac</c> backup file.</returns>
         public async Task<Stream> DownloadImmediateAsync(CancellationToken cancellationToken = default)
         {
             return await GroupPostReadBytesAsync("Immediate", new object(), cancellationToken: cancellationToken).ConfigureAwait(false);
