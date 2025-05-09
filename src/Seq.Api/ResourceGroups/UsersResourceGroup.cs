@@ -169,7 +169,7 @@ namespace Seq.Api.ResourceGroups
             var providers = await GroupGetAsync<AuthProvidersPart>("AuthenticationProviders", cancellationToken: cancellationToken).ConfigureAwait(false);
             var provider = providers.Providers.SingleOrDefault(p => p.Name == "Integrated Windows Authentication");
             if (provider == null)
-                throw new SeqApiException("The Integrated Windows Authentication provider is not available.", null);
+                throw new SeqApiException("The Integrated Windows Authentication provider is not available.");
             var response = await Client.HttpClient.GetAsync(provider.Url, cancellationToken).ConfigureAwait(false);
             response.EnsureSuccessStatusCode();
             return await FindCurrentAsync(cancellationToken).ConfigureAwait(false);

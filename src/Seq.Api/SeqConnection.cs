@@ -14,7 +14,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -36,33 +35,6 @@ namespace Seq.Api
         readonly object _sync = new();
         readonly Dictionary<string, Task<ResourceGroup>> _resourceGroups = new();
         Task<RootEntity> _root;
-
-        /// <summary>
-        /// Construct a <see cref="SeqConnection"/>.
-        /// </summary>
-        /// <param name="serverUrl">The base URL of the Seq server.</param>
-        /// <param name="apiKey">An API key to use when making requests to the server, if required.</param>
-        /// <param name="useDefaultCredentials">Whether default credentials will be sent with HTTP requests; the default is <c>true</c>.</param>
-        [Obsolete("Prefer `SeqConnection(serverUrl, apiKey, createHttpMessageHandler)` instead."), EditorBrowsable(EditorBrowsableState.Never)]
-        public SeqConnection(string serverUrl, string apiKey, bool useDefaultCredentials)
-        {
-            if (serverUrl == null) throw new ArgumentNullException(nameof(serverUrl));
-            Client = new SeqApiClient(serverUrl, apiKey, useDefaultCredentials);
-        }
-
-        /// <summary>
-        /// Construct a <see cref="SeqConnection"/>.
-        /// </summary>
-        /// <param name="serverUrl">The base URL of the Seq server.</param>
-        /// <param name="apiKey">An API key to use when making requests to the server, if required.</param>
-        /// <param name="configureHttpClientHandler">An optional callback to configure the <see cref="HttpClientHandler"/> used when making HTTP requests
-        /// to the Seq API.</param>
-        [Obsolete("Prefer `SeqConnection(serverUrl, apiKey, createHttpMessageHandler)` instead."), EditorBrowsable(EditorBrowsableState.Never)]
-        public SeqConnection(string serverUrl, string apiKey, Action<HttpClientHandler> configureHttpClientHandler)
-        {
-            if (serverUrl == null) throw new ArgumentNullException(nameof(serverUrl));
-            Client = new SeqApiClient(serverUrl, apiKey, configureHttpClientHandler);
-        }
 
         /// <summary>
         /// Construct a <see cref="SeqConnection"/>.
