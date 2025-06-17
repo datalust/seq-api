@@ -72,14 +72,12 @@ namespace Seq.Api.ResourceGroups
         /// Add a new app instance.
         /// </summary>
         /// <param name="entity">The app instance to add.</param>
-        /// <param name="runOnExisting">If <c>true</c>, events already on the server will be sent to the app. Note that this requires disk buffering and persistent bookmarks
-        /// for the app, which is not recommended for performance reasons.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> allowing the operation to be canceled.</param>
         /// <returns>The app instance, with server-allocated properties such as <see cref="Entity.Id"/> initialized.</returns>
-        public async Task<AppInstanceEntity> AddAsync(AppInstanceEntity entity, bool runOnExisting = false, CancellationToken cancellationToken = default)
+        public async Task<AppInstanceEntity> AddAsync(AppInstanceEntity entity, CancellationToken cancellationToken = default)
         {
             if (entity == null) throw new ArgumentNullException(nameof(entity));
-            return await GroupCreateAsync<AppInstanceEntity, AppInstanceEntity>(entity, new Dictionary<string, object> { { "runOnExisting", runOnExisting } }, cancellationToken)
+            return await GroupCreateAsync<AppInstanceEntity, AppInstanceEntity>(entity, cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
         }
 
