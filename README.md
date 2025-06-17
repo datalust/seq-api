@@ -52,7 +52,7 @@ Seq internally limits the resources a query is allowed to consume. The query met
 The snippet below demonstrates lazily enumerating through results to retrieve the complete set.
 
 ```csharp
-var resultSet = await connection.Events.EnumerateAsync(
+var resultSet = connection.Events.EnumerateAsync(
     filter: "Environment = 'Test'",
     render: true,
     count: 1000);
@@ -65,20 +65,19 @@ All methods that retrieve events require a `count`. The API client defaults this
 
 ### Streaming events
 
-Seq 3.4 provides live streaming of events matching a filter and/or set of signals.
+Seq provides live streaming of events matching a filter and/or set of signals.
 
 ```csharp
 var filter = "@Level = 'Error'";
 
-using (var stream = await connection.Events.StreamAsync<JObject>(filter: filter))
-using (stream.Select(jObject => LogEventReader.ReadFromJObject(jObject))
-             .Subscribe(evt => Log.Write(evt)))
+await foreach (var evt in connection.Events.StreamAsync<JObject>(filter: filter, clef: true))
 {
-    await stream;
+    var logEvent = LogEventReader.ReadFromString(evt);
+    Log.Write(logEvent);
 }
 ```
 
-The `Events.StreamAsync()` method returns a hot `IObservable<T>` over a _WebSocket_. The observable will keep producing events until either it's disposed, or the server is shut down.
+`Events.StreamAsync()` method returns `IAsyncEnumerable<T>` over a _WebSocket_. The enumerator will keep producing events until either it's disposed, or the server is shut down.
 
 Seq streams the events in [compact JSON format](https://github.com/serilog/serilog-formatting-compact), which the Seq API client library can deserialize into JSON.NET `JObjects` for consumption.
 
