@@ -42,7 +42,7 @@ namespace Seq.Api.Client
         // Future versions of Seq may not completely support vN-1 features, however
         // providing this as an Accept header will ensure what compatibility is available
         // can be utilized.
-        const string SeqApiV11MediaType = "application/vnd.datalust.seq.v11+json";
+        const string SeqApiV11MediaType = "application/vnd.datalust.seq.v12+json";
 
         // ReSharper disable once NotAccessedField.Local
         readonly bool _defaultMessageHandler;
