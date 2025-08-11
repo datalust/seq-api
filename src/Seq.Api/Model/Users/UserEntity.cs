@@ -86,5 +86,12 @@ namespace Seq.Api.Model.Users
         /// </summary>
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string AuthenticationProviderUniqueIdentifier { get; set; }
+        
+        /// <summary>
+        /// Because the <c>api/users/login</c> endpoint returns a <see cref="UserEntity"/> in the JSON response
+        /// body when login is successful, we piggy-back a CSRF token for browser use on these responses.
+        /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public string CsrfToken { get; set; }
     }
 }

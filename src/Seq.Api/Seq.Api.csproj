@@ -19,7 +19,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net8.0' ">
-    <DefineConstants>$(DefineConstants);SOCKETS_HTTP_HANDLER;WEBSOCKET_USE_HTTPCLIENT</DefineConstants>
+    <DefineConstants>$(DefineConstants);SOCKETS_HTTP_HANDLER;WEBSOCKET_USE_HTTPCLIENT;CANCELABLE_ASYNC_READ;STRING_STARTSWITH_CHAR</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
