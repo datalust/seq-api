@@ -528,8 +528,10 @@ public sealed class SeqApiClient : IDisposable
             absoluteUnknownScheme = new UriBuilder(combined);
         }
 
-        absoluteUnknownScheme.Scheme = absoluteUnknownScheme.Scheme.Equals("http", StringComparison.OrdinalIgnoreCase) ? "ws" : "wss";
-
+        absoluteUnknownScheme.Scheme = absoluteUnknownScheme.Scheme.Equals("http", StringComparison.OrdinalIgnoreCase) ||
+                                       absoluteUnknownScheme.Scheme.Equals("ws", StringComparison.OrdinalIgnoreCase) ? 
+            "ws" : "wss";
+        
         return absoluteUnknownScheme.ToString();
     }
 
