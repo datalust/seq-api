@@ -116,13 +116,17 @@ namespace Seq.Api.ResourceGroups
         /// <param name="password">The password to log in with.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> allowing the operation to be canceled.</param>
         /// <returns>The logged-in user.</returns>
-        /// <remarks>Following successful login, other calls through the API client will authenticate as the logged-in user.</remarks>
+        /// <remarks>Following successful login, other calls through the API client will authenticate as the
+        /// logged-in user. Note that this method is not safe for concurrent access: logins should be synchronized
+        /// if the API client is used concurrently by multiple threads/asynchronous tasks.</remarks>
         public async Task<UserEntity> LoginAsync(string username, string password, CancellationToken cancellationToken = default)
         {
             if (username == null) throw new ArgumentNullException(nameof(username));
             if (password == null) throw new ArgumentNullException(nameof(password));
             var credentials = new CredentialsPart {Username = username, Password = password};
-            return await GroupPostAsync<CredentialsPart, UserEntity>("Login", credentials, cancellationToken: cancellationToken).ConfigureAwait(false);
+            var user = await GroupPostAsync<CredentialsPart, UserEntity>("Login", credentials, cancellationToken: cancellationToken).ConfigureAwait(false);
+            Client.UpdateCsrfToken(user.CsrfToken);
+            return user;
         }
 
         /// <summary>
@@ -133,6 +137,7 @@ namespace Seq.Api.ResourceGroups
         public async Task LogoutAsync(CancellationToken cancellationToken = default)
         {
             await GroupPostAsync("Logout", new object(), cancellationToken: cancellationToken).ConfigureAwait(false);
+            Client.UpdateCsrfToken(null);
         }
 
         /// <summary>

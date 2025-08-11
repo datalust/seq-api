@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Description>Client library for the Seq HTTP API.</Description>
-    <VersionPrefix>2025.2.0</VersionPrefix>
+    <VersionPrefix>2025.2.1</VersionPrefix>
     <Authors>Datalust;Contributors</Authors>
     <TargetFrameworks>netstandard2.0;net6.0;net8.0</TargetFrameworks>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
@@ -19,7 +19,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net8.0' ">
-    <DefineConstants>$(DefineConstants);SOCKETS_HTTP_HANDLER;WEBSOCKET_USE_HTTPCLIENT</DefineConstants>
+    <DefineConstants>$(DefineConstants);SOCKETS_HTTP_HANDLER;WEBSOCKET_USE_HTTPCLIENT;CANCELABLE_ASYNC_READ;STRING_STARTSWITH_CHAR</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
