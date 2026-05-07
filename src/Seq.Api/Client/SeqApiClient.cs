@@ -41,7 +41,7 @@ public sealed class SeqApiClient : IDisposable
     // Future versions of Seq may not completely support vN-1 features, however
     // providing this as an Accept header will ensure what compatibility is available
     // can be utilized.
-    const string SeqApiVersionedMediaType = "application/vnd.datalust.seq.v13+json";
+    const string SeqApiVersionedMediaType = "application/vnd.datalust.seq.v14+json";
     const string ApiKeyHeaderName = "X-Seq-ApiKey";
     const string CsrfTokenHeaderName = "X-Seq-CsrfToken";
     
@@ -531,7 +531,7 @@ public sealed class SeqApiClient : IDisposable
         absoluteUnknownScheme.Scheme = absoluteUnknownScheme.Scheme.Equals("http", StringComparison.OrdinalIgnoreCase) ||
                                        absoluteUnknownScheme.Scheme.Equals("ws", StringComparison.OrdinalIgnoreCase) ? 
             "ws" : "wss";
-        
+
         return absoluteUnknownScheme.ToString();
     }
 

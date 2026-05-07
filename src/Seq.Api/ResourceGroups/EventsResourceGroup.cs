@@ -70,7 +70,7 @@ namespace Seq.Api.ResourceGroups
         /// created but not saved, a signal from another server, or the modified representation of an entity already persisted.</param>
         /// <param name="signal">If provided, a signal expression describing the set of events that will be filtered for the result.</param>
         /// <param name="filter">A strict Seq filter expression to match (text expressions must be in double quotes). To
-        /// convert a "fuzzy" filter into a strict one the way the Seq UI does, use connection.Expressions.ToStrictAsync().</param>
+        /// convert a "fuzzy" filter into a strict one the way the Seq UI does, use <see cref="ExpressionsResourceGroup.ToStrictAsync"/>.</param>
         /// <param name="count">The number of events to retrieve. If not specified will default to 30.</param>
         /// <param name="startAtId">An event id from which to start searching (inclusively).</param>
         /// <param name="afterId">An event id to search after (exclusively).</param>
@@ -141,7 +141,7 @@ namespace Seq.Api.ResourceGroups
         /// created but not saved, a signal from another server, or the modified representation of an entity already persisted.</param>
         /// <param name="signal">If provided, a signal expression describing the set of events that will be filtered for the result.</param>
         /// <param name="filter">A strict Seq filter expression to match (text expressions must be in double quotes). To
-        /// convert a "fuzzy" filter into a strict one the way the Seq UI does, use connection.Expressions.ToStrictAsync().</param>
+        /// convert a "fuzzy" filter into a strict one the way the Seq UI does, use <see cref="ExpressionsResourceGroup.ToStrictAsync"/>.</param>
         /// <param name="count">The number of events to retrieve. If not specified will default to 30.</param>
         /// <param name="startAtId">An event id from which to start searching (inclusively).</param>
         /// <param name="afterId">An event id to search after (exclusively).</param>
@@ -220,7 +220,7 @@ namespace Seq.Api.ResourceGroups
         /// created but not saved, a signal from another server, or the modified representation of an entity already persisted.</param>
         /// <param name="signal">If provided, a signal expression describing the set of events that will be filtered for the result.</param>
         /// <param name="filter">A strict Seq filter expression to match (text expressions must be in double quotes). To
-        /// convert a "fuzzy" filter into a strict one the way the Seq UI does, use connection.Expressions.ToStrictAsync().</param>
+        /// convert a "fuzzy" filter into a strict one the way the Seq UI does, use <see cref="ExpressionsResourceGroup.ToStrictAsync"/>.</param>
         /// <param name="count">The number of events to retrieve. If not specified will default to 30.</param>
         /// <param name="startAtId">An event id from which to start searching (inclusively).</param>
         /// <param name="afterId">An event id to search after (exclusively).</param>
@@ -267,7 +267,7 @@ namespace Seq.Api.ResourceGroups
         /// created but not saved, a signal from another server, or the modified representation of an entity already persisted.</param>
         /// <param name="signal">If provided, a signal expression describing the set of events that will be filtered for the result.</param>
         /// <param name="filter">A strict Seq filter expression to match (text expressions must be in double quotes). To
-        /// convert a "fuzzy" filter into a strict one the way the Seq UI does, use connection.Expressions.ToStrictAsync().</param>
+        /// convert a "fuzzy" filter into a strict one the way the Seq UI does, use <see cref="ExpressionsResourceGroup.ToStrictAsync"/>.</param>
         /// <param name="count">The number of events to retrieve. If not specified will default to 30.</param>
         /// <param name="startAtId">An event id from which to start searching (inclusively).</param>
         /// <param name="afterId">An event id to search after (exclusively).</param>
@@ -327,7 +327,7 @@ namespace Seq.Api.ResourceGroups
         /// created but not saved, a signal from another server, or the modified representation of an entity already persisted.</param>
         /// <param name="signal">If provided, a signal expression describing the set of events that will be filtered for the result.</param>
         /// <param name="filter">A strict Seq filter expression to match (text expressions must be in double quotes). To
-        /// convert a "fuzzy" filter into a strict one the way the Seq UI does, use connection.Expressions.ToStrictAsync().</param>
+        /// convert a "fuzzy" filter into a strict one the way the Seq UI does, use <see cref="ExpressionsResourceGroup.ToStrictAsync"/>.</param>
         /// <param name="fromDateUtc">Earliest (inclusive) date/time from which to delete.</param>
         /// <param name="toDateUtc">Latest (exclusive) date/time from which to delete.</param>
         /// <param name="variables">Values for any free variables that appear in <paramref name="filter"/>.</param>
@@ -359,7 +359,7 @@ namespace Seq.Api.ResourceGroups
         /// created but not saved, a signal from another server, or the modified representation of an entity already persisted.</param>
         /// <param name="signal">If provided, a signal expression describing the set of events that will be filtered for the result.</param>
         /// <param name="filter">A strict Seq filter expression to match (text expressions must be in double quotes). To
-        /// convert a "fuzzy" filter into a strict one the way the Seq UI does, use connection.Expressions.ToStrictAsync().</param>
+        /// convert a "fuzzy" filter into a strict one the way the Seq UI does, use <see cref="ExpressionsResourceGroup.ToStrictAsync"/>.</param>
         /// <param name="render">If specified, the event's message template and properties will be rendered into its <see cref="EventEntity.RenderedMessage"/> property.</param>
         /// <param name="variables">Values for any free variables that appear in <paramref name="filter"/>.</param>
         /// <param name="cancellationToken">Token through which the operation can be cancelled.</param>
@@ -405,7 +405,7 @@ namespace Seq.Api.ResourceGroups
         /// created but not saved, a signal from another server, or the modified representation of an entity already persisted.</param>
         /// <param name="signal">If provided, a signal expression describing the set of events that will be filtered for the result.</param>
         /// <param name="filter">A strict Seq filter expression to match (text expressions must be in double quotes). To
-        /// convert a "fuzzy" filter into a strict one the way the Seq UI does, use connection.Expressions.ToStrictAsync().</param>
+        /// convert a "fuzzy" filter into a strict one the way the Seq UI does, use <see cref="ExpressionsResourceGroup.ToStrictAsync"/>.</param>
         /// <param name="render">If specified, the event's message template and properties will be rendered into its <see cref="EventEntity.RenderedMessage"/> property.</param>
         /// <param name="clef">If specified, compact JSON format will be requested instead of the default format.</param>
         /// <param name="variables">Values for any free variables that appear in <paramref name="filter"/>.</param>

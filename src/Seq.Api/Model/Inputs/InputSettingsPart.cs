@@ -27,12 +27,12 @@ namespace Seq.Api.Model.Inputs
         /// Properties that will be automatically added to all events ingested using the key. These will override any properties with
         /// the same names already present on the event.
         /// </summary>
-        public List<EventPropertyPart> AppliedProperties { get; set; } = new List<EventPropertyPart>();
+        public List<EventPropertyPart> AppliedProperties { get; set; } = [];
 
         /// <summary>
         /// A filter that selects events to ingest. If <c>null</c>, all events received using the key will be ingested.
         /// </summary>
-        public DescriptiveFilterPart Filter { get; set; } = new DescriptiveFilterPart();
+        public DescriptiveFilterPart Filter { get; set; } = new();
 
         /// <summary>
         /// A minimum level at which events received using the key will be ingested. The level hierarchy understood by Seq is fuzzy
