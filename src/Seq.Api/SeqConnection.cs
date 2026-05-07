@@ -143,6 +143,11 @@ namespace Seq.Api
         /// Perform operations on the Seq license certificate.
         /// </summary>
         public LicensesResourceGroup Licenses => new(this);
+        
+        /// <summary>
+        /// Perform operations on metrics definitions.
+        /// </summary>
+        public MetricsResourceGroup Metrics => new(this);
 
         /// <summary>
         /// Perform operations on permalinked events.
@@ -189,6 +194,11 @@ namespace Seq.Api
         /// </summary>
         public UsersResourceGroup Users => new(this);
 
+        /// <summary>
+        /// Perform operations on metrics views.
+        /// </summary>
+        public ViewsResourceGroup Views => new(this);
+        
         /// <summary>
         /// Perform operations on workspaces.
         /// </summary>

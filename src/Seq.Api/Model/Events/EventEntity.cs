@@ -116,5 +116,11 @@ namespace Seq.Api.Model.Events
         /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public TimeSpan? Elapsed { get; set; }
+        
+        /// <summary>
+        /// If the event is a metric, the definitions of its metric samples.
+        /// </summary>
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public List<EventPropertyPart> Definitions { get; set; }
     }
 }

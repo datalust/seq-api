@@ -17,46 +17,50 @@ using System.Threading;
 using System.Threading.Tasks;
 using Seq.Api.Model.Expressions;
 
-namespace Seq.Api.ResourceGroups
+namespace Seq.Api.ResourceGroups;
+
+/// <summary>
+/// Perform operations on queries and filter expressions.
+/// </summary>
+public class ExpressionsResourceGroup : ApiResourceGroup
 {
-    /// <summary>
-    /// Perform operations on queries and filter expressions.
-    /// </summary>
-    public class ExpressionsResourceGroup : ApiResourceGroup
+    internal ExpressionsResourceGroup(ILoadResourceGroup connection)
+        : base("Expressions", connection)
     {
-        internal ExpressionsResourceGroup(ILoadResourceGroup connection)
-            : base("Expressions", connection)
-        {
-        }
+    }
 
-        /// <summary>
-        /// Convert an expression in the relaxed syntax supported by the filter bar, to the strictly-valid
-        /// syntax required by API interactions.
-        /// </summary>
-        /// <param name="fuzzy">The (potentially) relaxed-syntax expression.</param>
-        /// <param name="cancellationToken">A <see cref="CancellationToken"/> allowing the operation to be canceled.</param>
-        /// <returns>The expression in a strictly-valid form.</returns>
-        public Task<ExpressionPart> ToStrictAsync(string fuzzy, CancellationToken cancellationToken = default)
+    /// <summary>
+    /// Convert an expression in the relaxed syntax supported by the filter bar, to the strictly-valid
+    /// syntax required by API interactions.
+    /// </summary>
+    /// <param name="fuzzy">The (potentially) relaxed-syntax expression.</param>
+    /// <param name="cancellationToken">A <see cref="CancellationToken"/> allowing the operation to be canceled.</param>
+    /// <returns>The expression in a strictly-valid form.</returns>
+    public Task<ExpressionPart> ToStrictAsync(string fuzzy, CancellationToken cancellationToken = default)
+    {
+        var parameters = new Dictionary<string, object>
         {
-            return GroupGetAsync<ExpressionPart>("ToStrict", new Dictionary<string, object>
-            {
-                {"fuzzy", fuzzy}
-            }, cancellationToken);
-        }
+            [nameof(fuzzy)] = fuzzy
+        };
+        return GroupGetAsync<ExpressionPart>("ToStrict", parameters, cancellationToken);
+    }
 
-        /// <summary>
-        /// Convert an expression in the relaxed syntax supported by the filter bar, to the strict and limited
-        /// syntax required within SQL queries.
-        /// </summary>
-        /// <param name="fuzzy">The (potentially) relaxed-syntax expression.</param>
-        /// <param name="cancellationToken">A <see cref="CancellationToken"/> allowing the operation to be canceled.</param>
-        /// <returns>The expression in a form that can be used within SQL queries.</returns>
-        public Task<ExpressionPart> ToSqlAsync(string fuzzy, CancellationToken cancellationToken = default)
+    /// <summary>
+    /// Convert an expression in the relaxed syntax supported by the filter bar, to the strict and limited
+    /// syntax required within SQL queries.
+    /// </summary>
+    /// <param name="fuzzy">The (potentially) relaxed-syntax expression.</param>
+    /// <param name="schema">The name of the storage object that the expression will be evaluated against; accepted
+    /// values are <c>stream</c> and <c>series</c>. This influences the processing of <c>"free text"</c> expressions.</param>
+    /// <param name="cancellationToken">A <see cref="CancellationToken"/> allowing the operation to be canceled.</param>
+    /// <returns>The expression in a form that can be used within SQL queries.</returns>
+    public Task<ExpressionPart> ToSqlAsync(string fuzzy, string schema = "stream", CancellationToken cancellationToken = default)
+    {
+        var parameters = new Dictionary<string, object>
         {
-            return GroupGetAsync<ExpressionPart>("ToSql", new Dictionary<string, object>
-            {
-                {"fuzzy", fuzzy}
-            }, cancellationToken);
-        }
+            [nameof(fuzzy)] = fuzzy,
+            [nameof(schema)] = schema
+        };
+        return GroupGetAsync<ExpressionPart>("ToSql", parameters, cancellationToken);
     }
 }

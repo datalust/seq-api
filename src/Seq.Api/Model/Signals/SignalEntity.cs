@@ -31,12 +31,12 @@ namespace Seq.Api.Model.Signals
         public SignalEntity()
         {
             Title = "New Signal";
-            Filters = new List<DescriptiveFilterPart>();
-            Columns = new List<SignalColumnPart>();
+            Filters = [];
+            Columns = [];
         }
 
         /// <summary>
-        /// The friendly, human readable title of the signal.
+        /// The friendly, human-readable title of the signal.
         /// </summary>
         public string Title { get; set; }
 
@@ -46,7 +46,7 @@ namespace Seq.Api.Model.Signals
         public string Description { get; set; }
 
         /// <summary>
-        /// Filters that are combined (using the <c>and</c> operator) to identify events matching the filter.
+        /// Filters that are combined (using the <c>and</c> operator) to identify events present in the signal.
         /// </summary>
         public List<DescriptiveFilterPart> Filters { get; set; }
 

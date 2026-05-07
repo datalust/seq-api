@@ -166,6 +166,12 @@ namespace Seq.Api.Model.Settings
         NewUserShowDashboardIds,
 
         /// <summary>
+        /// A comma-separated list of (shared) metrics view ids that will be included in any new user's
+        /// personal default workspace.
+        /// </summary>
+        NewUserShowViewIds,
+
+        /// <summary>
         /// If using OpenID Connect authentication, the URL of the authorization endpoint. For example,
         /// <c>https://example.com</c>.
         /// </summary>

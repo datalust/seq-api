@@ -36,7 +36,7 @@ namespace Seq.Api.Model.Shared
         public string Filter { get; set; }
 
         /// <summary>
-        /// The original ("fuzzy") text entered by the user into the filter bar when
+        /// Optionally, the original ("fuzzy") text entered by the user into the filter bar when
         /// creating the filter. This may not be syntactically valid, e.g. it may be
         /// interpreted as free text - hence while it's displayed in the UI and forms the
         /// basis of user editing of the filter, the <see cref="Filter"/> value is executed.
