@@ -37,8 +37,8 @@ public class MetricsResourceGroup : ApiResourceGroup
     /// <param name="filter">A strict Seq filter expression to match (text expressions must be in double quotes). To
     /// convert a "fuzzy" filter into a strict one the way the Seq UI does, use <see cref="ExpressionsResourceGroup.ToStrictAsync"/>.</param>
     /// <param name="count">The number of definitions to retrieve. If not specified will default to 30.</param>
-    /// <param name="rangeStartUtc">The earliest timestamp from which to include events in the query result.</param>
-    /// <param name="rangeEndUtc">The exclusive latest timestamp to which events are included in the query result. The default is the current time.</param>
+    /// <param name="rangeStartUtc">The earliest timestamp from which to include definitions in the query result.</param>
+    /// <param name="rangeEndUtc">The exclusive latest timestamp to which definitions are included in the query result. The default is the current time.</param>
     /// <param name="timeout">The query timeout; if not specified, the query will run until completion.</param>
     /// <param name="variables">Values for any free variables that appear in <paramref name="filter"/>.</param>
     /// <param name="trace">Enable detailed (server-side) query tracing.</param>
@@ -61,13 +61,13 @@ public class MetricsResourceGroup : ApiResourceGroup
     }
 
     /// <summary>
-    /// Retrieve information about the labels available for filtering samples matching a set of search criteria.
+    /// Retrieve information about the dimensions available for filtering samples matching a set of search criteria.
     /// </summary>
-    /// <param name="count">The number of definitions to retrieve. If not specified will default to 30.</param>
+    /// <param name="count">The number of dimensions to retrieve. If not specified will default to 30.</param>
     /// <param name="metric">Optionally, the name of a metric to limit dimension search to. By default, dimensions
     /// for all metrics are returned.</param>
-    /// <param name="rangeStartUtc">The earliest timestamp from which to include events in the query result.</param>
-    /// <param name="rangeEndUtc">The exclusive latest timestamp to which events are included in the query result. The default is the current time.</param>
+    /// <param name="rangeStartUtc">The earliest timestamp from which to include dimensions in the query result.</param>
+    /// <param name="rangeEndUtc">The exclusive latest timestamp to which dimensions are included in the query result. The default is the current time.</param>
     /// <param name="timeout">The query timeout; if not specified, the query will run until completion.</param>
     /// <param name="trace">Enable detailed (server-side) query tracing.</param>
     /// <param name="cancellationToken">Token through which the operation can be cancelled.</param>
@@ -86,6 +86,33 @@ public class MetricsResourceGroup : ApiResourceGroup
             parameters.Add(nameof(metric), metric);
         var body = new EvaluationContextPart();
         return await GroupPostAsync<EvaluationContextPart, List<MetricDimensionPart>>("Dimensions", body, parameters, cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Retrieve the top <paramref name="count"/> values associated with the metric dimension <paramref name="accessor"/>.
+    /// </summary>
+    /// <param name="accessor">The dimension's accessor. This is generally a simple property path (<c>cluster.node.name</c>) but can
+    /// use explict root namespaces and indexer notation (<c>@Resource.cluster['node name']</c>) if necessary.</param>
+    /// <param name="count">The number of values to retrieve. If not specified will default to 30.</param>
+    /// <param name="rangeStartUtc">The earliest timestamp from which to include values in the query result.</param>
+    /// <param name="rangeEndUtc">The exclusive latest timestamp to which values are included in the query result. The default is the current time.</param>
+    /// <param name="timeout">The query timeout; if not specified, the query will run until completion.</param>
+    /// <param name="trace">Enable detailed (server-side) query tracing.</param>
+    /// <param name="cancellationToken">Token through which the operation can be cancelled.</param>
+    /// <returns>A structured result set.</returns>
+    public async Task<List<object>> ListDimensionValuesAsync(
+        string accessor,
+        int count = 30,
+        DateTime? rangeStartUtc = null,
+        DateTime? rangeEndUtc = null,
+        TimeSpan? timeout = null,
+        bool trace = false,
+        CancellationToken cancellationToken = default)
+    {
+        var parameters = MakeParameters(null, null, count, rangeStartUtc, rangeEndUtc, timeout, trace);
+        parameters.Add(nameof(accessor), accessor);
+        var body = new EvaluationContextPart();
+        return await GroupPostAsync<EvaluationContextPart, List<object>>("DimensionValues", body, parameters, cancellationToken).ConfigureAwait(false);
     }
 
     static Dictionary<string, object> MakeParameters(List<string> groups, string filter, int count, DateTime? rangeStartUtc, DateTime? rangeEndUtc, TimeSpan? timeout, bool trace)

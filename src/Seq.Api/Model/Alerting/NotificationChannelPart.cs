@@ -58,6 +58,6 @@ namespace Seq.Api.Model.Alerting
         /// by the alert.
         /// </summary>
         public Dictionary<string, string> NotificationAppSettingOverrides { get; set; } =
-            new Dictionary<string, string>();
+            new();
     }
 }
