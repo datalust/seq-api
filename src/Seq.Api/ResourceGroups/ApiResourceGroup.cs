@@ -159,6 +159,13 @@ namespace Seq.Api.ResourceGroups
             var group = await LoadGroupAsync(cancellationToken).ConfigureAwait(false);
             return await Client.PostAsync<TEntity, TResponse>(group, link, content, parameters, cancellationToken).ConfigureAwait(false);
         }
+        
+        // Throws on 5xx errors; callers are expected to derive 4xx error information from the response stream.
+        internal async Task<TResponse> GroupTryPostAsync<TEntity, TResponse>(string link, TEntity content, IDictionary<string, object> parameters = null, CancellationToken cancellationToken = default)
+        {
+            var group = await LoadGroupAsync(cancellationToken).ConfigureAwait(false);
+            return await Client.TryPostAsync<TEntity, TResponse>(group, link, content, parameters, cancellationToken).ConfigureAwait(false);
+        }
 
         /// <summary>
         /// Update an entity.
