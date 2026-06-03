@@ -191,7 +191,7 @@ public sealed class SeqApiClient : IDisposable
         return _serializer.Deserialize<TResponse>(new JsonTextReader(new StreamReader(stream)));
     }
     
-    // Throws on 5xx errors; callers are expected to derive 400 error information from the response stream.
+    // Callers are expected to derive 400 error information from the response stream. All other result status codes throw.
     internal async Task<TResponse> TryPostAsync<TEntity, TResponse>(ILinked entity, string link, TEntity content, IDictionary<string, object> parameters = null, CancellationToken cancellationToken = default)
     {
         var linkUri = ResolveLink(entity, link, parameters);

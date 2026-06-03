@@ -160,7 +160,7 @@ namespace Seq.Api.ResourceGroups
             return await Client.PostAsync<TEntity, TResponse>(group, link, content, parameters, cancellationToken).ConfigureAwait(false);
         }
         
-        // Throws on 5xx errors; callers are expected to derive 400 error information from the response stream.
+        // Callers are expected to derive 400 error information from the response stream. All other result status codes throw.
         internal async Task<TResponse> GroupTryPostAsync<TEntity, TResponse>(string link, TEntity content, IDictionary<string, object> parameters = null, CancellationToken cancellationToken = default)
         {
             var group = await LoadGroupAsync(cancellationToken).ConfigureAwait(false);
