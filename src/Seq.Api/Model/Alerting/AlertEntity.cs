@@ -52,10 +52,20 @@ namespace Seq.Api.Model.Alerting
         public bool IsDisabled { get; set; }
         
         /// <summary>
+        /// The source of the data for the query.
+        /// </summary>
+        public DataSource DataSource { get; set; } = DataSource.Stream;
+
+        /// <summary>
+        /// Lateral joins applied to the data source.
+        /// </summary>
+        public List<JoinPart> Joins { get; set; } = [];
+        
+        /// <summary>
         /// An optional <see cref="SignalExpressionPart"/> limiting the data source that triggers the alert.
         /// </summary>
         public SignalExpressionPart SignalExpression { get; set; }
-
+        
         /// <summary>
         /// An optional <c>where</c> clause limiting the data source that triggers the alert.
         /// </summary>
@@ -75,7 +85,7 @@ namespace Seq.Api.Model.Alerting
         /// <summary>
         /// The individual measurements that will be tested by the alert condition.
         /// </summary>
-        public List<ColumnPart> Select { get; set; } = new List<ColumnPart>();
+        public List<ColumnPart> Select { get; set; } = [];
         
         /// <summary>
         /// The alert condition. This is a <c>having</c> clause over the grouped results

@@ -28,6 +28,6 @@ namespace Seq.Api.Model.Alerting
         /// <summary>
         /// The <see cref="NotificationChannelPart">NotificationChannelParts</see> that were alerted.
         /// </summary>
-        public List<AlertNotificationPart> Notifications { get; set; } = new List<AlertNotificationPart>();
+        public List<AlertNotificationPart> Notifications { get; set; } = new();
     }
 }

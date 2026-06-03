@@ -191,6 +191,14 @@ public sealed class SeqApiClient : IDisposable
         return _serializer.Deserialize<TResponse>(new JsonTextReader(new StreamReader(stream)));
     }
     
+    // Callers are expected to derive 400 error information from the response stream. All other result status codes throw.
+    internal async Task<TResponse> TryPostAsync<TEntity, TResponse>(ILinked entity, string link, TEntity content, IDictionary<string, object> parameters = null, CancellationToken cancellationToken = default)
+    {
+        var linkUri = ResolveLink(entity, link, parameters);
+        var request = new HttpRequestMessage(HttpMethod.Post, linkUri) { Content = MakeJsonContent(content) };
+        var stream = await HttpTrySendAsync(request, cancellationToken).ConfigureAwait(false);
+        return _serializer.Deserialize<TResponse>(new JsonTextReader(new StreamReader(stream)));
+    }
     /// <summary>
     /// Issue a <c>POST</c> request accepting a serialized <typeparamref name="TEntity"/> and returning a string by following <paramref name="link"/> from <paramref name="entity"/>.
     /// </summary>
@@ -452,8 +460,19 @@ public sealed class SeqApiClient : IDisposable
 #endif
             ).ConfigureAwait(false);
     }
-    
+
+    // Throws on 5xx errors; callers are expected to derive 400 error information from the response stream.
+    async Task<Stream> HttpTrySendAsync(HttpRequestMessage request, CancellationToken cancellationToken = default)
+    {
+        return await HttpSendAsyncCore(request, throwOn400: false, cancellationToken);
+    }
+
     async Task<Stream> HttpSendAsync(HttpRequestMessage request, CancellationToken cancellationToken = default)
+    {
+        return await HttpSendAsyncCore(request, throwOn400: true, cancellationToken);
+    }
+
+    async Task<Stream> HttpSendAsyncCore(HttpRequestMessage request, bool throwOn400, CancellationToken cancellationToken)
     {
         var response = await HttpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
         var stream = await response.Content.ReadAsStreamAsync(
@@ -462,7 +481,7 @@ public sealed class SeqApiClient : IDisposable
 #endif
             ).ConfigureAwait(false);
 
-        if (response.IsSuccessStatusCode)
+        if (response.IsSuccessStatusCode || (!throwOn400 && response.StatusCode == HttpStatusCode.BadRequest))
         {
             return stream;
         }

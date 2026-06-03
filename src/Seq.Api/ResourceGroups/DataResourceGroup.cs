@@ -33,7 +33,8 @@ namespace Seq.Api.ResourceGroups
         }
 
         /// <summary>
-        /// Execute an SQL query and retrieve the result set as a structured <see cref="QueryResultPart"/>.
+        /// Execute an SQL query and retrieve the result set as a structured <see cref="QueryResultPart"/>. For non-throwing
+        /// syntax error reporting, see <see cref="TryQueryAsync"/>.
         /// </summary>
         /// <param name="query">The query to execute.</param>
         /// <param name="rangeStartUtc">The earliest timestamp from which to include events in the query result.</param>
@@ -61,6 +62,37 @@ namespace Seq.Api.ResourceGroups
             return await GroupPostAsync<EvaluationContextPart, QueryResultPart>("Query", body, parameters, cancellationToken).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Execute an SQL query and retrieve the result set as a structured <see cref="QueryResultPart"/>. This method
+        /// differs from <see cref="QueryAsync"/> by returning a result object with error information instead of throwing
+        /// when the query syntax is invalid.
+        /// </summary>
+        /// <param name="query">The query to execute.</param>
+        /// <param name="rangeStartUtc">The earliest timestamp from which to include events in the query result.</param>
+        /// <param name="rangeEndUtc">The exclusive latest timestamp to which events are included in the query result. The default is the current time.</param>
+        /// <param name="signal">A signal expression over which the query will be executed.</param>
+        /// <param name="unsavedSignal">A constructed signal that may not appear on the server, for example, a <see cref="SignalEntity"/> that has been
+        /// created but not saved, a signal from another server, or the modified representation of an entity already persisted.</param>
+        /// <param name="timeout">The query timeout; if not specified, the query will run until completion.</param>
+        /// <param name="variables">Values for any free variables that appear in <paramref name="query"/>.</param>
+        /// <param name="trace">Enable detailed (server-side) query tracing.</param>
+        /// <param name="cancellationToken">Token through which the operation can be cancelled.</param>
+        /// <returns>A structured result set or syntax/execution error information.</returns>
+        public async Task<QueryResultPart> TryQueryAsync(
+            string query,
+            DateTime? rangeStartUtc = null,
+            DateTime? rangeEndUtc = null,
+            SignalExpressionPart signal = null,
+            SignalEntity unsavedSignal = null,
+            TimeSpan? timeout = null,
+            Dictionary<string, object> variables = null,
+            bool trace = false,
+            CancellationToken cancellationToken = default)
+        {
+            MakeParameters(query, rangeStartUtc, rangeEndUtc, signal, unsavedSignal, timeout, variables, trace, out var body, out var parameters);
+            return await GroupTryPostAsync<EvaluationContextPart, QueryResultPart>("Query", body, parameters, cancellationToken).ConfigureAwait(false);
+        }
+                
         /// <summary>
         /// Execute an SQL query and retrieve the result set as a structured <see cref="QueryResultPart"/>.
         /// </summary>

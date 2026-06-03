@@ -38,14 +38,14 @@ namespace Seq.Api.Model.Alerting
         /// <summary>
         /// The most recent occurrences of the alert that triggered notifications.
         /// </summary>
-        public List<AlertOccurrencePart> RecentOccurrences { get; set; } = new List<AlertOccurrencePart>();
+        public List<AlertOccurrencePart> RecentOccurrences { get; set; } = new();
 
         /// <summary>
         /// Minimal metrics for the most recent occurrences of the alert that triggered notifications.
         /// The metrics in this list are a superset of <see cref="RecentOccurrences"/>.
         /// </summary>
         public List<AlertOccurrenceRangePart> RecentOccurrenceRanges { get; set; } =
-            new List<AlertOccurrenceRangePart>();
+            new();
 
         /// <summary>
         /// The number of times this alert has been triggered since its creation.

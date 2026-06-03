@@ -17,17 +17,17 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Seq.Api.Model;
-using Seq.Api.Model.SqlQueries;
+using Seq.Api.Model.Queries;
 using Seq.Api.Model.Users;
 
 namespace Seq.Api.ResourceGroups
 {
     /// <summary>
-    /// Perform operations on saved SQL queries.
+    /// Perform operations on saved queries.
     /// </summary>
-    public class SqlQueriesResourceGroup : ApiResourceGroup
+    public class QueriesResourceGroup : ApiResourceGroup
     {
-        internal SqlQueriesResourceGroup(ILoadResourceGroup connection)
+        internal QueriesResourceGroup(ILoadResourceGroup connection)
             : base("SqlQueries", connection)
         {
         }
@@ -38,10 +38,10 @@ namespace Seq.Api.ResourceGroups
         /// <param name="id">The id of the query.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> allowing the operation to be canceled.</param>
         /// <returns>The query.</returns>
-        public async Task<SqlQueryEntity> FindAsync(string id, CancellationToken cancellationToken = default)
+        public async Task<QueryEntity> FindAsync(string id, CancellationToken cancellationToken = default)
         {
             if (id == null) throw new ArgumentNullException(nameof(id));
-            return await GroupGetAsync<SqlQueryEntity>("Item", new Dictionary<string, object> { { "id", id } }, cancellationToken).ConfigureAwait(false);
+            return await GroupGetAsync<QueryEntity>("Item", new Dictionary<string, object> { { "id", id } }, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -52,10 +52,10 @@ namespace Seq.Api.ResourceGroups
         /// <param name="shared">If <c>true</c>, shared queries will be included in the result.</param>
         /// <param name="cancellationToken"><see cref="CancellationToken"/> allowing the operation to be canceled.</param>
         /// <returns>A list containing matching queries.</returns>
-        public async Task<List<SqlQueryEntity>> ListAsync(string ownerId = null, bool shared = false, CancellationToken cancellationToken = default)
+        public async Task<List<QueryEntity>> ListAsync(string ownerId = null, bool shared = false, CancellationToken cancellationToken = default)
         {
             var parameters = new Dictionary<string, object> { { "ownerId", ownerId }, { "shared", shared } };
-            return await GroupListAsync<SqlQueryEntity>("Items", parameters, cancellationToken: cancellationToken).ConfigureAwait(false);
+            return await GroupListAsync<QueryEntity>("Items", parameters, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -63,9 +63,9 @@ namespace Seq.Api.ResourceGroups
         /// </summary>
         /// <param name="cancellationToken"><see cref="CancellationToken"/> allowing the operation to be canceled.</param>
         /// <returns>The unsaved query.</returns>
-        public async Task<SqlQueryEntity> TemplateAsync(CancellationToken cancellationToken = default)
+        public async Task<QueryEntity> TemplateAsync(CancellationToken cancellationToken = default)
         {
-            return await GroupGetAsync<SqlQueryEntity>("Template", cancellationToken: cancellationToken).ConfigureAwait(false);
+            return await GroupGetAsync<QueryEntity>("Template", cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -74,9 +74,9 @@ namespace Seq.Api.ResourceGroups
         /// <param name="entity">The query to add.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> allowing the operation to be canceled.</param>
         /// <returns>The query, with server-allocated properties such as <see cref="Entity.Id"/> initialized.</returns>
-        public async Task<SqlQueryEntity> AddAsync(SqlQueryEntity entity, CancellationToken cancellationToken = default)
+        public async Task<QueryEntity> AddAsync(QueryEntity entity, CancellationToken cancellationToken = default)
         {
-            return await GroupCreateAsync<SqlQueryEntity, SqlQueryEntity>(entity, cancellationToken: cancellationToken).ConfigureAwait(false);
+            return await GroupCreateAsync<QueryEntity, QueryEntity>(entity, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -85,7 +85,7 @@ namespace Seq.Api.ResourceGroups
         /// <param name="entity">The query to remove.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> allowing the operation to be canceled.</param>
         /// <returns>A task indicating completion.</returns>
-        public async Task RemoveAsync(SqlQueryEntity entity, CancellationToken cancellationToken = default)
+        public async Task RemoveAsync(QueryEntity entity, CancellationToken cancellationToken = default)
         {
             await Client.DeleteAsync(entity, "Self", entity, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
@@ -96,7 +96,7 @@ namespace Seq.Api.ResourceGroups
         /// <param name="entity">The query to update.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> allowing the operation to be canceled.</param>
         /// <returns>A task indicating completion.</returns>
-        public async Task UpdateAsync(SqlQueryEntity entity, CancellationToken cancellationToken = default)
+        public async Task UpdateAsync(QueryEntity entity, CancellationToken cancellationToken = default)
         {
             await Client.PutAsync(entity, "Self", entity, cancellationToken: cancellationToken).ConfigureAwait(false);
         }

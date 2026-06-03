@@ -6,27 +6,37 @@ namespace Seq.Api.Model.Metrics;
 public enum MetricAggregationPreference
 {
     /// <summary>
-    /// The <c>count()</c> aggregate function.
+    /// The total count of observed values.
     /// </summary>
-    Count,
-
+    Total,
+    
     /// <summary>
-    /// The <c>sum()</c> aggregate function.
+    /// The sum of all observed values.
     /// </summary>
     Sum,
     
     /// <summary>
-    /// The <c>min()</c> aggregate function.
+    /// The counts of values falling in each histogram bucket.
+    /// </summary>
+    BucketSum,
+    
+    /// <summary>
+    /// The smallest observed value.
     /// </summary>
     Min,
     
     /// <summary>
-    /// The <c>mean()</c> aggregate function.
+    /// The center observed value.
     /// </summary>
     Mean,
     
     /// <summary>
-    /// The <c>max()</c> aggregate function.
+    /// The largest observed value.
     /// </summary>
-    Max
+    Max,
+    
+    /// <summary>
+    /// The set of values greater than a percentage of all other observed values.
+    /// </summary>
+    Percentiles
 }
