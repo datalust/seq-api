@@ -180,9 +180,9 @@ namespace Seq.Api
         public SignalsResourceGroup Signals => new(this);
 
         /// <summary>
-        /// Perform operations on saved SQL queries.
+        /// Perform operations on saved queries.
         /// </summary>
-        public SqlQueriesResourceGroup SqlQueries => new(this);
+        public QueriesResourceGroup Queries => new(this);
 
         /// <summary>
         /// Perform operations on known available Seq versions.

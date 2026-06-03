@@ -16,7 +16,7 @@ using System.Collections.Generic;
 using Seq.Api.Model.Dashboarding;
 using Seq.Api.Model.Metrics;
 using Seq.Api.Model.Signals;
-using Seq.Api.Model.SqlQueries;
+using Seq.Api.Model.Queries;
 
 namespace Seq.Api.Model.Workspaces
 {
@@ -31,7 +31,7 @@ namespace Seq.Api.Model.Workspaces
         public List<string> SignalIds { get; set; } = [];
 
         /// <summary>
-        /// A list of <see cref="SqlQueryEntity"/> ids to include in the workspace.
+        /// A list of <see cref="QueryEntity"/> ids to include in the workspace.
         /// </summary>
         public List<string> QueryIds { get; set; } = [];
         
