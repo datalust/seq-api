@@ -191,7 +191,7 @@ public sealed class SeqApiClient : IDisposable
         return _serializer.Deserialize<TResponse>(new JsonTextReader(new StreamReader(stream)));
     }
     
-    // Throws on 5xx errors; callers are expected to derive 4xx error information from the response stream.
+    // Throws on 5xx errors; callers are expected to derive 400 error information from the response stream.
     internal async Task<TResponse> TryPostAsync<TEntity, TResponse>(ILinked entity, string link, TEntity content, IDictionary<string, object> parameters = null, CancellationToken cancellationToken = default)
     {
         var linkUri = ResolveLink(entity, link, parameters);
@@ -461,18 +461,18 @@ public sealed class SeqApiClient : IDisposable
             ).ConfigureAwait(false);
     }
 
-    // Throws on 5xx errors; callers are expected to derive 4xx error information from the response stream.
+    // Throws on 5xx errors; callers are expected to derive 400 error information from the response stream.
     async Task<Stream> HttpTrySendAsync(HttpRequestMessage request, CancellationToken cancellationToken = default)
     {
-        return await HttpSendAsyncCore(request, throwOn4xx: false, cancellationToken);
+        return await HttpSendAsyncCore(request, throwOn400: false, cancellationToken);
     }
 
     async Task<Stream> HttpSendAsync(HttpRequestMessage request, CancellationToken cancellationToken = default)
     {
-        return await HttpSendAsyncCore(request, throwOn4xx: true, cancellationToken);
+        return await HttpSendAsyncCore(request, throwOn400: true, cancellationToken);
     }
 
-    async Task<Stream> HttpSendAsyncCore(HttpRequestMessage request, bool throwOn4xx, CancellationToken cancellationToken)
+    async Task<Stream> HttpSendAsyncCore(HttpRequestMessage request, bool throwOn400, CancellationToken cancellationToken)
     {
         var response = await HttpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
         var stream = await response.Content.ReadAsStreamAsync(
@@ -481,7 +481,7 @@ public sealed class SeqApiClient : IDisposable
 #endif
             ).ConfigureAwait(false);
 
-        if (response.IsSuccessStatusCode || (!throwOn4xx && (int)response.StatusCode >= 400 && (int)response.StatusCode < 500))
+        if (response.IsSuccessStatusCode || (!throwOn400 && response.StatusCode == HttpStatusCode.BadRequest))
         {
             return stream;
         }
