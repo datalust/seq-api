@@ -36,7 +36,7 @@ namespace Seq.Api.Model.Dashboarding
         /// <summary>
         /// Lateral joins applied to the data source.
         /// </summary>
-        public List<CrossJoinLateralPart> Joins { get; set; } = [];
+        public List<JoinPart> Joins { get; set; } = [];
 
         /// <summary>
         /// Individual measurements included in the query. These are effectively projected columns.
