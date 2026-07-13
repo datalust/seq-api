@@ -14,19 +14,19 @@
 
 using Seq.Api.Model.Security;
 
-namespace Seq.Api.Model.SqlQueries
+namespace Seq.Api.Model.Queries
 {
     /// <summary>
-    /// A saved SQL-style query.
+    /// A saved query.
     /// </summary>
-    public class SqlQueryEntity : Entity
+    public class QueryEntity : Entity
     {
         /// <summary>
-        /// Construct a <see cref="SqlQueryEntity"/>.
+        /// Construct a <see cref="QueryEntity"/>.
         /// </summary>
-        public SqlQueryEntity()
+        public QueryEntity()
         {
-            Title = "New SQL Query";
+            Title = "New Query";
             Sql = "";
         }
 

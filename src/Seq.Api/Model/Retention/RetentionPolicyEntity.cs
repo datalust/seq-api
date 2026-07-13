@@ -14,33 +14,38 @@
 
 using System;
 using Newtonsoft.Json;
+using Seq.Api.Model.Shared;
 using Seq.Api.Model.Signals;
 
-namespace Seq.Api.Model.Retention
+namespace Seq.Api.Model.Retention;
+
+/// <summary>
+/// A retention policy. Identifies a subset of events to delete at a specified age.
+/// </summary>
+public class RetentionPolicyEntity : Entity
 {
     /// <summary>
-    /// A retention policy. Identifies a subset of events to delete at a specified age.
+    /// The age at which events will be deleted by the policy. This is based on the
+    /// events' timestamps relative to the server's clock.
     /// </summary>
-    public class RetentionPolicyEntity : Entity
-    {
-        /// <summary>
-        /// The age at which events will be deleted by the policy. This is based on the
-        /// events' timestamps relative to the server's clock.
-        /// </summary>
-        public TimeSpan RetentionTime { get; set; }
+    public TimeSpan RetentionTime { get; set; }
 
-        /// <summary>
-        /// An optional <see cref="SignalExpressionPart"/> describing the set of events
-        /// to delete. If <c>null</c>, the policy will efficiently truncate the event store,
-        /// deleting all events.
-        /// </summary>
-        public SignalExpressionPart RemovedSignalExpression { get; set; }
+    /// <summary>
+    /// An optional <see cref="SignalExpressionPart"/> describing the set of events
+    /// to delete. If <c>null</c>, the policy will efficiently truncate the event store,
+    /// deleting all events. Supported only when <see cref="DataSource"/> is <see cref="DataSource.Stream"/>.
+    /// </summary>
+    public SignalExpressionPart RemovedSignalExpression { get; set; }
 
-        /// <summary>
-        /// Obsolete.
-        /// </summary>
-        [Obsolete("Replaced by RemovedSignalExpression."),
-         JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string SignalId { get; set; }
-    }
+    /// <summary>
+    /// The data source to delete from. If unspecified, defaults to <see cref="DataSource.Stream"/>
+    /// </summary>
+    public DataSource DataSource { get; set; } = DataSource.Stream;
+
+    /// <summary>
+    /// Obsolete.
+    /// </summary>
+    [Obsolete("Replaced by RemovedSignalExpression."),
+     JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+    public string SignalId { get; set; }
 }

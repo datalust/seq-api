@@ -29,9 +29,19 @@ namespace Seq.Api.Model.Dashboarding
         public string Id { get; set; }
 
         /// <summary>
+        /// The source of the data displayed by the chart.
+        /// </summary>
+        public DataSource DataSource { get; set; } = DataSource.Stream;
+
+        /// <summary>
+        /// Lateral joins applied to the data source.
+        /// </summary>
+        public List<JoinPart> Joins { get; set; } = [];
+
+        /// <summary>
         /// Individual measurements included in the query. These are effectively projected columns.
         /// </summary>
-        public List<ColumnPart> Measurements { get; set; } = new List<ColumnPart>();
+        public List<ColumnPart> Measurements { get; set; } = [];
 
         /// <summary>
         /// An optional filtering <c>where</c> clause limiting the data that contributes to the chart.
@@ -46,12 +56,12 @@ namespace Seq.Api.Model.Dashboarding
         /// <summary>
         /// A series of expressions used to group data returned by the query.
         /// </summary>
-        public List<string> GroupBy { get; set; } = new List<string>();
+        public List<string> GroupBy { get; set; } = [];
 
         /// <summary>
         /// How measurements included in the chart will be displayed.
         /// </summary>
-        public MeasurementDisplayStylePart DisplayStyle { get; set; } = new MeasurementDisplayStylePart();
+        public MeasurementDisplayStylePart DisplayStyle { get; set; } = new();
 
         /// <summary>
         /// A filter that limits which groups will be displayed on the chart. Not supported by all chart types.
@@ -61,7 +71,7 @@ namespace Seq.Api.Model.Dashboarding
         /// <summary>
         /// An ordering applied to the results of the query; not supported by all chart types.
         /// </summary>
-        public List<string> OrderBy { get; set; } = new List<string>();
+        public List<string> OrderBy { get; set; } = [];
 
         /// <summary>
         /// The row limit used for the query. By default, a server-determined limit will be applied.

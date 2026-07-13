@@ -36,12 +36,13 @@ namespace Seq.Api.ResourceGroups
         /// Retrieve the dashboard with the given id; throws if the entity does not exist.
         /// </summary>
         /// <param name="id">The id of the dashboard.</param>
+        /// <param name="partial">If <c>true</c>, include only partial details in the result.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> allowing the operation to be canceled.</param>
         /// <returns>The dashboard.</returns>
-        public async Task<DashboardEntity> FindAsync(string id, CancellationToken cancellationToken = default)
+        public async Task<DashboardEntity> FindAsync(string id, bool partial = false, CancellationToken cancellationToken = default)
         {
             if (id == null) throw new ArgumentNullException(nameof(id));
-            return await GroupGetAsync<DashboardEntity>("Item", new Dictionary<string, object> { { "id", id } }, cancellationToken).ConfigureAwait(false);
+            return await GroupGetAsync<DashboardEntity>("Item", new Dictionary<string, object> { { "id", id }, { "partial", partial } }, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -50,11 +51,12 @@ namespace Seq.Api.ResourceGroups
         /// <param name="ownerId">If the id of a <see cref="UserEntity"/> is provided, only dashboards owned by them will be included in the result; if
         /// not specified, personal dashboards for all owners will be listed.</param>
         /// <param name="shared">If <c>true</c>, shared dashboards will be included in the result.</param>
+        /// <param name="partial">If <c>true</c>, include only partial details in the result.</param>
         /// <param name="cancellationToken"><see cref="CancellationToken"/> allowing the operation to be canceled.</param>
         /// <returns>A list containing matching dashboards.</returns>
-        public async Task<List<DashboardEntity>> ListAsync(string ownerId = null, bool shared = false, CancellationToken cancellationToken = default)
+        public async Task<List<DashboardEntity>> ListAsync(string ownerId = null, bool shared = false, bool partial = false, CancellationToken cancellationToken = default)
         {
-            var parameters = new Dictionary<string, object> { { "ownerId", ownerId }, { "shared", shared } };
+            var parameters = new Dictionary<string, object> { { "ownerId", ownerId }, { "shared", shared }, { "partial", partial } };
             return await GroupListAsync<DashboardEntity>("Items", parameters, cancellationToken).ConfigureAwait(false);
         }
 

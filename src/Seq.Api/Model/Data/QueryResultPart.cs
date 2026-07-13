@@ -32,6 +32,7 @@ namespace Seq.Api.Model.Data
         /// <summary>
         /// The columns within the result set (at various levels of the hierarchy).
         /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string[] Columns { get; set; }
 
         /// <summary>
@@ -43,6 +44,7 @@ namespace Seq.Api.Model.Data
         /// <summary>
         /// Metadata for the time grouping column.
         /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public ColumnMetadataPart TimeColumnMetadata { get; set; }
 
         /// <summary>

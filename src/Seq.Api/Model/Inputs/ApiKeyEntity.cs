@@ -47,7 +47,7 @@ namespace Seq.Api.Model.Inputs
         /// <summary>
         /// Settings that control how events are ingested through the API key.
         /// </summary>
-        public InputSettingsPart InputSettings { get; set; } = new InputSettingsPart();
+        public InputSettingsPart InputSettings { get; set; } = new();
 
         /// <summary>
         /// If <c>true</c>, the key is the built-in (tokenless) API key representing unauthenticated HTTP ingestion.
@@ -63,12 +63,12 @@ namespace Seq.Api.Model.Inputs
         /// The <see cref="Permission"/>s assigned to the API key. Note that, if the API key is owned by an individual user, permissions
         /// not held by the user will be ignored by the server.
         /// </summary>
-        public HashSet<Permission> AssignedPermissions { get; set; } = new HashSet<Permission>();
+        public HashSet<Permission> AssignedPermissions { get; set; } = [];
 
         /// <summary>
         /// Information about the ingestion activity using this API key.
         /// </summary>
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public InputMetricsPart InputMetrics { get; set; } = new InputMetricsPart();
+        public InputMetricsPart InputMetrics { get; set; } = new();
     }
 }
