@@ -68,8 +68,8 @@ public class MetricPart
     public string? Unit { get; set; }
     
     /// <summary>
-    /// If a filter or groupings were supplied when retrieving this metric, a <c>where</c>-clause compatible expression
-    /// that restricts queries for metric data to only the samples matched in the filter, or belonging to the group.
+    /// A <c>where</c>-clause compatible expression that restricts queries for metric data to only the samples
+    /// with the appropriate kind and unit, matched in the filter, and belonging to the group.
     /// </summary>
     public string? Condition { get; set; }
 }

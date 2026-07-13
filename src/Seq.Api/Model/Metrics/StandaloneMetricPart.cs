@@ -28,7 +28,8 @@ public class StandaloneMetricPart
     public List<string> GroupKeyExpressions { get; set; } = [];
     
     /// <summary>
-    /// The non-grouping portion of <see cref="MetricPart.Condition"/>. The
+    /// The non-grouping portion of <see cref="MetricPart.Condition"/>. The metric's <see cref="MetricPart.Kind"/>,
+    /// <see cref="MetricPart.Unit"/>, 
     /// <see cref="GroupKeyExpressions"/> and <see cref="MetricPart.GroupKey"/> values are combined with
     /// <see cref="NonGroupingCondition"/> in the metric's <see cref="MetricPart.Condition"/>.
     /// </summary>
