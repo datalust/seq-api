@@ -187,8 +187,29 @@ namespace Seq.Api.ResourceGroups
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> allowing the operation to be canceled.</param>
         /// <returns>A task signalling completion.</returns>
         public async Task UnlinkAuthenticationProviderAsync(UserEntity entity, CancellationToken cancellationToken = default)
-        { 
+        {
             await Client.PostAsync(entity, "UnlinkAuthenticationProvider", new {}, cancellationToken: cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>Deactivate <paramref name="entity"/>. The user will be unable to log in, their existing
+        /// sessions are revoked, and API keys they own stop working. The account and everything it owns
+        /// is retained, and the account can be reactivated with <see cref="ReactivateAsync"/>.</summary>
+        /// <param name="entity">The user to deactivate.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken"/> allowing the operation to be canceled.</param>
+        /// <returns>The updated user.</returns>
+        /// <remarks>The account the requesting principal acts on behalf of cannot be deactivated.</remarks>
+        public async Task<UserEntity> DeactivateAsync(UserEntity entity, CancellationToken cancellationToken = default)
+        {
+            return await Client.PostAsync<object, UserEntity>(entity, "Deactivate", new {}, cancellationToken: cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>Reactivate a user deactivated with <see cref="DeactivateAsync"/>.</summary>
+        /// <param name="entity">The user to reactivate.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken"/> allowing the operation to be canceled.</param>
+        /// <returns>The updated user.</returns>
+        public async Task<UserEntity> ReactivateAsync(UserEntity entity, CancellationToken cancellationToken = default)
+        {
+            return await Client.PostAsync<object, UserEntity>(entity, "Reactivate", new {}, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
     }
 }

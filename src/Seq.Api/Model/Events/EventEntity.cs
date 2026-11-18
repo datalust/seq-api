@@ -95,6 +95,12 @@ namespace Seq.Api.Model.Events
         /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string SpanKind { get; set; }
+        
+        /// <summary>
+        /// If the event is a span, any links it carries.
+        /// </summary>
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public List<object> SpanLinks { get; set; }
 
         /// <summary>
         /// A collection of properties describing the origin of the event, if any. These correspond to resource

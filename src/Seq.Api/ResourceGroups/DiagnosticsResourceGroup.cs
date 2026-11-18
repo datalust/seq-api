@@ -80,11 +80,10 @@ namespace Seq.Api.ResourceGroups
         /// extended to account for the resolution of the underlying data.
         /// </summary>
         /// <param name="rangeStart">The (inclusive) start of the range to report on. If omitted, the results will report from the
-        /// earliest stored data. The range start must land on a five-minute boundary.</param>
-        /// <param name="rangeEnd">The (exclusive) end of the range to report on. If omitted, the results will report from the
-        /// earliest stored data. The range must be a multiple of the interval size, or a whole number of days if
-        /// no interval is specified.</param>
-        /// <param name="intervalSeconds">The bucket size to use. Must be a multiple of 5 minutes. Defaults to 1440 (one day).</param>
+        /// earliest stored data. The range start must land on a storage tick-aligned boundary.</param>
+        /// <param name="rangeEnd">The (exclusive) end of the range to report on. If omitted, the results will report to the
+        /// latest stored data. The range end must lane on a storage tick-aligned boundary.</param>
+        /// <param name="intervalSeconds">The bucket size to use. Must be a multiple of storage ticks. Defaults to 1440 (one day). A safe minimum value is 300 (5 minutes).</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> allowing the operation to be canceled.</param>
         /// <returns>Storage consumption information.</returns>
         public async Task<StorageConsumptionPart> GetStorageConsumptionAsync(
