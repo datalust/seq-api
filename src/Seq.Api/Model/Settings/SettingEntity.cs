@@ -31,5 +31,19 @@ namespace Seq.Api.Model.Settings
         /// The value of the setting.
         /// </summary>
         public object Value { get; set; }
+
+        /// <summary>
+        /// Indicates that the setting has a value, even when the server redacts that value and
+        /// returns it as <c>null</c> (the case for passwords and similar secrets). Ignored when
+        /// saving values: <c>null</c> will always clear a setting, irrespective of the value sent
+        /// for this property.
+        /// </summary>
+        public bool HasValue { get; set; }
+
+        /// <summary>
+        /// Indicates that the setting's value is overridden in the server's configuration, and can't be changed through
+        /// the API. Ignored when saving values.
+        /// </summary>
+        public bool IsReadOnly { get; set; }
     }
 }

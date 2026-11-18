@@ -41,7 +41,7 @@ public sealed class SeqApiClient : IDisposable
     // Future versions of Seq may not completely support vN-1 features, however
     // providing this as an Accept header will ensure what compatibility is available
     // can be utilized.
-    const string SeqApiVersionedMediaType = "application/vnd.datalust.seq.v14+json";
+    const string SeqApiVersionedMediaType = "application/vnd.datalust.seq.v15+json";
     const string ApiKeyHeaderName = "X-Seq-ApiKey";
     const string CsrfTokenHeaderName = "X-Seq-CsrfToken";
     

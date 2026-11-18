@@ -15,6 +15,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Seq.Api.Model.Shared;
+using Seq.Api.ResourceGroups;
 
 namespace Seq.Api.Model.Users
 {
@@ -69,7 +70,17 @@ namespace Seq.Api.Model.Users
         /// The ids of one or more roles that grant permissions to the user. Note that
         /// the Seq UI currently only supports a single role when editing users.
         /// </summary>
-        public HashSet<string> RoleIds { get; set; } = new HashSet<string>();
+        public HashSet<string> RoleIds { get; set; } = new();
+
+        /// <summary>
+        /// If <c>true</c>, the user account is deactivated: the user cannot log in. The account and the entities
+        /// it owns are retained, and the account can be reactivated later.
+        /// </summary>
+        /// <remarks>Read-only; changes to this property are ignored when the entity is updated. Use
+        /// the <see cref="UsersResourceGroup.DeactivateAsync"/> and <see cref="UsersResourceGroup.ReactivateAsync"/> actions
+        /// to change it.</remarks>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public bool IsDeactivated { get; set; }
 
         /// <summary>
         /// The authentication provider associated with the user account. This will normally be
@@ -86,6 +97,15 @@ namespace Seq.Api.Model.Users
         /// </summary>
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string AuthenticationProviderUniqueIdentifier { get; set; }
+
+        /// <summary>
+        /// The identifier assigned to the user by an external provisioning system (the SCIM <c>externalId</c>),
+        /// if the account is managed through SCIM.
+        /// </summary>
+        /// <remarks>Read-only; the value is set by the provisioning system and changes to this property are
+        /// ignored when the entity is updated.</remarks>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public string ScimExternalId { get; set; }
         
         /// <summary>
         /// Because the <c>api/users/login</c> endpoint returns a <see cref="UserEntity"/> in the JSON response

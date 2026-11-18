@@ -58,29 +58,64 @@ namespace Seq.Api.Model.Settings
         DataAgeWarningThresholdMilliseconds,
 
         /// <summary>
-        /// The Microsoft Entra ID authority. The default is <c>login.windows.net</c>; government cloud users may
+        /// The Microsoft Entra ID authority. The default is <c>login.microsoftonline.com</c>; government cloud users may
         /// require <c>login.microsoftonline.us</c> or similar.
         /// </summary>
-        // ReSharper disable once InconsistentNaming
-        EntraIDAuthority,
+        EntraIdAuthority,
         
         /// <summary>
         /// The Microsoft Entra ID client id.
         /// </summary>
-        // ReSharper disable once InconsistentNaming
-        EntraIDClientId,
+        EntraIdClientId,
 
         /// <summary>
         /// The Microsoft Entra ID client key.
         /// </summary>
-        // ReSharper disable once InconsistentNaming
-        EntraIDClientKey,
+        EntraIdClientKey,
 
         /// <summary>
         /// The Microsoft Entra ID tenant id.
         /// </summary>
-        // ReSharper disable once InconsistentNaming
-        EntraIDTenantId,
+        EntraIdTenantId,
+        
+        /// <summary>
+        /// The Microsoft Entra ID credential source type. By default (<c>ClientSecret</c>), a client key (client
+        /// secret) is expected in <see cref="EntraIdClientKey"/>. Specify <c>SignedAssertionFromManagedIdentity</c>
+        /// and, optionally, a value for <see cref="EntraIdManagedIdentityClientId"/> to authenticate using a
+        /// managed identity instead. If no <see cref="EntraIdManagedIdentityClientId"/> is specified, the
+        /// system-assigned managed identity is used. Specify <c>SignedAssertionFile</c> to authenticate using
+        /// a signed assertion (for example, a Kubernetes projected service account token) read from the file named
+        /// by the <c>AZURE_FEDERATED_TOKEN_FILE</c> environment variable; the file is re-read on each sign-in so
+        /// that rotated tokens are picked up. Specify <c>CertificateFile</c> to authenticate using a client
+        /// certificate and private key from the Seq server's certificates folder.
+        /// Specify <c>CertificateThumbprint</c> or <c>CertificateSubject</c> to authenticate using a client
+        /// certificate identified by <see cref="EntraIdClientCertificateThumbprint"/> or
+        /// <see cref="EntraIdClientCertificateSubject"/>, respectively; these options are only supported on Windows.
+        /// </summary>
+        EntraIdCredentialType,
+        
+        /// <summary>
+        /// The client id of the user-assigned managed identity that the app registration's federated identity
+        /// credential trusts. Considered only when <see cref="EntraIdCredentialType"/> is
+        /// <c>SignedAssertionFromManagedIdentity</c>.
+        /// </summary>
+        EntraIdManagedIdentityClientId,
+
+        /// <summary>
+        /// The SHA-1 thumbprint of a client certificate, with private key, in the <c>LocalMachine</c> or
+        /// <c>CurrentUser</c> Personal (<c>My</c>) Windows certificate store. Considered only when
+        /// <see cref="EntraIdCredentialType"/> is <c>CertificateThumbprint</c>.
+        /// </summary>
+        EntraIdClientCertificateThumbprint,
+
+        /// <summary>
+        /// The subject common name, or full distinguished name, of a client certificate in the
+        /// <c>LocalMachine</c> or <c>CurrentUser</c> Personal (<c>My</c>) Windows certificate store. The newest
+        /// currently-valid matching certificate with a private key is used, so that rolled-over certificates are
+        /// picked up automatically. Considered only when <see cref="EntraIdCredentialType"/> is
+        /// <c>CertificateSubject</c>.
+        /// </summary>
+        EntraIdClientCertificateSubject,
 
         /// <summary>
         /// Server-local filesystem location where automatic backups are stored.
@@ -131,6 +166,11 @@ namespace Seq.Api.Model.Settings
         /// Seq will stop accepting new events.
         /// </summary>
         MinimumFreeStorageSpace,
+
+        /// <summary>
+        /// The minimum length of passwords for local username/password authentication.
+        /// </summary>
+        MinimumPasswordLength,
         
         /// <summary>
         /// A dictionary of `(string, string)` pairs that will be used to initialize the
@@ -192,11 +232,23 @@ namespace Seq.Api.Model.Settings
         /// list. For example, <c>openid, profile, email</c>.
         /// </summary>
         OpenIdConnectScopes,
+
+        /// <summary>
+        /// If using OpenID Connect, the URI that the provider will redirect to after the user signs out.
+        /// </summary>
+        OpenIdConnectEndSessionRedirectUri,
         
         /// <summary>
         /// If using OpenID Connect, overrides the URI of the provider's metadata endpoint.
         /// </summary>
         OpenIdConnectMetadataAddress,
+
+        /// <summary>
+        /// The character classes that local username/password authentication passwords must include, as a string
+        /// containing any of <c>a</c> (lowercase letter), <c>A</c> (uppercase letter), <c>0</c> (digit), and
+        /// <c>!</c> (punctuation).
+        /// </summary>
+        PasswordRequiredCharacterClasses,
     
         /// <summary>
         /// If <c>true</c>, ingestion requests incoming via HTTP must be authenticated using an API key or
@@ -215,6 +267,22 @@ namespace Seq.Api.Model.Settings
         RawPayloadMaximumContentLength,
         
         /// <summary>
+        /// If <c>true</c>, the SCIM 2.0 user provisioning endpoints under <c>/scim/v2</c> are enabled. Only
+        /// effective when <see cref="IsAuthenticationEnabled"/> is <c>true</c>.
+        /// </summary>
+        ScimEnabled,
+
+        /// <summary>
+        /// The default duration, in seconds, that searches will cover.
+        /// </summary>
+        SearchDurationSeconds,
+
+        /// <summary>
+        /// An expression that identifies the service associated with an event or span.
+        /// </summary>
+        ServiceNameExpression,
+
+        /// <summary>
         /// Tracks whether an admin user has dismissed the secret key backup warning.
         /// </summary>
         SecretKeyIsBackedUp,
@@ -228,6 +296,11 @@ namespace Seq.Api.Model.Settings
         /// <summary>
         /// A snippet of CSS that will be included in the front-end's user interface styles.
         /// </summary>
-        ThemeStyles
+        ThemeStyles,
+
+        /// <summary>
+        /// If <c>true</c>, user avatars will be retrieved from Gravatar.
+        /// </summary>
+        UseGravatar
     }
 }

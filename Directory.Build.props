@@ -2,7 +2,7 @@
     <PropertyGroup>
         <LangVersion>latest</LangVersion>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-        <VersionPrefix>2026.1.1</VersionPrefix>
+        <VersionPrefix>2026.2.0</VersionPrefix>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <IncludeSymbols>true</IncludeSymbols>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
