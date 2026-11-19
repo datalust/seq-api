@@ -84,5 +84,33 @@ namespace Seq.Api.ResourceGroups
         {
             await GroupPutAsync("InternalErrorReporting", internalErrorReporting, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
+
+        /// <summary>
+        /// Update a set of related settings together. Either all of the settings are updated, or none are. Changes to
+        /// authentication provider settings are applied by reloading the provider, which ends all existing sessions
+        /// when the provider is OpenID Connect-based. Requires the <c>System</c> permission.
+        /// </summary>
+        /// <param name="values">The settings to update. The <see cref="SettingsValuesPart.Username"/> and
+        /// <see cref="SettingsValuesPart.Password"/> properties must be <c>null</c>.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken"/> allowing the operation to be canceled.</param>
+        /// <returns>A task indicating completion.</returns>
+        public async Task ApplyAsync(SettingsValuesPart values, CancellationToken cancellationToken = default)
+        {
+            if (values == null) throw new ArgumentNullException(nameof(values));
+            await GroupPostAsync("Apply", values, cancellationToken: cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Check that proposed authentication settings can be used successfully, without applying them. Requires
+        /// the <c>System</c> permission.
+        /// </summary>
+        /// <param name="test">The proposed settings.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken"/> allowing the operation to be canceled.</param>
+        /// <returns>The outcome of the test.</returns>
+        public async Task<AuthenticationSettingsTestResultPart> TestAuthenticationSettingsAsync(SettingsValuesPart test, CancellationToken cancellationToken = default)
+        {
+            if (test == null) throw new ArgumentNullException(nameof(test));
+            return await GroupPostAsync<SettingsValuesPart, AuthenticationSettingsTestResultPart>("AuthTest", test, cancellationToken: cancellationToken).ConfigureAwait(false);
+        }
     }
 }

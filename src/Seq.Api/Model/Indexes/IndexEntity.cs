@@ -29,5 +29,10 @@ namespace Seq.Api.Model.Indexes
         /// The storage used by this index.
         /// </summary>
         public ulong StorageBytes { get; set; }
+
+        /// <summary>
+        /// If the last attempt at indexing failed to build this index.
+        /// </summary>
+        public bool IsIndexingFailing { get; set; }
     }
 }
