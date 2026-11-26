@@ -281,7 +281,7 @@ namespace Seq.Api
                 if (!_resourceGroups.TryGetValue(name, out loadGroup) || loadGroup.IsFaulted || loadGroup.IsCanceled)
                 {
                     loadGroup = GetResourceGroup(rootEntity, name, cancellationToken);
-                    _resourceGroups.Add(name, loadGroup);
+                    _resourceGroups[name] = loadGroup;
                 }
             }
 
